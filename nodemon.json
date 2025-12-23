@@ -1,0 +1,11 @@
+{
+  "watch": ["js", "__tests__"],
+  "ext": "js",
+  "ignore": ["node_modules", "coverage"],
+  "exec": "node --experimental-vm-modules node_modules/jest/bin/jest.js --findRelatedTests",
+  "delay": 500,
+  "verbose": true,
+  "events": {
+    "restart": "echo '\n File changed, running related tests...\n'"
+  }
+}

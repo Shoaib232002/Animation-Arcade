@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "rules": {
+    "color-hex-length": "short",
+    "block-no-empty": true,
+    "color-no-invalid-hex": true,
+    "declaration-block-no-duplicate-properties": true,
+    "font-family-no-duplicate-names": true,
+    "function-calc-no-unspaced-operator": true,
+    "selector-pseudo-class-no-unknown": true,
+    "selector-pseudo-element-no-unknown": true,
+    "selector-type-no-unknown": true,
+    "unit-no-unknown": true,
+    "property-no-unknown": true,
+    "declaration-block-no-shorthand-property-overrides": true,
+    "selector-max-id": 0,
+    "max-nesting-depth": 3,
+    "no-duplicate-selectors": true,
+    "no-descending-specificity": true,
+    "selector-class-pattern": "^[a-z][a-zA-Z0-9]+$"
+  }
+}

@@ -1,0 +1,15 @@
+#!/bin/sh
+npx eslint .
+npx stylelint "**/*.css"
+
+# Get list of staged JS files
+STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.js$')
+
+# If there are staged JS files, run tests for them
+if [ -n "$STAGED_JS_FILES" ]; then
+  echo "Running tests for changed files..."
+  node --experimental-vm-modules node_modules/jest/bin/jest.js --bail --findRelatedTests $STAGED_JS_FILES
+else
+  # If no JS files changed, run all tests
+  npm test
+fi
