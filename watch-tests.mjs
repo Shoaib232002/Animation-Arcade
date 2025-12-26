@@ -17,8 +17,8 @@ const cssWatcher = chokidar.watch(["css/**/*.css", "**/*.css"], {
 
 jsWatcher.on("change", (path) => {
   console.log(`\nJS File changed: ${path}`);
-  
   console.log("Running ESLint...\n");
+  
   const eslint = spawn("npx", ["eslint", path], { stdio: "inherit" });
   
   eslint.on("close", (eslintCode) => {
