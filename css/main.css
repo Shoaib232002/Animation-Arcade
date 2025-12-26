@@ -1,20 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 :root {
-  --bg-color: #ffffff;
+  --bg-color: #fff;
   --surface-color: #f5f7fa;
   --text-color: #1f2933;
   --muted-text: #6b7280;
   --primary-color: #2563eb;
   --border-color: #e5e7eb;
-
   --font-main: 'Roboto', system-ui, -apple-system, sans-serif;
-
   --radius: 12px;
   --radius-sm: 8px;
   --transition-slow: 0.6s ease;
-
-  --shadow-sm: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 10px 25px rgb(0 0 0 / 8%);
 }
 
 * {
@@ -86,7 +83,7 @@ body {
 
 .page-description:hover {
   transform: translateY(-8px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 12%);
 }
 
 .page-description h1 {
@@ -214,7 +211,7 @@ body {
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgb(0 0 0 / 40%);
   display: none;
   justify-content: center;
   align-items: center;

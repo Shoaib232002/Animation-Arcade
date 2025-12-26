@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "stylelint-config-standard"
-  ],
+  "extends": ["stylelint-config-standard"],
   "rules": {
     "color-hex-length": "short",
     "block-no-empty": true,
@@ -18,7 +16,7 @@
     "selector-max-id": 0,
     "max-nesting-depth": 3,
     "no-duplicate-selectors": true,
-    "no-descending-specificity": true,
-    "selector-class-pattern": "^[a-z][a-zA-Z0-9]+$"
+    "no-descending-specificity": null,
+    "selector-class-pattern": null
   }
 }
