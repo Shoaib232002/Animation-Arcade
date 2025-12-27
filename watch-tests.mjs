@@ -9,7 +9,7 @@ const jsWatcher = chokidar.watch(["js/**/*.js", "__tests__/**/*.js"], {
   ignoreInitial: true
 });
 
-const cssWatcher = chokidar.watch(["css/**/*.css", "**/*.css"], {
+const cssWatcher = chokidar.watch(["css/**/*.css"], {
   ignored: /node_modules/,
   persistent: true,
   ignoreInitial: true
