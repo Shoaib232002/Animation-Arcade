@@ -5,8 +5,12 @@ set -e  # Exit on first error
 echo " Running ESLint..."
 npx eslint .
 
-echo " Running Stylelint..."
-npx stylelint "**/*.css" --allow-empty-input
+echo " ESLint passed"
+
+echo ""
+echo "=== Running Stylelint ==="
+npx stylelint "**/*.css"
+echo " Stylelint passed"
 
 # Get list of staged JS files
 STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.js$' || true)
@@ -19,4 +23,5 @@ else
   npm test
 fi
 
+echo ""
 echo " All checks passed!"
