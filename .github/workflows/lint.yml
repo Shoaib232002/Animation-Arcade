@@ -1,33 +1,25 @@
 name: Lint & Test Code
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
 jobs:
   quality:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: Run ESLint
         run: npx eslint .
-
       - name: Run Stylelint
-        run: npx stylelint "**/*.css"
-
+        run: npx stylelint "**/*.css" --allow-empty-input
       - name: Run Tests
         run: npm test

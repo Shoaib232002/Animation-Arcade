@@ -1,10 +1,8 @@
 #!/bin/sh
 npx eslint .
 npx stylelint "**/*.css" --allow-empty-input
-
 # Get list of staged JS files
 STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.js$')
-
 # If there are staged JS files, run tests for them
 if [ -n "$STAGED_JS_FILES" ]; then
   echo "Running tests for changed files..."
