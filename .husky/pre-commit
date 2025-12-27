@@ -22,5 +22,9 @@ if [ -n "$STAGED_JS_FILES" ]; then
 else
   npm test
 fi
+<<<<<<< HEAD
 echo ""
+=======
+
+>>>>>>> fcafaf8 (fix: add verbose debugging to pre-commit)
 echo " All checks passed!"
