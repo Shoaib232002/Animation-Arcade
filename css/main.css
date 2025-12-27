@@ -216,7 +216,7 @@ main,
 .step p {
   color: var(--muted-text);
   text-align: justify;
-  padding: 0.5rem 1rem 1rem 1rem;
+  padding: 0.5rem 1rem 1rem;
 }
 
 .step {
@@ -230,6 +230,7 @@ main,
 .step h3{
   text-align: center;
 }
+
 .overlay {
   position: fixed;
   inset: 0;
