@@ -14,13 +14,13 @@ npm install
 
 ## Features
 
-- **ESLint** - JavaScript linting with automatic fixes on commit
-- **Stylelint** - CSS linting with automatic fixes on commit
-- **Jest** - Unit testing framework with automated execution
-- **Husky** - Git hooks for pre-commit validation
-- **Commitlint** - Enforced conventional commit message format
-- **GitHub Actions** - Continuous integration pipeline
-- **Automated Testing** - Tests run automatically on commit for changed files
+- ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white) - JavaScript linting with automatic fixes on commit
+- ![Stylelint](https://img.shields.io/badge/Stylelint-263238?logo=stylelint&logoColor=white) - CSS linting with automatic fixes on commit
+- ![Jest](https://img.shields.io/badge/Jest-C21325?logo=jest&logoColor=white) - Unit testing framework with automated execution
+- ![Husky](https://img.shields.io/badge/Husky-000000?logo=git&logoColor=white) - Git hooks for pre-commit validation
+- ![Commitlint](https://img.shields.io/badge/Commitlint-2B2B2B?logo=commitlint&logoColor=white) - Enforced conventional commit message format
+- ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=github-actions&logoColor=white) - Continuous integration pipeline
+- ![Automated Testing](https://img.shields.io/badge/Automated%20Testing-4CAF50?logo=checkmarx&logoColor=white) - Tests run automatically on commit for changed files
 
 ## Development
 
@@ -221,12 +221,3 @@ npm run prepare
 ## License
 
 ISC
-
-## Links
-
-- [Repository](https://github.com/Shoaib232002/Animation-Arcade)
-- [Issues](https://github.com/Shoaib232002/Animation-Arcade/issues)
-
----
-
-**Everything is automated! Just code, commit, and push.** 
