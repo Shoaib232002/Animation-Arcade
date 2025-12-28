@@ -1,5 +1,18 @@
 {
   "extends": ["stylelint-config-standard"],
+  "ignoreFiles": [
+    "**/*.js",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.json",
+    "**/*.html",
+    "**/*.md",
+    "**/*.png",
+    "**/*.jpg",
+    "**/*.svg",
+    "node_modules/**",
+    "coverage/**"
+  ],
   "rules": {
     "color-hex-length": "short",
     "block-no-empty": true,
