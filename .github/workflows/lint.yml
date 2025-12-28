@@ -1,25 +1,75 @@
 name: Lint & Test Code
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+
 jobs:
   quality:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
+      
       - name: Install dependencies
         run: npm ci
+      
       - name: Run ESLint
-        run: npx eslint .
+        run: |
+          echo "========================================"
+          echo "ESLint - JavaScript Code Quality Check"
+          echo "========================================"
+          echo ""
+          echo "Counting JavaScript files to lint..."
+          JS_FILE_COUNT=$(find . -type f \( -name "*.js" -o -name "*.mjs" -o -name "*.cjs" \) ! -path "*/node_modules/*" ! -path "*/coverage/*" | wc -l)
+          echo "Found $JS_FILE_COUNT JavaScript files"
+          echo ""
+          echo "Files to be checked:"
+          find . -type f \( -name "*.js" -o -name "*.mjs" -o -name "*.cjs" \) ! -path "*/node_modules/*" ! -path "*/coverage/*"
+          echo ""
+          echo "Running ESLint..."
+          npx eslint . --format stylish
+          echo ""
+          echo "ESLint completed - Checked $JS_FILE_COUNT files"
+      
       - name: Run Stylelint
-        run: npx stylelint "**/*.css" --allow-empty-input
+        run: |
+          echo "========================================"
+          echo "Stylelint - CSS Code Quality Check"
+          echo "========================================"
+          echo ""
+          echo "Counting CSS files to lint..."
+          CSS_FILE_COUNT=$(find ./css -type f -name "*.css" 2>/dev/null | wc -l)
+          echo "Found $CSS_FILE_COUNT CSS files"
+          echo ""
+          echo "Files to be checked:"
+          find ./css -type f -name "*.css" 2>/dev/null || echo "No CSS files found"
+          echo ""
+          echo "Running Stylelint..."
+          npx stylelint "css/**/*.css" --allow-empty-input
+          echo ""
+          echo "Stylelint completed - Checked $CSS_FILE_COUNT files"
+      
       - name: Run Tests
-        run: npm test
+        run: |
+          echo "========================================"
+          echo "Jest - Running Test Suite"
+          echo "========================================"
+          echo ""
+          echo "Counting test files..."
+          TEST_FILE_COUNT=$(find ./__tests__ -type f -name "*.test.js" 2>/dev/null | wc -l)
+          echo "Found $TEST_FILE_COUNT test files"
+          echo ""
+          echo "Running tests..."
+          npm test
+          echo ""
+          echo "Tests completed"
