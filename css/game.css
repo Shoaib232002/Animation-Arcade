@@ -1,6 +1,22 @@
+:root {
+  --bg-body: #0a5;
+  --bg-top-bar: #083;
+  --border-light: #fff;
+  --text-light: #fff;
+  --text-dark: #000;
+  --bg-editor-panel: #efe;
+  --bg-editor: #fff;
+  --bg-line-numbers: #eee;
+  --text-muted: #777;
+  --border-muted: #ccc;
+  --accent-primary: #02ac57;
+  --accent-secondary: #fc0;
+  --bg-levels-bar: #ddd;
+}
+
 body {
   margin: 0;
-  background: #0a5;
+  background: var(--bg-body);
 }
 
 .top-bar {
@@ -8,19 +24,19 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 14px 24px;
-  background: #083;
-  border-bottom: 3px solid #fff;
+  background: var(--bg-top-bar);
+  border-bottom: 3px solid var(--border-light);
 }
 
 .logo {
   font-size: 20px;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-light);
 }
 
 .home-btn {
-  background: #fff;
-  border: 1px solid #000;
+  background: var(--bg-editor);
+  border: 1px solid var(--text-dark);
   border-radius: 6px;
   padding: 6px 14px;
   cursor: pointer;
@@ -41,28 +57,28 @@ body {
 }
 
 .editor-container {
-  border: 3px solid #fff;
-  background: #efe;
+  border: 3px solid var(--border-light);
+  background: var(--bg-editor-panel);
   padding: 12px;
 }
 
 .editor-header {
   font-weight: 600;
   margin-bottom: 8px;
-  color: #063;
+  color: var(--accent-primary);
 }
 
 .editor {
   display: flex;
   height: 300px;
-  border: 2px solid #ccc;
-  background: #fff;
+  border: 2px solid var(--border-muted);
+  background: var(--bg-editor);
 }
 
 .line-numbers {
-  background: #eee;
+  background: var(--bg-line-numbers);
   padding: 8px;
-  color: #777;
+  color: var(--text-muted);
   display: flex;
   flex-direction: column;
   font-size: 12px;
@@ -87,22 +103,22 @@ body {
 .level-text {
   font-size: 16px;
   font-weight: 700;
-  color: #063;
+  color: var(--accent-primary);
 }
 
 .submit-btn {
   padding: 8px 26px;
   border-radius: 20px;
   border: none;
-  background: #fc0;
+  background: var(--accent-secondary);
   cursor: pointer;
   font-weight: 600;
 }
 
 .hints {
-  border-top: 3px solid #fff;
+  border-top: 3px solid var(--border-light);
   padding-top: 10px;
-  color: #fff;
+  color: var(--text-light);
 }
 
 .hints h3 {
@@ -111,8 +127,8 @@ body {
 }
 
 .right-section {
-  border: 3px solid #fff;
-  background: #efe;
+  border: 3px solid var(--border-light);
+  background: var(--bg-editor-panel);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -124,8 +140,8 @@ body {
   justify-content: center;
   gap: 18px;
   padding: 6px 16px;
-  background: #ddd;
-  border: 2px solid #ccc;
+  background: var(--bg-levels-bar);
+  border: 2px solid var(--border-muted);
   margin-bottom: 20px;
 }
 
@@ -133,22 +149,22 @@ body {
   font-weight: 600;
 }
 
-.algn-level{
+.algn-level {
   margin-right: auto;
 }
 
-.arrows{
+.arrows {
   height: 20px;
   width: 20px;
 }
 
 .output-box {
   flex: 1;
-  border: 2px dashed #063;
+  border: 2px dashed var(--accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
   font-weight: 600;
-  color: #063;
+  color: var(--accent-primary);
 }
