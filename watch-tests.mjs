@@ -9,27 +9,28 @@ const jsWatcher = chokidar.watch(["js/**/*.js", "__tests__/**/*.js"], {
   ignoreInitial: true
 });
 
-const cssWatcher = chokidar.watch(["css/**/*.css", "**/*.css"], {
+const cssWatcher = chokidar.watch(["css/**/*.css"], {
   ignored: /node_modules/,
   persistent: true,
   ignoreInitial: true
 });
 
+// Helper function to run a command with live stdio
+const runCommand = (cmd, args, onClose) => {
+  const proc = spawn(cmd, args, { stdio: "inherit" });
+  proc.on("close", onClose);
+};
+
+// JS watcher
 jsWatcher.on("change", (path) => {
   console.log(`\nJS File changed: ${path}`);
   console.log("Running ESLint...\n");
-  
-  const eslint = spawn("npx", ["eslint", path], { stdio: "inherit" });
-  
-  eslint.on("close", (eslintCode) => {
-    if (eslintCode === 0) {
-      console.log("\nESLint passed!\n");
-    } else {
-      console.log("\nESLint failed!\n");
-    }
-    
+
+  runCommand("npx", ["eslint", path], (eslintCode) => {
+    console.log(eslintCode === 0 ? "\nESLint passed!" : "\nESLint failed!");
+
     console.log("Running related tests...\n");
-    const jest = spawn(
+    runCommand(
       "node",
       [
         "--experimental-vm-modules",
@@ -37,32 +38,21 @@ jsWatcher.on("change", (path) => {
         "--findRelatedTests",
         path
       ],
-      { stdio: "inherit" }
-    );
-    
-    jest.on("close", (jestCode) => {
-      if (jestCode === 0) {
-        console.log("\nTests passed!\n");
-      } else {
-        console.log("\nTests failed!\n");
+      (jestCode) => {
+        console.log(jestCode === 0 ? "\nTests passed!" : "\nTests failed!");
+        console.log("Watching for changes...\n");
       }
-      console.log("Watching for changes...\n");
-    });
+    );
   });
 });
 
+// CSS watcher
 cssWatcher.on("change", (path) => {
   console.log(`\nCSS File changed: ${path}`);
   console.log("Running Stylelint...\n");
-  
-  const stylelint = spawn("npx", ["stylelint", path], { stdio: "inherit" });
-  
-  stylelint.on("close", (code) => {
-    if (code === 0) {
-      console.log("\nCSS linting passed!\n");
-    } else {
-      console.log("\nCSS linting failed!\n");
-    }
+
+  runCommand("npx", ["stylelint", path], (code) => {
+    console.log(code === 0 ? "\nCSS linting passed!" : "\nCSS linting failed!");
     console.log("Watching for changes...\n");
   });
 });
