@@ -3,6 +3,8 @@ import globals from "globals";
 
 export default [
   js.configs.recommended,
+
+  // Browser source files
   {
     files: ["**/*.{js,mjs,cjs}"],
     languageOptions: {
@@ -22,16 +24,24 @@ export default [
       "complexity": ["warn", 10]
     }
   },
+
+  // Jest + jsdom test files
   {
-    files: ["**/__tests__/**/*.js", "**/*.test.js"],
+    files: ["**/__tests__/**/*.{js,mjs}", "**/*.test.{js,mjs}"],
     languageOptions: {
       globals: {
-        ...globals.jest
+        ...globals.jest,
+        ...globals.browser
       }
     }
   },
+
+  // Node / config / scripts
   {
-    files: ["**/*.mjs", "**/*.config.js", "**/scripts/**/*.js"],
+    files: ["**/*.config.{js,mjs}", "**/scripts/**/*.{js,mjs}"],
+    languageOptions: {
+      globals: globals.node
+    },
     rules: {
       "no-console": "off"
     }
