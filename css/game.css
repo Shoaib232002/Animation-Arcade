@@ -25,6 +25,7 @@ body {
   padding: 6px 14px;
   cursor: pointer;
 }
+
 .main-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -74,6 +75,7 @@ body {
   resize: none;
   outline: none;
 }
+
 .editor-footer {
   display: flex;
   align-items: center;
@@ -130,6 +132,7 @@ body {
 .levels-text {
   font-weight: 600;
 }
+
 .algn-level{
   margin-right: auto;
 }
@@ -138,6 +141,7 @@ body {
   height: 20px;
   width: 20px;
 }
+
 .output-box {
   flex: 1;
   border: 2px dashed #063;
