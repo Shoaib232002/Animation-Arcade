@@ -349,3 +349,92 @@ input:focus {
     font-size: 1rem;
   }
 }
+
+/* Dark Theme Variables */
+body.dark-theme {
+  --bg-color: #1a1d23;
+  --surface-color: #252931;
+  --text-color: #e4e7eb;
+  --muted-text: #a0a8b0;
+  --primary-color: #2ecc71;
+  --secondary-color: #f4c542;
+  --accent-color: #e74c3c;
+  --border-color: #3a3f4b;
+  --shadow-sm: 0 8px 20px rgb(0 0 0 / 30%);
+}
+
+/* Dark theme navbar */
+body.dark-theme .navbar {
+  background-color: #252931;
+  border-bottom-color: var(--secondary-color);
+}
+
+/* Dark theme buttons */
+body.dark-theme .login-btn,
+body.dark-theme .theme-toggle {
+  color: var(--text-color);
+}
+
+body.dark-theme .login-btn:hover,
+body.dark-theme .theme-toggle:hover {
+  background-color: #3a3f4b;
+}
+
+/* Dark theme page description */
+body.dark-theme .page-description {
+  background-color: var(--surface-color);
+  box-shadow: 0 10px 25px rgb(0 0 0 / 30%);
+}
+
+body.dark-theme .page-description:hover {
+  box-shadow: 0 15px 30px rgb(0 0 0 / 40%);
+}
+
+/* Dark theme feature cards */
+body.dark-theme .feature-card,
+body.dark-theme .step {
+  background-color: var(--surface-color);
+}
+
+/* Dark theme info section */
+body.dark-theme .info-section {
+  background-color: #1f2229;
+}
+
+/* Dark theme modal */
+body.dark-theme .modal {
+  background-color: var(--surface-color);
+}
+
+body.dark-theme .tab-btn {
+  color: var(--text-color);
+}
+
+body.dark-theme .tab-btn.active {
+  background-color: var(--primary-color);
+  color: #1a1d23;
+}
+
+body.dark-theme input {
+  background-color: #1a1d23;
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.dark-theme input:focus {
+  border-color: var(--primary-color);
+}
+
+/* Smooth transition for theme changes */
+body,
+.navbar,
+.page-description,
+.feature-card,
+.step,
+.modal,
+.login-btn,
+.theme-toggle,
+.tab-btn,
+input {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
