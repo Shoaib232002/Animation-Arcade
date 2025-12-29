@@ -4,6 +4,7 @@ import globals from "globals";
 export default [
   js.configs.recommended,
 
+  // Browser source files
   {
     files: ["**/*.{js,mjs,cjs}"],
     languageOptions: {
@@ -24,6 +25,7 @@ export default [
     }
   },
 
+  // Jest + jsdom test files
   {
     files: ["**/__tests__/**/*.{js,mjs}", "**/*.test.{js,mjs}"],
     languageOptions: {
@@ -34,6 +36,7 @@ export default [
     }
   },
 
+  // Node / config / scripts
   {
     files: ["**/*.config.{js,mjs}", "**/scripts/**/*.{js,mjs}"],
     languageOptions: {
