@@ -16,13 +16,11 @@ const cssWatcher = chokidar.watch(["css/**/*.css"], {
   ignoreInitial: true
 });
 
-// Helper function to run a command with live stdio
 const runCommand = (cmd, args, onClose) => {
   const proc = spawn(cmd, args, { stdio: "inherit" });
   proc.on("close", onClose);
 };
 
-// JS watcher
 jsWatcher.on("change", (path) => {
   console.log(`\nJS File changed: ${path}`);
   console.log("Running ESLint...\n");
@@ -47,7 +45,6 @@ jsWatcher.on("change", (path) => {
   });
 });
 
-// CSS watcher
 cssWatcher.on("change", (path) => {
   console.log(`\nCSS File changed: ${path}`);
   console.log("Running Stylelint...\n");
