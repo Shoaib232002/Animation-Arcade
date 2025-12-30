@@ -3,6 +3,8 @@
  */
 import { ThemeManager } from "../js/landing.js";
 import { THEME_KEY, DARK_THEME, LIGHT_THEME } from "../js/constants.js";
+import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -43,8 +45,8 @@ describe("ThemeManager", () => {
   describe("ThemeManager Functionality", () => {
     test("initializes with light theme by default", () => {
       ThemeManager.init();
-      expect(document.body.classList.contains("dark-theme")).toBe(false);
-      expect(getThemeIcon().src).toContain("darkmode.jpeg");
+      expect(document.body).not.toHaveClass("dark-theme");
+      expect(getThemeIcon()).toHaveAttribute("src", expect.stringContaining("darkmode.jpeg"));
     });
 
     test("loads dark theme from localStorage on init", () => {
@@ -56,18 +58,21 @@ describe("ThemeManager", () => {
     test("applyTheme('dark') enables dark theme and updates icon", () => {
       ThemeManager.init();
       ThemeManager.applyTheme(DARK_THEME);
+      expect(document.body).toHaveClass("dark-theme");
       expectThemeState(DARK_THEME);
     });
 
     test("applyTheme('light') disables dark theme and updates icon", () => {
       ThemeManager.init();
       ThemeManager.applyTheme(LIGHT_THEME);
+      expect(document.body).not.toHaveClass("dark-theme");
       expectThemeState(LIGHT_THEME);
     });
 
     test("toggleTheme switches from light to dark", () => {
       ThemeManager.init();
       ThemeManager.toggleTheme();
+      expect(document.body).toHaveClass("dark-theme");
       expectThemeState(DARK_THEME);
     });
 
@@ -75,6 +80,7 @@ describe("ThemeManager", () => {
       localStorage.setItem(THEME_KEY, DARK_THEME);
       ThemeManager.init();
       ThemeManager.toggleTheme();
+      expect(document.body).not.toHaveClass("dark-theme");
       expectThemeState(LIGHT_THEME);
     });
 
@@ -86,9 +92,14 @@ describe("ThemeManager", () => {
       expect(ThemeManager.getCurrentTheme()).toBe(DARK_THEME);
     });
 
-    test("clicking theme toggle button toggles theme", () => {
+    test("clicking theme toggle button toggles theme", async () => {
       ThemeManager.init();
-      getElement("themeToggle").click();
+      const user = userEvent.setup();
+      const button = getElement("themeToggle");
+      
+      await user.click(button);
+      
+      expect(document.body).toHaveClass("dark-theme");
       expectThemeState(DARK_THEME);
     });
 
