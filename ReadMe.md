@@ -27,7 +27,7 @@ bash:
 npx http-server
 ```
 ---
-## 5. Available Commands
+## Available Commands
 ```
 npm test
 npm run test:watch
@@ -35,7 +35,7 @@ npm run lint
 npm run lint:css
 ```
 ---
-## 6. Contributing (Short Version)
+## Contributing (Short Version)
 1. Fork the repo
 2. Create a feature branch
 3. Commit using conventional commits
@@ -69,7 +69,7 @@ bash:
 npx http-server
 ```
 ---
-## 5. Available Commands
+## Available Commands
 ```
 npm test
 npm run test:watch
@@ -77,7 +77,7 @@ npm run lint
 npm run lint:css
 ```
 ---
-## 6. Contributing (Short Version)
+## Contributing (Short Version)
 1. Fork the repo
 2. Create a feature branch
 3. Commit using conventional commits
