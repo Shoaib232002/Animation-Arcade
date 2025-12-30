@@ -90,8 +90,6 @@ For full contribution workflow, see the [Wikis](https://github.com/Shoaib232002/
 ## Team Members
 - Siripireddy Giri 
 - Mohammed Shoaib
-## License
-ISC]().
 ## Requirements
 - Node.js v24.11.1
 - npm v10+
