@@ -25,6 +25,17 @@ jobs:
       
       - name: Run ESLint
         run: |
+
+          echo "Counting JavaScript files to lint..."
+          JS_FILE_COUNT=$(find . -type f \( -name "*.js" -o -name "*.mjs" -o -name "*.cjs" \) ! -path "*/node_modules/*" ! -path "*/coverage/*" | wc -l)
+          echo "Found $JS_FILE_COUNT JavaScript files"
+          npx eslint . --format stylish
+
+          echo "========================================"
+          echo "ESLint - JavaScript Code Quality Check"
+          echo "========================================"
+          echo ""
+
           echo "Counting JavaScript files to lint..."
           JS_FILE_COUNT=$(find . -type f \( -name "*.js" -o -name "*.mjs" -o -name "*.cjs" \) ! -path "*/node_modules/*" ! -path "*/coverage/*" | wc -l)
           echo "Found $JS_FILE_COUNT JavaScript files"
@@ -33,6 +44,16 @@ jobs:
       
       - name: Run Stylelint
         run: |
+
+          echo "Counting CSS files to lint..."
+          CSS_FILE_COUNT=$(find ./css -type f -name "*.css" 2>/dev/null | wc -l)
+          echo "Found $CSS_FILE_COUNT CSS files"
+          npx stylelint "css/**/*.css" --allow-empty-input
+          echo "========================================"
+          echo "Stylelint - CSS Code Quality Check"
+          echo "========================================"
+          echo ""
+
           echo "Counting CSS files to lint..."
           CSS_FILE_COUNT=$(find ./css -type f -name "*.css" 2>/dev/null | wc -l)
           echo "Found $CSS_FILE_COUNT CSS files"
@@ -41,8 +62,23 @@ jobs:
       
       - name: Run Tests
         run: |
+
           echo "Counting test files..."
           TEST_FILE_COUNT=$(find ./__tests__ -type f -name "*.test.js" 2>/dev/null | wc -l)
           echo "Found $TEST_FILE_COUNT test files"
           npm test
+          echo "========================================"
+          echo "Jest - Running Test Suite"
+          echo "========================================"
+          echo ""
+
+          echo "Counting test files..."
+          TEST_FILE_COUNT=$(find ./__tests__ -type f -name "*.test.js" 2>/dev/null | wc -l)
+          echo "Found $TEST_FILE_COUNT test files"
+          npm test
+
+          echo ""
           echo "Tests completed"
+
+          echo "Tests completed"
+

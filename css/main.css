@@ -1,0 +1,440 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+:root {
+  --bg-color: #fff;
+  --surface-color: #f3f7f2;
+  --text-color: #1f2933;
+  --muted-text: #5f6f65;
+  --primary-color: #1b7f3a;
+  --secondary-color: #d1b88a;
+  --accent-color: #c0392b;
+  --border-color: #e0e6e2;
+  --font-main: "Roboto", system-ui, -apple-system, sans-serif;
+  --radius: 1rem;
+  --radius-sm: 0.5rem;
+  --transition: 0.3s ease;
+  --shadow-sm: 0 8px 20px rgb(0 0 0 / 6%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+main,
+.page-description,
+.hero-section,
+.info-section {
+  scroll-margin-top: 80px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.login-btn,
+.theme-toggle {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.login-btn:hover,
+.theme-toggle:hover {
+  background-color: var(--surface-color);
+}
+
+.theme-toggle img {
+  width: 1rem;
+  height: 1rem;
+}
+
+.page-description {
+  max-width: 1000px;
+  margin: 3rem auto 2rem;
+  padding: 3rem 2rem;
+  background-color: var(--surface-color);
+  border-radius: var(--radius);
+  text-align: center;
+  box-shadow: 0 10px 25px rgb(0 0 0 / 10%);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.page-description:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgb(0 0 0 / 15%);
+}
+
+.page-description h1 {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.page-description p {
+  max-width: 650px;
+  margin: auto;
+  color: var(--muted-text);
+}
+
+.hero-section {
+  max-width: 1100px;
+  margin: auto;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 2.6rem;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  max-width: 600px;
+  margin: auto;
+  color: var(--muted-text);
+}
+
+.features-grid {
+  margin: 3rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card{
+  padding: 1.5rem;
+  background-color: var(--surface-color);
+  border-radius: var(--radius);
+  border-top: 4px solid var(--secondary-color);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.feature-card:hover,
+.step:hover {
+  transform: translateY(-4px);
+  border-top-color: var(--primary-color);
+}
+
+.feature-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: var(--muted-text);
+}
+
+.feature-icon {
+  display: none;
+}
+
+.start-btn {
+  padding: 0.9rem 2.2rem;
+  border: none;
+  border-radius: var(--radius);
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
+}
+
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 18%);
+}
+
+
+.info-section {
+  background-color: var(--surface-color);
+  padding: 4rem 2rem;
+}
+
+.info-section h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 3rem;
+}
+
+.steps {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  margin: 0.5rem auto 1rem;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step p {
+  color: var(--muted-text);
+  text-align: justify;
+  padding: 0.5rem 1rem 1rem;
+}
+
+.step {
+  background-color: var(--surface-color);
+  border-radius: var(--radius);
+  border-top: 4px solid var(--secondary-color);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.step h3{
+  text-align: center;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 38%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  background-color: var(--bg-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.tab-container {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.auth-message {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--muted-text);
+}
+
+@media (width <= 768px) {
+  .page-description {
+    margin: 2rem 1rem;
+    padding: 2rem 1rem;
+  }
+
+  .page-description h1 {
+    font-size: 2rem;
+  }
+
+  .page-description p {
+    font-size: 1rem;
+  }
+}
+
+@media (width <= 480px) {
+  .page-description {
+    padding: 1.5rem 1rem;
+  }
+
+  .page-description h1 {
+    font-size: 1.8rem;
+  }
+  
+  .page-description p {
+    font-size: 1rem;
+  }
+}
+
+/* Dark Theme Variables */
+body.dark-theme {
+  --bg-color: #1a1d23;
+  --surface-color: #252931;
+  --text-color: #e4e7eb;
+  --muted-text: #a0a8b0;
+  --primary-color: #2ecc71;
+  --secondary-color: #f4c542;
+  --accent-color: #e74c3c;
+  --border-color: #3a3f4b;
+  --shadow-sm: 0 8px 20px rgb(0 0 0 / 30%);
+}
+
+/* Dark theme navbar */
+body.dark-theme .navbar {
+  background-color: #252931;
+  border-bottom-color: var(--secondary-color);
+}
+
+/* Dark theme buttons */
+body.dark-theme .login-btn,
+body.dark-theme .theme-toggle {
+  color: var(--text-color);
+}
+
+body.dark-theme .login-btn:hover,
+body.dark-theme .theme-toggle:hover {
+  background-color: #3a3f4b;
+}
+
+/* Dark theme page description */
+body.dark-theme .page-description {
+  background-color: var(--surface-color);
+  box-shadow: 0 10px 25px rgb(0 0 0 / 30%);
+}
+
+body.dark-theme .page-description:hover {
+  box-shadow: 0 15px 30px rgb(0 0 0 / 40%);
+}
+
+/* Dark theme feature cards */
+body.dark-theme .feature-card,
+body.dark-theme .step {
+  background-color: var(--surface-color);
+}
+
+/* Dark theme info section */
+body.dark-theme .info-section {
+  background-color: #1f2229;
+}
+
+/* Dark theme modal */
+body.dark-theme .modal {
+  background-color: var(--surface-color);
+}
+
+body.dark-theme .tab-btn {
+  color: var(--text-color);
+}
+
+body.dark-theme .tab-btn.active {
+  background-color: var(--primary-color);
+  color: #1a1d23;
+}
+
+body.dark-theme input {
+  background-color: #1a1d23;
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.dark-theme input:focus {
+  border-color: var(--primary-color);
+}
+
+/* Smooth transition for theme changes */
+body,
+.navbar,
+.page-description,
+.feature-card,
+.step,
+.modal,
+.login-btn,
+.theme-toggle,
+.tab-btn,
+input {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

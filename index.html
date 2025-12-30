@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Arcade - Learn CSS Animations Through Play</title>
+    <link rel="icon" href="./assets/Icon.png">
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">Animation Arcade</span>
+            </div>
+            <div class="nav-actions">
+                <button id="loginBtn" class="login-btn">Login</button>
+                <button id="themeToggle" class="theme-toggle">
+                    <span class="theme-icon">
+                        <img src="./assets/darkmode.jpeg" alt="Mode toggle">
+                    </span>
+                </button>
+
+            </div>
+        </div>
+    </nav>
+
+    <main class="landing-page">
+        <section class="page-description">
+            <h1>Learn CSS Animations Through Play</h1>
+            <p>
+                Animation Arcade is a gamified platform that teaches CSS animations,
+                transforms, and transitions using hands-on, cricket-themed challenges.
+            </p>
+        </section>
+
+        <section class="hero-section">
+            <h1 class="hero-title">Master CSS Animations Through Interactive Challenges</h1>
+            <p class="hero-subtitle">
+                Write real CSS, animate real elements, and level up your animation skills through gameplay.
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Interactive Learning</h3>
+                    <p>Write real CSS code and instantly see animations execute on the game board.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Progressive Levels</h3>
+                    <p>Progress through 10 carefully designed levels with increasing difficulty.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Hints & Learning</h3>
+                    <p>Use built-in hints to understand CSS animation concepts while playing.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Track Progress</h3>
+                    <p>Track completed levels and continue your progress anytime.</p>
+                </div>
+            </div>
+
+            <button id="startGameBtn" class="start-btn">Start Playing Now</button>
+        </section>
+
+        <section class="info-section">
+            <h2>How Animation Arcade Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Read the Challenge</h3>
+                    <p>Each level introduces a cricket-themed and CSS animation challenge with clear goals.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Write Your CSS</h3>
+                    <p>Write real CSS animations, transforms, and transitions in the editor.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>See the Animation</h3>
+                    <p>The animation engine executes your CSS and shows real-time results.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Progress & Improve</h3>
+                    <p>Pass validation, unlock new levels, and sharpen your CSS skills.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="loginOverlay" class="overlay">
+        <div class="modal">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h2 id="modalTitle">Login</h2>
+
+            <div class="tab-container">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="signup">Sign Up</button>
+            </div>
+
+            <form id="authForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword"
+                        placeholder="Confirm your password">
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Login</button>
+            </form>
+
+            <div id="authMessage" class="auth-message"></div>
+        </div>
+    </div>
+   <script type="module" src="./js/landing.js"></script>
+</body>
+
+</html>

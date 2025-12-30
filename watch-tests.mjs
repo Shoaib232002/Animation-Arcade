@@ -16,6 +16,10 @@ const cssWatcher = chokidar.watch(["css/**/*.css"], {
   ignoreInitial: true
 });
 
+
+
+// Helper function to run a command with live stdio
+
 const runCommand = (cmd, args, onClose) => {
   const proc = spawn(cmd, args, { stdio: "inherit" });
   proc.on("close", onClose);
