@@ -1,51 +1,46 @@
+import { THEME_KEY, DARK_THEME, LIGHT_THEME, THEME_ICONS } from "./constants.js";
+
 const ThemeManager = {
-  THEME_KEY: "animation-arcade-theme",
-  DARK_THEME: "dark",
-  LIGHT_THEME: "light",
-  
   init() {
     this.themeIcon = document.querySelector("#themeToggle img");
     this.loadTheme();
     this.attachEventListeners();
   },
-  
+
   loadTheme() {
-    const savedTheme = localStorage.getItem(this.THEME_KEY);
-    const theme = savedTheme || this.LIGHT_THEME;
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    const theme = savedTheme || LIGHT_THEME;
     this.applyTheme(theme);
   },
-  
+
   applyTheme(theme) {
-    if (theme === this.DARK_THEME) {
+    if (theme === DARK_THEME) {
       document.body.classList.add("dark-theme");
-      this.updateIcon(this.DARK_THEME);
+      this.updateIcon(DARK_THEME);
     } else {
       document.body.classList.remove("dark-theme");
-      this.updateIcon(this.LIGHT_THEME);
+      this.updateIcon(LIGHT_THEME);
     }
-    localStorage.setItem(this.THEME_KEY, theme);
+    localStorage.setItem(THEME_KEY, theme);
   },
-  
+
   toggleTheme() {
     const isDark = document.body.classList.contains("dark-theme");
-    const newTheme = isDark ? this.LIGHT_THEME : this.DARK_THEME;
+    const newTheme = isDark ? LIGHT_THEME : DARK_THEME;
     this.applyTheme(newTheme);
   },
-  
+
   getCurrentTheme() {
     return document.body.classList.contains("dark-theme")
-      ? this.DARK_THEME
-      : this.LIGHT_THEME;
+      ? DARK_THEME
+      : LIGHT_THEME;
   },
-  
+
   updateIcon(theme) {
     if (!this.themeIcon) return;
-    this.themeIcon.src =
-      theme === this.DARK_THEME
-        ? "./assets/lightmode.png"
-        : "./assets/darkmode.jpeg";
+    this.themeIcon.src = THEME_ICONS[theme];
   },
-  
+
   attachEventListeners() {
     const themeToggle = document.getElementById("themeToggle");
     if (themeToggle) {
