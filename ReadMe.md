@@ -25,7 +25,6 @@ Open `index.html` in your browser or start a local server:
 bash:
 npx http-server
 ```
----
 ## Available Commands
 ```
 npm test
@@ -33,26 +32,10 @@ npm run test:watch
 npm run lint
 npm run lint:css
 ```
----
-## Contributing (Short Version)
-1. Fork the repo
-2. Create a feature branch
-3. Commit using conventional commits
-4. Open a Pull Request
-For full contribution workflow, see the [Wikis](https://github.com/Shoaib232002/Animation-Arcade/wiki).
-## Requirements
-- Node.js v24.11.1
-- npm v10+
-- Git
-## Team Members
-- Siripireddy Giri 
-- Mohammed Shoaib
-## Requirements
-- Node.js v24.11.1
-- npm v10+
-- Git
+## Documentation
+- For full contribution workflow, see the [Animation-Arcade Wiki](https://github.com/Shoaib232002/Animation-Arcade/wiki).
 ## Team Members
 - Siripireddy Giri 
 - Mohammed Shoaib
 ## License
-ISC
+This project is licensed under the ISC License.
