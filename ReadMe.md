@@ -39,7 +39,7 @@ npm run lint:css
 2. Create a feature branch
 3. Commit using conventional commits
 4. Open a Pull Request
-For full contribution workflow, see the [Wikis](https://github.com/Shoaib232002/Animation-Arcade/wiki/Animation-Arcade-%E2%80%93-Developer-Wiki).
+For full contribution workflow, see the [Wikis](https://github.com/Shoaib232002/Animation-Arcade/wiki).
 ## Requirements
 - Node.js v24.11.1
 - npm v10+
