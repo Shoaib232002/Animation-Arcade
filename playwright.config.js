@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./__tests__/visual",
@@ -8,21 +8,31 @@ export default defineConfig({
   workers: 1,
   reporter: "html",
   timeout: 30000,
-  
+
   use: {
     baseURL: "http://localhost:3000",
-    trace: "on-first-retry",
-    screenshot: "only-on-failure",
+
     viewport: { width: 1280, height: 720 },
     deviceScaleFactor: 1,
-    hasTouch: false,
     isMobile: false,
+    hasTouch: false,
+
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
+
+    launchOptions: {
+      args: [
+        "--disable-font-subpixel-positioning",
+        "--disable-lcd-text",
+        "--force-device-scale-factor=1",
+      ],
+    },
   },
 
   expect: {
     toHaveScreenshot: {
-      maxDiffPixels: 100,
       animations: "disabled",
+      maxDiffPixelRatio: 0.03, 
       timeout: 10000,
     },
   },
@@ -30,9 +40,8 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { 
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1280, height: 720 },
+      use: {
+        browserName: "chromium",
       },
     },
   ],

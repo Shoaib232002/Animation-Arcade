@@ -53,7 +53,6 @@ export class ThemeTestHelper {
     const isDark = theme === DARK_THEME;
     const expectedIcon = isDark ? "lightmode.png" : "darkmode.jpeg";
 
-    // ✅ wait until theme is actually applied
     await this.waitForTheme(theme);
 
     const hasDarkClass = await this.page.locator("body").evaluate(
@@ -75,10 +74,11 @@ export class ThemeTestHelper {
   }
 
   async takeSnapshot(name) {
-    await expect(this.page).toHaveScreenshot(`${name}.png`, {
-      fullPage: true,
-    });
+    await expect(this.page.locator("#app")).toHaveScreenshot(
+      `${name}.png`
+    );
   }
+
 }
 
 export const THEMES = {
