@@ -18,3 +18,16 @@ npm-debug.log*
 Thumbs.db
 *.tmp
 .cache/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/tests/visual/**/*-snapshots/
+playwright-report/
+playwright/.auth/
+*.trace
+
+# Test artifacts
+/tests/visual/__screenshots__/
+/tests/visual/__image_snapshots__/

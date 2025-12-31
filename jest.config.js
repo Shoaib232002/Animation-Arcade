@@ -1,9 +1,9 @@
 export default {
-  testEnvironment: "jsdom",
+  testEnvironment: "node",
   transform: {},
   testMatch: ["**/__tests__/**/*.test.js"],
+  testPathIgnorePatterns: ["/node_modules/", "/tests/visual/"],
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 };

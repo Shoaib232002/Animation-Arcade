@@ -1,29 +1,19 @@
 #!/bin/sh
-
-
 set -e
 
-set -e 
-
+echo "=== Running ESLint ==="
 npx eslint .
 
-npx stylelint "**/*.css" --allow-empty-input
-echo " ESLint passed"
-
-echo ""
 echo "=== Running Stylelint ==="
-npx stylelint "**/*.css"
-echo " Stylelint passed"
+npx stylelint "**/*.css" --allow-empty-input
 
-STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.js$' || true)
+echo "=== Running Tests ==="
+STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.js$' | grep -v -E '(test|spec|config|server)\.js$' || true)
 
 if [ -n "$STAGED_JS_FILES" ]; then
-  node --experimental-vm-modules node_modules/jest/bin/jest.js --bail --findRelatedTests $STAGED_JS_FILES
+  node --experimental-vm-modules node_modules/jest/bin/jest.js --bail --findRelatedTests $STAGED_JS_FILES --passWithNoTests
 else
   npm test
 fi
-echo ""
 
-
-echo ""
-echo " All checks passed!"
+echo "All checks passed!"

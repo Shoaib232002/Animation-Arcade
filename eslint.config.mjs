@@ -3,11 +3,15 @@ import globals from "globals";
 
 export default [
   js.configs.recommended,
-
   {
     files: ["**/*.{js,mjs,cjs}"],
     languageOptions: {
-      globals: globals.browser
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      }
     },
     rules: {
       "no-var": "error",
@@ -23,24 +27,37 @@ export default [
       "complexity": ["warn", 10]
     }
   },
-
   {
-    files: ["**/__tests__/**/*.{js,mjs}", "**/*.test.{js,mjs}"],
+    files: ["**/__tests__/**/*.{js,mjs}", "**/*.test.{js,mjs}", "tests/**/*.{js,mjs}", "**/*.spec.{js,mjs}"],
     languageOptions: {
       globals: {
         ...globals.jest,
-        ...globals.browser
+        ...globals.browser,
+        ...globals.node
       }
+    },
+    rules: {
+      "no-console": "off"
     }
   },
-
   {
-    files: ["**/*.config.{js,mjs}", "**/scripts/**/*.{js,mjs}"],
+    files: ["server.js", "watch-tests.mjs", "**/*.config.{js,mjs}", "**/scripts/**/*.{js,mjs}"],
     languageOptions: {
       globals: globals.node
     },
     rules: {
       "no-console": "off"
     }
+  },
+  {
+    ignores: [
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      "coverage/**",
+      "test-results/**",
+      "playwright-report/**",
+      ".cache/**"
+    ]
   }
 ];
