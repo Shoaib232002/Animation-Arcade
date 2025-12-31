@@ -16,6 +16,7 @@
     "test:visual:debug": "playwright test --debug",
     "test:visual:update": "playwright test --update-snapshots",
     "test:visual:headed": "playwright test --headed",
+    "test:visual:watch": "node scripts/test-watcher.js",
     "test:all": "npm run test && npm run test:visual",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -25,7 +26,7 @@
     "format": "npm run lint:fix && npm run lint:css:fix",
     "validate": "npm run lint:all && npm run test:all",
     "prepare": "husky",
-    "postinstall": "npx playwright install chromium && echo '\nSetup complete!\n\nAvailable commands:\n   npm start           - Start the server\n   npm run dev         - Start server with auto-reload\n   npm run dev:test    - Auto-run tests on file changes\n   npm run test:watch  - Jest watch mode\n   npm test            - Run unit tests\n   npm run test:visual - Run visual tests (Playwright)\n   npm run test:all    - Run all tests\n   npm run validate    - Run linting + all tests\n\nVisual Testing:\n   npm run test:visual:ui     - Interactive UI mode\n   npm run test:visual:debug  - Debug mode\n   npm run test:visual:update - Update snapshots\n'"
+    "postinstall": "npx playwright install chromium && echo '\nSetup complete!\n\nAvailable commands:\n   npm start                - Start the server\n   npm run dev              - Start server with auto-reload\n   npm run dev:test         - Auto-run tests on file changes\n   npm run test:watch       - Jest watch mode\n   npm test                 - Run unit tests\n   npm run test:visual      - Run visual tests (Playwright)\n   npm run test:visual:watch - Auto-run visual tests on file changes\n   npm run test:all         - Run all tests\n   npm run validate         - Run linting + all tests\n\nVisual Testing:\n   npm run test:visual:ui     - Interactive UI mode\n   npm run test:visual:debug  - Debug mode\n   npm run test:visual:update - Update snapshots\n   npm run test:visual:watch  - Watch mode for visual tests\n'"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
     "@eslint/js": "^9.39.2",
     "@playwright/test": "^1.48.0",
     "babel-jest": "^30.2.0",
+    "chokidar": "^3.6.0",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
     "husky": "^9.1.7",

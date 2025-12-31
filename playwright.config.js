@@ -13,12 +13,27 @@ export default defineConfig({
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
+    viewport: { width: 1280, height: 720 },
+    deviceScaleFactor: 1,
+    hasTouch: false,
+    isMobile: false,
+  },
+
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixels: 100,
+      animations: "disabled",
+      timeout: 10000,
+    },
   },
 
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { 
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1280, height: 720 },
+      },
     },
   ],
 
