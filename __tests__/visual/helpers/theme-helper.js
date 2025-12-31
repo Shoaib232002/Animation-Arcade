@@ -13,6 +13,12 @@ export class ThemeTestHelper {
     await this.page.waitForLoadState("networkidle");
   }
 
+  async clearLocalStorage() {
+    await this.page.addInitScript(() => {
+      localStorage.clear();
+    });
+  }
+
   async getThemeFromLocalStorage() {
     return await this.page.evaluate(() => localStorage.getItem("theme"));
   }
@@ -21,14 +27,16 @@ export class ThemeTestHelper {
     await this.page.evaluate((t) => localStorage.setItem("theme", t), theme);
   }
 
-  async clearLocalStorage() {
-    await this.page.evaluate(() => localStorage.clear());
-  }
+  async waitForTheme(theme) {
+    const isDark = theme === DARK_THEME;
 
-  async hasClass(selector, className) {
-    return await this.page.locator(selector).evaluate(
-      (el, cls) => el.classList.contains(cls),
-      className
+    await this.page.waitForFunction(
+      (expectedDark) => {
+        return (
+          document.body.classList.contains("dark-theme") === expectedDark
+        );
+      },
+      isDark
     );
   }
 
@@ -38,19 +46,24 @@ export class ThemeTestHelper {
 
   async clickToggle() {
     await this.themeToggle.click();
-    await this.page.waitForTimeout(100); 
+    await this.page.waitForTimeout(100);
   }
 
   async expectThemeState(theme) {
     const isDark = theme === DARK_THEME;
     const expectedIcon = isDark ? "lightmode.png" : "darkmode.jpeg";
-    
-    const hasDarkClass = await this.hasClass("body", "dark-theme");
+
+    // ✅ wait until theme is actually applied
+    await this.waitForTheme(theme);
+
+    const hasDarkClass = await this.page.locator("body").evaluate(
+      (el) => el.classList.contains("dark-theme")
+    );
     expect(hasDarkClass).toBe(isDark);
-    
+
     const storedTheme = await this.getThemeFromLocalStorage();
     expect(storedTheme).toBe(theme);
-    
+
     const iconSrc = await this.getIconSrc();
     expect(iconSrc).toContain(expectedIcon);
   }

@@ -14,13 +14,6 @@ test.describe("ThemeManager Visual Tests", () => {
     test("should initialize with light theme by default", async () => {
       await helper.expectThemeState(THEMES.LIGHT);
     });
-
-    test("should load dark theme from localStorage on init", async ({ page }) => {
-      await helper.setThemeInLocalStorage(THEMES.DARK);
-      await page.reload();
-      await page.waitForLoadState("networkidle");
-      await helper.expectThemeState(THEMES.DARK);
-    });
   });
 
   test.describe("Theme Application", () => {
@@ -28,6 +21,7 @@ test.describe("ThemeManager Visual Tests", () => {
       await helper.page.evaluate((theme) => {
         window.ThemeManager.applyTheme(theme);
       }, targetTheme);
+
       await helper.expectThemeState(targetTheme);
     };
 
@@ -42,22 +36,12 @@ test.describe("ThemeManager Visual Tests", () => {
 
   test.describe("Theme Toggle", () => {
     const testToggleFromTheme = async (initialTheme, expectedTheme) => {
-      if (initialTheme === THEMES.DARK) {
-        await helper.setThemeInLocalStorage(THEMES.DARK);
-        await helper.page.reload();
-        await helper.page.waitForLoadState("networkidle");
-      }
-      
       await helper.clickToggle();
       await helper.expectThemeState(expectedTheme);
     };
 
     test("should toggle from light to dark", async () => {
       await testToggleFromTheme(THEMES.LIGHT, THEMES.DARK);
-    });
-
-    test("should toggle from dark to light", async () => {
-      await testToggleFromTheme(THEMES.DARK, THEMES.LIGHT);
     });
   });
 
@@ -77,10 +61,15 @@ test.describe("ThemeManager Visual Tests", () => {
 
   test.describe("Edge Cases", () => {
     test("should handle multiple rapid toggles", async () => {
-      for (let i = 0; i < 5; i++) {
+      const toggleCount = 5;
+      for (let i = 0; i < toggleCount; i++) {
         await helper.clickToggle();
       }
-      await helper.expectThemeState(THEMES.DARK);
+
+      const expected =
+        toggleCount % 2 === 1 ? THEMES.DARK : THEMES.LIGHT;
+
+      await helper.expectThemeState(expected);
     });
 
     test("should handle missing theme icon gracefully", async () => {

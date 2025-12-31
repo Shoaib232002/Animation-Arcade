@@ -1,58 +1,80 @@
-import { THEME_KEY, DARK_THEME, LIGHT_THEME, THEME_ICONS } from "./constants.js";
+import { THEME_KEY, DARK_THEME, LIGHT_THEME } from "./constants.js";
 
-const ThemeManager = {
+class ThemeManagerClass {
+  constructor() {
+    this.toggleButton = null;
+    this.icon = null;
+    this.currentTheme = LIGHT_THEME;
+  }
+
+  bootstrap() {
+    const apply = () => {
+      if (!document.body) {
+        requestAnimationFrame(apply);
+        return;
+      }
+
+      const storedTheme = localStorage.getItem(THEME_KEY);
+
+      if (storedTheme === DARK_THEME || storedTheme === LIGHT_THEME) {
+        this.applyTheme(storedTheme);
+      } else {
+        this.applyTheme(LIGHT_THEME);
+      }
+    };
+
+    apply();
+  }
+
   init() {
-    this.themeIcon = document.querySelector("#themeToggle img");
-    this.loadTheme();
-    this.attachEventListeners();
-  },
+    this.toggleButton = document.getElementById("themeToggle");
+    this.icon = this.toggleButton?.querySelector("img");
 
-  loadTheme() {
-    const savedTheme = localStorage.getItem(THEME_KEY);
-    const theme = savedTheme || LIGHT_THEME;
-    this.applyTheme(theme);
-  },
+    this.toggleButton?.addEventListener("click", () => {
+      this.toggleTheme();
+    });
+  }
 
   applyTheme(theme) {
-    if (theme === DARK_THEME) {
-      document.body.classList.add("dark-theme");
-      this.updateIcon(DARK_THEME);
-    } else {
-      document.body.classList.remove("dark-theme");
-      this.updateIcon(LIGHT_THEME);
-    }
+    this.currentTheme = theme;
+
+    document.body.classList.toggle(
+      "dark-theme",
+      theme === DARK_THEME
+    );
+
     localStorage.setItem(THEME_KEY, theme);
-  },
+    this.updateIcon(theme);
+  }
 
   toggleTheme() {
-    const isDark = document.body.classList.contains("dark-theme");
-    const newTheme = isDark ? LIGHT_THEME : DARK_THEME;
-    this.applyTheme(newTheme);
-  },
+    const nextTheme =
+      this.currentTheme === DARK_THEME
+        ? LIGHT_THEME
+        : DARK_THEME;
 
-  getCurrentTheme() {
-    return document.body.classList.contains("dark-theme")
-      ? DARK_THEME
-      : LIGHT_THEME;
-  },
+    this.applyTheme(nextTheme);
+  }
 
   updateIcon(theme) {
-    if (!this.themeIcon) return;
-    this.themeIcon.src = THEME_ICONS[theme];
-  },
+    if (!this.icon) return;
 
-  attachEventListeners() {
-    const themeToggle = document.getElementById("themeToggle");
-    if (themeToggle) {
-      themeToggle.addEventListener("click", () => this.toggleTheme());
-    }
+    this.icon.src =
+      theme === DARK_THEME
+        ? "assets/lightmode.png"
+        : "assets/darkmode.jpeg";
   }
-};
 
-if (typeof document !== "undefined") {
-  document.addEventListener("DOMContentLoaded", () => {
-    ThemeManager.init();
-  });
+  getCurrentTheme() {
+    return this.currentTheme;
+  }
 }
 
-export { ThemeManager };
+export const ThemeManager = new ThemeManagerClass();
+window.ThemeManager = ThemeManager;
+
+ThemeManager.bootstrap();
+
+document.addEventListener("DOMContentLoaded", () => {
+  ThemeManager.init();
+});
