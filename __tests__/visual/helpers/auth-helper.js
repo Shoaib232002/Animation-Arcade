@@ -3,6 +3,9 @@ import { expect } from "@playwright/test";
 export class AuthTestHelper {
   constructor(page) {
     this.page = page;
+    this.defaultTimeout = 10000;
+    this.clickDelay = 200;
+    
     this.loginButton = page.locator("#loginBtn");
     this.overlay = page.locator("#loginOverlay");
     this.modal = page.locator(".modal");
@@ -32,34 +35,33 @@ export class AuthTestHelper {
     });
   }
 
+  async clickElement(locator) {
+    await locator.click({ force: true });
+    await this.page.waitForTimeout(this.clickDelay);
+  }
+
   async clickLoginButton() {
-    await this.loginButton.click({ force: true });
-    await this.page.waitForTimeout(200);
+    await this.clickElement(this.loginButton);
   }
 
   async clickCloseButton() {
-    await this.closeButton.click();
-    await this.page.waitForTimeout(200);
+    await this.clickElement(this.closeButton);
   }
 
   async clickLoginTab() {
-    await this.loginTab.click();
-    await this.page.waitForTimeout(200);
+    await this.clickElement(this.loginTab);
   }
 
   async clickSignupTab() {
-    await this.signupTab.click();
-    await this.page.waitForTimeout(200);
+    await this.clickElement(this.signupTab);
   }
 
   async clickSubmit() {
-    await this.submitButton.click();
-    await this.page.waitForTimeout(200);
+    await this.clickElement(this.submitButton);
   }
 
   async clickStartGameButton() {
-    await this.startGameButton.click();
-    await this.page.waitForTimeout(200);
+    await this.clickElement(this.startGameButton);
   }
 
   async fillLoginForm({ email, password }) {
@@ -101,21 +103,28 @@ export class AuthTestHelper {
     await expect(this.footerText).toHaveText(text);
   }
 
+  async expectMessage(message) {
+    await expect(this.messageDiv).toHaveText(message, { 
+      timeout: this.defaultTimeout 
+    });
+  }
+
   async expectErrorMessage(message) {
-    await expect(this.messageDiv).toHaveText(message, { timeout: 10000 });
+    await this.expectMessage(message);
   }
 
   async expectSuccessMessage(message) {
-    await expect(this.messageDiv).toHaveText(message, { timeout: 10000 });
+    await this.expectMessage(message);
   }
 
   async expectInfoMessage(message) {
-    await expect(this.messageDiv).toHaveText(message, { timeout: 10000 });
+    await this.expectMessage(message);
   }
 
   async expectLoggedIn(name) {
-    await expect(this.loginButton).toHaveText("Logout", { timeout: 10000 });
-    await expect(this.welcomeMessage).toBeVisible({ timeout: 10000 });
+    const timeoutConfig = { timeout: this.defaultTimeout };
+    await expect(this.loginButton).toHaveText("Logout", timeoutConfig);
+    await expect(this.welcomeMessage).toBeVisible(timeoutConfig);
     await expect(this.welcomeMessage).toContainText(`Welcome back, ${name}!`);
   }
 
@@ -129,13 +138,8 @@ export class AuthTestHelper {
   }
 
   async expectUserInLocalStorage(name, email) {
-    const authData = await this.page.evaluate(() => {
-      return localStorage.getItem("animation_arcade_auth");
-    });
-
-    expect(authData).toBeTruthy();
-
-    const user = JSON.parse(authData);
+    const user = await this.getAuthFromLocalStorage();
+    expect(user).toBeTruthy();
     expect(user.name).toBe(name);
     expect(user.email).toBe(email);
     expect(user.id).toBeTruthy();
@@ -145,7 +149,6 @@ export class AuthTestHelper {
     const authData = await this.page.evaluate(() => {
       return localStorage.getItem("animation_arcade_auth");
     });
-
     return authData ? JSON.parse(authData) : null;
   }
 
@@ -157,7 +160,6 @@ export class AuthTestHelper {
     this.page.once("dialog", async dialog => {
       await dialog.accept();
     });
-
     await this.loginButton.click();
     await this.page.waitForTimeout(2100);
   }
@@ -165,14 +167,7 @@ export class AuthTestHelper {
   async signupUser({ name, email, password }) {
     await this.clickLoginButton();
     await this.clickSignupTab();
-
-    await this.fillSignupForm({
-      name,
-      email,
-      password,
-      confirmPassword: password
-    });
-
+    await this.fillSignupForm({ name, email, password, confirmPassword: password });
     await this.clickSubmit();
     await this.page.waitForTimeout(1200);
   }
