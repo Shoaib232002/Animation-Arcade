@@ -102,7 +102,7 @@ class AuthManagerClass {
   }
 
   updateModalContent(tab) {
-    const modalTitle = document.getElementById("modalTitle");
+    const modalTitle = document.getElementById("modal-title");
     const submitBtn = document.getElementById("submitBtn");
     const footerText = document.getElementById("authFooterText");
     

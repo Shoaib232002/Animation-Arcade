@@ -7,7 +7,7 @@ export class AuthTestHelper {
     this.overlay = page.locator("#loginOverlay");
     this.modal = page.locator(".modal");
     this.closeButton = page.locator("#closeModal");
-    this.modalTitle = page.locator("#modalTitle");
+    this.modalTitle = page.locator("#modal-title");
     this.loginTab = page.locator("[data-tab=\"login\"]");
     this.signupTab = page.locator("[data-tab=\"signup\"]");
     this.nameField = page.locator("#name");
