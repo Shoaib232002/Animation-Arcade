@@ -22,7 +22,6 @@
                         <img src="./assets/darkmode.jpeg" alt="Mode toggle">
                     </span>
                 </button>
-
             </div>
         </div>
     </nav>
@@ -112,29 +111,35 @@
             </div>
 
             <form id="authForm" class="auth-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                <div class="form-group" id="nameGroup" style="display: none;">
+                    <input type="text" id="name" name="name" placeholder="Name">
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <input type="email" id="email" name="email" placeholder="Email">
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder="Password">
                 </div>
 
                 <div class="form-group" id="confirmPasswordGroup" style="display: none;">
-                    <label for="confirmPassword">Confirm Password</label>
                     <input type="password" id="confirmPassword" name="confirmPassword"
-                        placeholder="Confirm your password">
+                        placeholder="Confirm Password">
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">Login</button>
             </form>
 
             <div id="authMessage" class="auth-message"></div>
+            
+            <div class="auth-footer">
+                <span id="authFooterText">New user? Sign up.</span>
+            </div>
         </div>
     </div>
-   <script type="module" src="./js/landing.js"></script>
+    
+    <script type="module" src="./js/landing.js"></script>
 </body>
 
 </html>
