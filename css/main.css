@@ -238,30 +238,32 @@ main,
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
+  animation: fade-in 0.3s ease;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes slideIn {
+@keyframes slide-in {
   from { 
     opacity: 0;
     transform: translateX(100%);
   }
+
   to { 
     opacity: 1;
     transform: translateX(0);
   }
 }
 
-@keyframes modalSlide {
+@keyframes modal-slide {
   from {
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -278,7 +280,7 @@ main,
   border-radius: 1.5rem;
   box-shadow: 0 20px 60px rgb(0 0 0 / 30%);
   position: relative;
-  animation: modalSlide 0.3s ease;
+  animation: modal-slide 0.3s ease;
 }
 
 .close-btn {
@@ -304,7 +306,7 @@ main,
   background-color: var(--surface-color);
 }
 
-#modalTitle {
+#modal-title {
   text-align: center;
   font-size: 1.75rem;
   margin-bottom: 1.25rem;
@@ -449,7 +451,7 @@ input:focus {
     padding: 1.5rem 1.25rem;
   }
 
-  #modalTitle {
+  #modal-title {
     font-size: 1.5rem;
   }
 
