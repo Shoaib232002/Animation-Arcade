@@ -1,4 +1,5 @@
 import { THEME_KEY, DARK_THEME, LIGHT_THEME } from "./constants.js";
+import "./auth.js";
 
 class ThemeManagerClass {
   constructor() {
