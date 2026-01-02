@@ -2,13 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>UI Replica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animation Arcade - Game</title>
+  <link rel="icon" href="./assets/Icon.png">
   <link rel="stylesheet" href="./css/game.css">
 </head>
 <body>
   <header class="top-bar">
     <div class="logo">Animation Arcade</div>
-    <button class="home-btn submit-btn">Home</button>
+    <div class="header-actions">
+      <button class="home-btn submit-btn">Home</button>
+      <button id="themeToggle" class="theme-toggle">
+        <span class="theme-icon">
+          <img src="./assets/darkmode.jpeg" alt="Mode toggle">
+        </span>
+      </button>
+    </div>
   </header>
   <main class="main-layout">
     <section class="left-section">
@@ -41,5 +50,6 @@
       </div>
     </section>
   </main>
+  <script type="module" src="./js/landing.js"></script>
 </body>
 </html>
