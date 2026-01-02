@@ -14,50 +14,77 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
-
+      
       - name: Install dependencies
         run: npm ci
-
+      
       - name: Run ESLint
         run: npx eslint . --format stylish
         continue-on-error: false
-
+      
       - name: Run Stylelint
         run: npx stylelint "css/**/*.css" --allow-empty-input
         continue-on-error: false
-
+      
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
-
+      
       - name: Run Playwright Visual Tests
         run: npm run test:visual
-
-      - name: Upload Playwright Report
-        if: failure()
+        continue-on-error: true
+      
+      - name: Upload Playwright HTML Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.run_id }}
           path: playwright-report/
           retention-days: 30
-
+          if-no-files-found: ignore
+      
       - name: Upload Test Results
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-results-${{ github.run_id }}
           path: test-results/
           retention-days: 30
+          if-no-files-found: ignore
       
       - name: Upload Visual Diff Screenshots
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-diffs
-          path: test-results/**/*-diff.png
+          name: visual-diffs-${{ github.run_id }}
+          path: |
+            test-results/**/*-diff.png
+            test-results/**/*-actual.png
+            test-results/**/*-expected.png
           retention-days: 30
+          if-no-files-found: ignore
+      
+      - name: Comment PR with Results
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runId = context.runId;
+            const message = `## Visual Tests Failed
+            
+            Visual regression tests detected differences. Please review:
+            - [Test Results](https://github.com/${{ github.repository }}/actions/runs/${runId})
+            - Download artifacts to see visual diffs
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
