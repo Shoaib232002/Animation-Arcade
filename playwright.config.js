@@ -2,13 +2,15 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./__tests__/visual",
+  outputDir: "test-results",
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: 1,
   reporter: [
-    ["html", { open: "never" }],
+    ["html", { outputFolder: "playwright-report", open: "never" }],
     ["list"],
+    ["json", { outputFile: "test-results/results.json" }],
   ],
   timeout: 30000,
   use: {
