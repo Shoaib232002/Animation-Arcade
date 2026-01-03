@@ -25,3 +25,4 @@ playwright/.auth/
 *.trace
 **/*-actual.png
 **/*-diff.png
+**/*-snapshots/

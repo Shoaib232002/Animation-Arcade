@@ -56,15 +56,14 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-      - name: Upload Visual Diff Screenshots
+      - name: Upload Visual Screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: visual-diffs-${{ github.run_id }}
+          name: visual-screenshots-${{ github.run_id }}
           path: |
-            test-results/**/*-diff.png
-            test-results/**/*-actual.png
-            test-results/**/*-expected.png
+            __tests__/**/*-snapshots/
+            test-results/
           retention-days: 30
           if-no-files-found: warn
 
@@ -74,51 +73,51 @@ jobs:
         with:
           script: |
             const fs = require('fs');
+            const path = require('path');
             const testResultsExist = fs.existsSync('test-results');
             const reportExists = fs.existsSync('playwright-report');
-            
             let hasDiffs = false;
+            let hasSnapshots = false;
             if (testResultsExist) {
               const files = fs.readdirSync('test-results', { recursive: true });
               hasDiffs = files.some(file => file.endsWith('-diff.png'));
             }
-            
+            try {
+              const visualPath = path.join('__tests__', 'visual');
+              if (fs.existsSync(visualPath)) {
+                const files = fs.readdirSync(visualPath, { recursive: true });
+                hasSnapshots = files.some(file => file.endsWith('.png'));
+              }
+            } catch (e) {}
             const runId = context.runId;
             const runUrl = `https://github.com/${{ github.repository }}/actions/runs/${runId}`;
-            
             let message = `## Visual Test Results\n\n`;
-            
             if (hasDiffs) {
               message += `Visual differences detected.\n\n`;
               message += `### Review Results:\n`;
               message += `- [View Full Test Run](${runUrl})\n`;
-              message += `- Download the \`visual-diffs-${{ github.run_id }}\` artifact to see:\n`;
-              message += `  - \`*-actual.png\` - Current screenshots\n`;
-              message += `  - \`*-expected.png\` - Baseline screenshots\n`;
-              message += `  - \`*-diff.png\` - Visual differences highlighted\n\n`;
+              message += `- Download \`visual-screenshots-${{ github.run_id }}\` artifact\n\n`;
               message += `### Next Steps:\n`;
               message += `1. Download and review the visual diffs\n`;
-              message += `2. If changes are intentional, update the baseline screenshots\n`;
+              message += `2. If changes are intentional, update baseline by running tests locally\n`;
               message += `3. If changes are unintentional, fix the UI issues\n`;
-            } else if (testResultsExist || reportExists) {
-              message += `All visual tests passed.\n\n`;
+            } else if (hasSnapshots || testResultsExist || reportExists) {
+              message += `Visual tests completed.\n\n`;
               message += `- [View Test Run](${runUrl})\n`;
+              message += `- [Download Screenshots](${runUrl})\n`;
             } else {
               message += `Visual tests completed.\n\n`;
               message += `- [View Test Run](${runUrl})\n`;
             }
-            
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-            
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('Visual Test Results')
             );
-            
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
