@@ -11,7 +11,7 @@
   <header class="top-bar">
     <div class="logo">Animation Arcade</div>
     <div class="header-actions">
-      <button class="home-btn submit-btn">Home</button>
+      <button class="home-btn">Home</button>
       <button id="themeToggle" class="theme-toggle">
         <span class="theme-icon">
           <img src="./assets/darkmode.jpeg" alt="Mode toggle">
@@ -22,34 +22,54 @@
   <main class="main-layout">
     <section class="left-section">
       <div class="editor-container">
-        <div class="editor-box">
-          <div class="editor">
-            <div class="line-numbers">
-              <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
-              <span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
-              <span>16</span><span>17</span><span>18</span>
-            </div>
-            <textarea class="editor-input"></textarea>
+        <div class="description-box">
+          <p class="game-description">Description:</p>
+        </div>
+        
+        <div class="code-editor">
+          <div class="line-numbers" id="lineNumbers">
+            <span>1</span>
           </div>
-          <div class="editor-footer">
-            </span><span class="level-text algn-level">Level: </span>
-            <button class="submit-btn">Submit</button>
-          </div>
+          <pre class="code-content" id="codeContent">
+            <div class="code-line"><span class="code-line-text"></span></div>
+          </pre>
+        </div>
+        
+        <div class="editor-footer">
+          <button class="submit-btn">Next</button>
         </div>
       </div>
       <div class="hints">
         <h3>Hints:</h3>
+        <ul id="hintsList">
+          <li>Show Solution</li>
+        </ul>
       </div>
     </section>
     <section class="right-section">
       <div class="levels-bar">   
-        <span ><img class="arrows" src="./assets/left-arrow.svg" alt=""></span><span class="level-text">Levels</span><span></span><span><img class="arrows" src="./assets/right-arrow.svg" alt=""></span>
+        <span><img class="arrows" id="prevArrow" src="./assets/left-arrow.svg" alt="Previous"></span>
+        <span class="level-text" id="levelTextTrigger" style="cursor: pointer;">Level <span id="currentLevel">1</span> of <span id="totalLevels">10</span></span>
+        <span><img class="arrows" id="nextArrow" src="./assets/right-arrow.svg" alt="Next"></span>
       </div>
-      <div class="output-box">        
+      <div class="output-box">
+        
       </div>
     </section>
   </main>
+  <div class="levels-overlay" id="levelsOverlay">
+    <div class="levels-modal">
+      <div class="levels-modal-header">
+        <h2>Select Level</h2>
+        <button class="close-modal" id="closeModal">&times;</button>
+      </div>
+      <div class="levels-grid" id="levelsGrid">
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/animation.js"></script>
+  <script type="module" src="./js/levels.js"></script>
   <script type="module" src="./js/landing.js"></script>
 </body>
 </html>
