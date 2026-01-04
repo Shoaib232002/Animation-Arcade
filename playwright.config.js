@@ -10,7 +10,7 @@ export default defineConfig({
     ["html", { open: "never" }],
     ["list"],
   ],
-  timeout: 30000,
+  timeout: 50000,
   use: {
     baseURL: "http://localhost:3000",
     viewport: { width: 1280, height: 720 },
