@@ -1,110 +1,184 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Game UI Visual Tests", () => {
+test.describe("Game UI Tests", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/game.html");
-    await page.waitForLoadState("domcontentloaded");
+    await page.goto("/game.html", { waitUntil: "networkidle" });
   });
 
-  test("should render header with logo and buttons", async ({ page }) => {
-    const header = page.locator(".top-bar");
-    await expect(header).toBeVisible();
+  const openLevelsOverlay = async (page) => {
+    await page.locator("#levelTextTrigger").click();
+  };
 
-    const logo = page.locator(".logo");
-    await expect(logo).toContainText("Animation Arcade");
+  const verifyElementVisible = async (page, selector, text = null) => {
+    const locator = page.locator(selector);
+    await expect(locator).toBeVisible();
+    if (text) {
+      await expect(locator).toContainText(text);
+    }
+  };
 
-    const homeBtn = page.locator(".home-btn");
-    await expect(homeBtn).toBeVisible();
-
-    const themeToggle = page.locator("#themeToggle");
-    await expect(themeToggle).toBeVisible();
+  test("renders header with logo and actions", async ({ page }) => {
+    await verifyElementVisible(page, ".top-bar");
+    await verifyElementVisible(page, ".logo", "Animation Arcade");
+    await verifyElementVisible(page, ".home-btn", "Home");
+    await verifyElementVisible(page, "#themeToggle");
   });
 
-  test("should render main layout with left and right sections", async ({
+  test("renders main layout with left and right sections", async ({ page }) => {
+    await verifyElementVisible(page, ".main-layout");
+    await verifyElementVisible(page, ".left-section");
+    await verifyElementVisible(page, ".right-section");
+  });
+
+  test("renders editor container with description and code editor", async ({
     page,
   }) => {
-    const mainLayout = page.locator(".main-layout");
-    await expect(mainLayout).toBeVisible();
-
-    const leftSection = page.locator(".left-section");
-    await expect(leftSection).toBeVisible();
-
-    const rightSection = page.locator(".right-section");
-    await expect(rightSection).toBeVisible();
+    await verifyElementVisible(page, ".editor-container");
+    await verifyElementVisible(page, ".description-box");
+    await verifyElementVisible(page, ".code-editor");
+    await verifyElementVisible(page, "#lineNumbers");
+    await verifyElementVisible(page, "#codeContent");
   });
 
-  test("should render editor container with input", async ({ page }) => {
-    const editorContainer = page.locator(".editor-container");
-    await expect(editorContainer).toBeVisible();
-
-    const editor = page.locator(".editor");
-    await expect(editor).toBeVisible();
-
-    const lineNumbers = page.locator(".line-numbers");
-    await expect(lineNumbers).toBeVisible();
-
-    const textarea = page.locator(".editor-input");
-    await expect(textarea).toBeVisible();
-  });
-
-  test("should render editor footer with level and submit button", async ({
+  test("renders editor footer with Next button and level display", async ({
     page,
   }) => {
-    const footer = page.locator(".editor-footer");
-    await expect(footer).toBeVisible();
-
-    const levelText = page.locator(".editor-footer .level-text");
-    await expect(levelText).toContainText("Level:");
-
-    const submitBtn = page.locator(".editor-footer .submit-btn");
-    await expect(submitBtn).toContainText("Submit");
+    await verifyElementVisible(page, ".editor-footer");
+    await verifyElementVisible(page, ".editor-footer .submit-btn", "Next");
+    await expect(page.locator("#currentLevel")).toHaveText(/\d+/);
   });
 
-  test("should render hints section", async ({ page }) => {
-    const hints = page.locator(".hints");
-    await expect(hints).toBeVisible();
-
-    const hintsTitle = page.locator(".hints h3");
-    await expect(hintsTitle).toContainText("Hints:");
+  test("renders hints section with title", async ({ page }) => {
+    await verifyElementVisible(page, ".hints");
+    await verifyElementVisible(page, ".hints h3", "Hints:");
+    await verifyElementVisible(page, "#hintsList");
   });
 
-  test("should render levels bar with navigation arrows", async ({ page }) => {
-    const levelsBar = page.locator(".levels-bar");
-    await expect(levelsBar).toBeVisible();
-
-    const levelsText = page.locator(".levels-bar .level-text");
-    await expect(levelsText).toContainText("Levels");
-
-    const arrows = page.locator(".arrows");
-    expect(await arrows.count()).toBe(2); 
+  test("renders levels bar with arrow buttons and level trigger", async ({
+    page,
+  }) => {
+    await verifyElementVisible(page, ".levels-bar");
+    await expect(page.locator(".levels-bar .arrows")).toHaveCount(2);
+    await verifyElementVisible(page, "#levelTextTrigger", "Level");
+    await expect(page.locator("#currentLevel")).toHaveText("1");
+    await expect(page.locator("#totalLevels")).toHaveText("10");
   });
 
-  test("should render output box for animation preview", async ({ page }) => {
-    const outputBox = page.locator(".output-box");
-    await expect(outputBox).toBeVisible();
+  test("renders output box for animation preview", async ({ page }) => {
+    await verifyElementVisible(page, ".output-box");
   });
 
-  test("should toggle between light and dark theme", async ({ page }) => {
+  test("opens levels overlay when level text is clicked", async ({ page }) => {
+    await openLevelsOverlay(page);
+    await expect(page.locator("#levelsOverlay")).toHaveClass(/active/);
+    await verifyElementVisible(page, ".levels-modal");
+    await verifyElementVisible(page, ".levels-modal-header h2", "Select Level");
+  });
+
+  test("closes levels overlay on close button click", async ({ page }) => {
+    await openLevelsOverlay(page);
+    await expect(page.locator("#levelsOverlay")).toHaveClass(/active/);
+    await page.locator("#closeModal").click();
+    await expect(page.locator("#levelsOverlay")).not.toHaveClass(/active/);
+  });
+
+  test("closes levels overlay on background click", async ({ page }) => {
+    await openLevelsOverlay(page);
+    const overlay = page.locator("#levelsOverlay");
+    await expect(overlay).toHaveClass(/active/);
+    await overlay.click({ position: { x: 10, y: 10 } });
+    await page.waitForTimeout(100);
+    await expect(overlay).not.toHaveClass(/active/);
+  });
+
+  test("closes levels overlay on ESC key press", async ({ page }) => {
+    await openLevelsOverlay(page);
+    await expect(page.locator("#levelsOverlay")).toHaveClass(/active/);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(100);
+    await expect(page.locator("#levelsOverlay")).not.toHaveClass(/active/);
+  });
+
+  test("displays correct number of level circles (10 levels)", async ({
+    page,
+  }) => {
+    await openLevelsOverlay(page);
+    const levelCircles = page.locator(".level-circle");
+    await expect(levelCircles).toHaveCount(10);
+
+    for (let i = 1; i <= 10; i++) {
+      await expect(levelCircles.nth(i - 1)).toContainText(String(i));
+    }
+  });
+
+  test("highlights current level circle", async ({ page }) => {
+    await openLevelsOverlay(page);
+    const currentCircle = page.locator(".level-circle.current");
+    await expect(currentCircle).toBeVisible();
+    await expect(currentCircle).toContainText("1");
+
+    await page.locator(".level-circle").nth(4).click();
+    await openLevelsOverlay(page);
+    await expect(page.locator(".level-circle.current")).toContainText("5");
+  });
+
+  test("navigates to new level when level circle is clicked", async ({
+    page,
+  }) => {
+    await openLevelsOverlay(page);
+    await page.locator(".level-circle").nth(2).click();
+    await expect(page.locator("#currentLevel")).toHaveText("3");
+    await expect(page.locator("#levelsOverlay")).not.toHaveClass(/active/);
+  });
+
+  test("level circles have pointer cursor", async ({ page }) => {
+    await openLevelsOverlay(page);
+    const firstCircle = page.locator(".level-circle").first();
+    const cursor = await firstCircle.evaluate((el) =>
+      window.getComputedStyle(el).cursor
+    );
+    expect(cursor).toBe("pointer");
+  });
+
+  test("toggles between light and dark theme", async ({ page }) => {
     const body = page.locator("body");
-    let hasDarkClass = await body.evaluate((el) =>
-      el.classList.contains("dark-theme")
-    );
-    expect(hasDarkClass).toBe(false);
-    const themeToggle = page.locator("#themeToggle");
-    await themeToggle.click();
-    await page.waitForTimeout(300);
+    await expect(body).not.toHaveClass(/dark-theme/);
 
-    hasDarkClass = await body.evaluate((el) =>
-      el.classList.contains("dark-theme")
-    );
-    expect(hasDarkClass).toBe(true);
+    await page.locator("#themeToggle").click();
+    await page.waitForTimeout(350);
+    await expect(body).toHaveClass(/dark-theme/);
 
-    await themeToggle.click();
-    await page.waitForTimeout(300);
+    await page.locator("#themeToggle").click();
+    await page.waitForTimeout(350);
+    await expect(body).not.toHaveClass(/dark-theme/);
+  });
 
-    hasDarkClass = await body.evaluate((el) =>
-      el.classList.contains("dark-theme")
+  test("level circles are interactive and scale on hover", async ({
+    page,
+  }) => {
+    await openLevelsOverlay(page);
+    const firstCircle = page.locator(".level-circle").first();
+
+    const initialTransform = await firstCircle.evaluate((el) =>
+      window.getComputedStyle(el).transform
     );
-    expect(hasDarkClass).toBe(false);
+
+    await firstCircle.hover();
+    await page.waitForTimeout(100);
+
+    const hoverTransform = await firstCircle.evaluate((el) =>
+      window.getComputedStyle(el).transform
+    );
+
+    expect(initialTransform).not.toBe(hoverTransform);
+  });
+
+  test("overlay modal has proper structure", async ({ page }) => {
+    await openLevelsOverlay(page);
+    await verifyElementVisible(page, ".levels-modal");
+    await verifyElementVisible(page, ".levels-modal-header");
+    await verifyElementVisible(page, ".levels-modal-header h2", "Select Level");
+    await verifyElementVisible(page, ".close-modal", "×");
+    await verifyElementVisible(page, ".levels-grid");
   });
 });
