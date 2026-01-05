@@ -67,7 +67,7 @@ test.describe("Game UI Tests", () => {
   test("renders levels bar", async ({ page }) => {
     await expectVisible(page, ".levels-bar");
     await expect(page.locator(".levels-bar .arrows")).toHaveCount(2);
-    await expectVisible(page, "#levelTextTrigger", "Level");
+    await expectVisible(page, ".level-text", "Level");
     await expect(page.locator("#currentLevel")).toHaveText("1");
     await expect(page.locator("#totalLevels")).toHaveText(String(TOTAL_LEVELS));
   });
