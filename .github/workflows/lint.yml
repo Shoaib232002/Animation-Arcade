@@ -130,86 +130,6 @@ jobs:
           retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
           if-no-files-found: warn
 
-      - name: Upload Visual Screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: visual-screenshots-${{ github.run_id }}
-          path: __tests__/**/*-snapshots/
-          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
-          if-no-files-found: warn
-
-      - name: Comment PR with Results
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            
-            const testResultsExist = fs.existsSync('test-results');
-            const reportExists = fs.existsSync('playwright-report');
-            let hasDiffs = false;
-            let hasSnapshots = false;
-            
-            if (testResultsExist) {
-              const files = fs.readdirSync('test-results', { recursive: true });
-              hasDiffs = files.some(file => file.endsWith('-diff.png'));
-            }
-            
-            try {
-              const visualPath = path.join('__tests__', 'visual');
-              if (fs.existsSync(visualPath)) {
-                const files = fs.readdirSync(visualPath, { recursive: true });
-                hasSnapshots = files.some(file => file.endsWith('.png'));
-              }
-            } catch (e) {}
-            
-            const runId = context.runId;
-            const runUrl = `https://github.com/${{ github.repository }}/actions/runs/${runId}`;
-            
-            let message = `## Visual Test Results\n\n`;
-            
-            if (hasDiffs) {
-              message += `Visual differences detected.\n\n`;
-              message += `[View Full Test Run](${runUrl})\n\n`;
-              message += `Download artifacts: playwright-report-${{ github.run_id }}, test-results-${{ github.run_id }}, visual-screenshots-${{ github.run_id }}\n\n`;
-              message += `Review the visual diffs from test-results artifact. If changes are intentional, update baseline by running tests locally. If changes are unintentional, fix the UI issues.\n`;
-            } else if (hasSnapshots || testResultsExist || reportExists) {
-              message += `Visual tests passed.\n\n`;
-              message += `[View Test Run](${runUrl})\n`;
-            } else {
-              message += `Visual tests completed.\n\n`;
-              message += `[View Test Run](${runUrl})\n`;
-            }
-            
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-            
-            const botComment = comments.find(comment => 
-              comment.user.type === 'Bot' && 
-              comment.body.includes('Visual Test Results')
-            );
-            
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: message
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: message
-              });
-            }
-
   e2e-tests:
     name: End-to-End Tests
     runs-on: ubuntu-latest
@@ -251,6 +171,15 @@ jobs:
 
       - name: Run E2E Tests
         run: npm run test:e2e
+
+      - name: Upload E2E HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-html-report-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+          if-no-files-found: warn
 
       - name: Upload E2E Test Results
         if: always()
