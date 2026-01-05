@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
-
-const TOTAL_LEVELS = 10;
+import {TOTAL_LEVELS} from "../../js/constants";
 
 const gotoGame = async (page) =>
   page.goto("/game.html", { waitUntil: "networkidle" });
@@ -11,7 +10,6 @@ const openLevelsOverlay = async (page) => {
 };
 
 const closeOverlayAndWait = async (page) => {
-  await page.waitForTimeout(100);
   await expect(page.locator("#levelsOverlay")).not.toHaveClass(/active/);
 };
 
@@ -128,11 +126,9 @@ test.describe("Game UI Tests", () => {
 
     await expect(body).not.toHaveClass(/dark-theme/);
     await page.locator("#themeToggle").click();
-    await page.waitForTimeout(350);
     await expect(body).toHaveClass(/dark-theme/);
 
     await page.locator("#themeToggle").click();
-    await page.waitForTimeout(350);
     await expect(body).not.toHaveClass(/dark-theme/);
   });
 
@@ -142,7 +138,6 @@ test.describe("Game UI Tests", () => {
 
     const before = await getCssValue(circle, "transform");
     await circle.hover();
-    await page.waitForTimeout(100);
     const after = await getCssValue(circle, "transform");
 
     expect(before).not.toBe(after);
