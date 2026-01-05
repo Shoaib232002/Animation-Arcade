@@ -1,4 +1,4 @@
-name: Lint & Visual Tests
+name: Lint & Test Pipeline
 
 on:
   push:
@@ -11,10 +11,20 @@ permissions:
   issues: write
   pull-requests: write
 
+env:
+  LINT_TIMEOUT_MINUTES: 10
+  UNIT_TEST_TIMEOUT_MINUTES: 15
+  VISUAL_TEST_TIMEOUT_MINUTES: 30
+  E2E_TEST_TIMEOUT_MINUTES: 30
+  ARTIFACT_RETENTION_DAYS: 30
+  NODE_VERSION_FILE: .nvmrc
+  PLAYWRIGHT_CACHE_PATH: ~/.cache/ms-playwright
+
 jobs:
-  quality:
+  lint:
+    name: Code Linting
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: ${{ fromJSON(env.LINT_TIMEOUT_MINUTES) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,7 +32,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
           cache: npm
 
       - name: Install dependencies
@@ -30,18 +40,81 @@ jobs:
 
       - name: Run ESLint
         run: npx eslint . --format stylish
-        continue-on-error: false
 
       - name: Run Stylelint
         run: npx stylelint "css/**/*.css" --allow-empty-input
-        continue-on-error: false
+
+  unit-tests:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(env.UNIT_TEST_TIMEOUT_MINUTES) }}
+    needs: [lint]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Upload test coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ github.run_id }}
+          path: coverage/
+          retention-days: ${{ fromJSON(env.ARTIFACT_RETENTION_DAYS) }}
+          if-no-files-found: ignore
+
+  visual-tests:
+    name: Visual Regression Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(env.VISUAL_TEST_TIMEOUT_MINUTES) }}
+    needs: [lint, unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ${{ env.PLAYWRIGHT_CACHE_PATH }}
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
 
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Run Playwright Visual Tests
         run: npm run test:visual
-        continue-on-error: true
 
       - name: Upload Playwright HTML Report
         if: always()
@@ -49,7 +122,7 @@ jobs:
         with:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
-          retention-days: 30
+          retention-days: ${{ fromJSON(env.ARTIFACT_RETENTION_DAYS) }}
           if-no-files-found: warn
 
       - name: Upload Test Results
@@ -58,7 +131,7 @@ jobs:
         with:
           name: test-results-${{ github.run_id }}
           path: test-results/
-          retention-days: 30
+          retention-days: ${{ fromJSON(env.ARTIFACT_RETENTION_DAYS) }}
           if-no-files-found: warn
 
       - name: Upload Visual Screenshots
@@ -66,10 +139,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: visual-screenshots-${{ github.run_id }}
-          path: |
-            __tests__/**/*-snapshots/
-            test-results/
-          retention-days: 30
+          path: __tests__/**/*-snapshots/
+          retention-days: ${{ fromJSON(env.ARTIFACT_RETENTION_DAYS) }}
           if-no-files-found: warn
 
       - name: Comment PR with Results
@@ -79,14 +150,17 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
+            
             const testResultsExist = fs.existsSync('test-results');
             const reportExists = fs.existsSync('playwright-report');
             let hasDiffs = false;
             let hasSnapshots = false;
+            
             if (testResultsExist) {
               const files = fs.readdirSync('test-results', { recursive: true });
               hasDiffs = files.some(file => file.endsWith('-diff.png'));
             }
+            
             try {
               const visualPath = path.join('__tests__', 'visual');
               if (fs.existsSync(visualPath)) {
@@ -94,35 +168,36 @@ jobs:
                 hasSnapshots = files.some(file => file.endsWith('.png'));
               }
             } catch (e) {}
+            
             const runId = context.runId;
             const runUrl = `https://github.com/${{ github.repository }}/actions/runs/${runId}`;
+            
             let message = `## Visual Test Results\n\n`;
+            
             if (hasDiffs) {
               message += `Visual differences detected.\n\n`;
-              message += `### Review Results:\n`;
-              message += `- [View Full Test Run](${runUrl})\n`;
-              message += `- Download \`visual-screenshots-${{ github.run_id }}\` artifact\n\n`;
-              message += `### Next Steps:\n`;
-              message += `1. Download and review the visual diffs\n`;
-              message += `2. If changes are intentional, update baseline by running tests locally\n`;
-              message += `3. If changes are unintentional, fix the UI issues\n`;
+              message += `[View Full Test Run](${runUrl})\n\n`;
+              message += `Download artifacts: playwright-report-${{ github.run_id }}, test-results-${{ github.run_id }}, visual-screenshots-${{ github.run_id }}\n\n`;
+              message += `Review the visual diffs from test-results artifact. If changes are intentional, update baseline by running tests locally. If changes are unintentional, fix the UI issues.\n`;
             } else if (hasSnapshots || testResultsExist || reportExists) {
-              message += `Visual tests completed.\n\n`;
-              message += `- [View Test Run](${runUrl})\n`;
-              message += `- [Download Screenshots](${runUrl})\n`;
+              message += `Visual tests passed.\n\n`;
+              message += `[View Test Run](${runUrl})\n`;
             } else {
               message += `Visual tests completed.\n\n`;
-              message += `- [View Test Run](${runUrl})\n`;
+              message += `[View Test Run](${runUrl})\n`;
             }
+            
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
+            
             const botComment = comments.find(comment => 
               comment.user.type === 'Bot' && 
               comment.body.includes('Visual Test Results')
             );
+            
             if (botComment) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
@@ -138,3 +213,54 @@ jobs:
                 body: message
               });
             }
+
+  e2e-tests:
+    name: End-to-End Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(env.E2E_TEST_TIMEOUT_MINUTES) }}
+    needs: [lint, unit-tests, visual-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ env.NODE_VERSION_FILE }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(node -p "require('./package-lock.json').packages['node_modules/@playwright/test'].version")" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ${{ env.PLAYWRIGHT_CACHE_PATH }}
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Run E2E Tests
+        run: npm run test:e2e
+
+      - name: Upload E2E Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-${{ github.run_id }}
+          path: test-results/
+          retention-days: ${{ fromJSON(env.ARTIFACT_RETENTION_DAYS) }}
+          if-no-files-found: ignore
