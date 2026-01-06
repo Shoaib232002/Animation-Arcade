@@ -500,8 +500,8 @@ body {
 }
 
 .arrows {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2rem;
+  height: 2rem;
   cursor: pointer;
   transition: transform var(--transition);
 }
