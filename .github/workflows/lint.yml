@@ -10,13 +10,12 @@ permissions:
 
 env:
   NODE_VERSION: '24'
-  PLAYWRIGHT_BROWSERS_PATH: ~/.cache/ms-playwright
 
 jobs:
   setup:
-    name: Setup Dependencies
+    name: Setup
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 2
     steps:
       - uses: actions/checkout@v4
       
@@ -25,17 +24,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
       
-      - name: Install dependencies (skip postinstall)
-        run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false
+      - run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false
       
-      - name: Cache node_modules
-        uses: actions/cache/save@v4
+      - uses: actions/cache/save@v4
         with:
           path: node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
   lint:
-    name: Code Linting
+    name: Lint
     runs-on: ubuntu-latest
     needs: [setup]
     timeout-minutes: 2
@@ -46,23 +43,40 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       
-      - name: Restore node_modules
-        uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           fail-on-cache-miss: true
       
-      - name: Run ESLint
-        run: npx eslint . --format stylish --max-warnings 0
+      - run: npx eslint . --format stylish --max-warnings 0
       
-      - name: Run Stylelint
-        run: npx stylelint "css/**/*.css" --allow-empty-input
+      - run: npx stylelint "css/**/*.css" --allow-empty-input
 
-  unit-tests:
-    name: Unit & Integration Tests
+  test:
+    name: Unit Tests
     runs-on: ubuntu-latest
     needs: [lint]
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          fail-on-cache-miss: true
+      
+      - run: npm test -- --ci --maxWorkers=2 --silent
+
+  playwright:
+    name: Visual & E2E
+    runs-on: ubuntu-latest
+    needs: [test]
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
@@ -71,95 +85,22 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       
-      - name: Restore node_modules
-        uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v4
         with:
           path: node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           fail-on-cache-miss: true
       
-      - name: Run unit tests
-        run: npm test -- --ci --maxWorkers=2 --silent
-
-  visual-tests:
-    name: Visual Regression Tests
-    runs-on: ubuntu-latest
-    needs: [unit-tests]
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
+      - run: npx playwright install chromium
       
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+      - run: npm run test:visual
       
-      - name: Restore node_modules
-        uses: actions/cache/restore@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
+      - run: npm run test:e2e
       
-      - name: Cache Playwright browsers
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      
-      - name: Install Playwright Chromium (only if not cached)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install chromium --with-deps
-      
-      - name: Install Chromium dependencies (if cached)
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
-      
-      - name: Run visual tests
-        run: npm run test:visual
-
-  e2e-tests:
-    name: End-to-End Tests
-    runs-on: ubuntu-latest
-    needs: [visual-tests]
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      
-      - name: Restore node_modules
-        uses: actions/cache/restore@v4
-        with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          fail-on-cache-miss: true
-      
-      - name: Cache Playwright browsers
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
-          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      
-      - name: Install Playwright Chromium (only if not cached)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install chromium --with-deps
-      
-      - name: Install Chromium dependencies (if cached)
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
-      
-      - name: Run E2E tests
-        run: npm run test:e2e
-      
-      - name: Upload E2E Report
+      - uses: actions/upload-artifact@v4
         if: failure()
-        uses: actions/upload-artifact@v4
         with:
-          name: e2e-report-${{ github.run_id }}
+          name: reports-${{ github.run_id }}
           path: playwright-report/
           retention-days: 7
           if-no-files-found: ignore
