@@ -107,4 +107,5 @@ test.describe("Game UI Visual Tests", () => {
     );
     expect(hasDarkClass).toBe(false);
   });
+  
 });
