@@ -18,16 +18,11 @@ npm-debug.log*
 Thumbs.db
 *.tmp
 .cache/
-
-# Playwright
 /test-results/
 /playwright-report/
 /playwright/.cache/
 playwright/.auth/
 *.trace
-
-# Visual test snapshots - ignore ALL screenshot snapshots
+**/*-actual.png
+**/*-diff.png
 **/*-snapshots/
-__tests__/**/*-snapshots/
-tests/**/*-snapshots/
-__tests__/visual/**/*-snapshots/

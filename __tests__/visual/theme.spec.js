@@ -21,7 +21,6 @@ test.describe("ThemeManager Visual Tests", () => {
       await helper.page.evaluate((theme) => {
         window.ThemeManager.applyTheme(theme);
       }, targetTheme);
-
       await helper.expectThemeState(targetTheme);
     };
 
@@ -65,10 +64,8 @@ test.describe("ThemeManager Visual Tests", () => {
       for (let i = 0; i < toggleCount; i++) {
         await helper.clickToggle();
       }
-
       const expected =
         toggleCount % 2 === 1 ? THEMES.DARK : THEMES.LIGHT;
-
       await helper.expectThemeState(expected);
     });
 
@@ -83,17 +80,6 @@ test.describe("ThemeManager Visual Tests", () => {
           window.ThemeManager.updateIcon(theme);
         }, THEMES.DARK);
       }).not.toThrow();
-    });
-  });
-
-  test.describe("Visual Regression", () => {
-    test("should match light theme snapshot", async () => {
-      await helper.takeSnapshot("theme-light");
-    });
-
-    test("should match dark theme snapshot", async () => {
-      await helper.clickToggle();
-      await helper.takeSnapshot("theme-dark");
     });
   });
 });

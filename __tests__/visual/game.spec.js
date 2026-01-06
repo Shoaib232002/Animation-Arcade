@@ -70,4 +70,5 @@ test.describe("Game UI Tests", () => {
     await page.locator("#themeToggle").click();
     await expect(body).not.toHaveClass(/dark-theme/);
   });
+
 });

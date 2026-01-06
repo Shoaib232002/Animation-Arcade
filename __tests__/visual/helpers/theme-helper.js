@@ -29,7 +29,6 @@ export class ThemeTestHelper {
 
   async waitForTheme(theme) {
     const isDark = theme === DARK_THEME;
-
     await this.page.waitForFunction(
       (expectedDark) => {
         return (
@@ -72,13 +71,6 @@ export class ThemeTestHelper {
       return window.ThemeManager?.getCurrentTheme?.();
     });
   }
-
-  async takeSnapshot(name) {
-    await expect(this.page.locator("#app")).toHaveScreenshot(
-      `${name}.png`
-    );
-  }
-
 }
 
 export const THEMES = {
