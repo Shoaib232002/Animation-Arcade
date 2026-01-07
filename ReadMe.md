@@ -1,5 +1,7 @@
 # Animation-Arcade
+
 A web-based project for animations and interactive UI elements with comprehensive automated development tools.
+
 ## Quick Start
 
 ```
@@ -8,7 +10,9 @@ cd Animation-Arcade
 nvm use
 npm install
 ```
+
 ---
+
 ## Features
 
 - ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white) - JavaScript linting with automatic fixes on commit
@@ -20,22 +24,31 @@ npm install
 - ![Automated Testing](https://img.shields.io/badge/Automated%20Testing-4CAF50?logo=checkmarx&logoColor=white) - Tests run automatically on commit for changed files
 
 ## Running the Project
+
 ```
 Open `index.html` in your browser or start a local server:
 bash:
 npx http-server
 ```
+
 ## Available Commands
+
 ```
 npm test
 npm run test:watch
 npm run lint
 npm run lint:css
 ```
+
 ## Documentation
+
 - For full contribution workflow, see the [Animation-Arcade Wiki](https://github.com/Shoaib232002/Animation-Arcade/wiki).
+
 ## Team Members
-- Siripireddy Giri 
+
+- Siripireddy Giri
 - Mohammed Shoaib
+
 ## License
+
 This project is licensed under the ISC License.

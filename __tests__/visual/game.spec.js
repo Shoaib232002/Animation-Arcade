@@ -76,7 +76,7 @@ test.describe("Game UI Visual Tests", () => {
     await expect(levelsText).toContainText("Levels");
 
     const arrows = page.locator(".arrows");
-    expect(await arrows.count()).toBe(2); 
+    expect(await arrows.count()).toBe(2);
   });
 
   test("should render output box for animation preview", async ({ page }) => {
@@ -107,5 +107,4 @@ test.describe("Game UI Visual Tests", () => {
     );
     expect(hasDarkClass).toBe(false);
   });
-  
 });

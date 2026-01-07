@@ -38,10 +38,7 @@ class ThemeManagerClass {
   applyTheme(theme) {
     this.currentTheme = theme;
 
-    document.body.classList.toggle(
-      "dark-theme",
-      theme === DARK_THEME
-    );
+    document.body.classList.toggle("dark-theme", theme === DARK_THEME);
 
     localStorage.setItem(THEME_KEY, theme);
     this.updateIcon(theme);
@@ -49,9 +46,7 @@ class ThemeManagerClass {
 
   toggleTheme() {
     const nextTheme =
-      this.currentTheme === DARK_THEME
-        ? LIGHT_THEME
-        : DARK_THEME;
+      this.currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
 
     this.applyTheme(nextTheme);
   }
@@ -60,9 +55,7 @@ class ThemeManagerClass {
     if (!this.icon) return;
 
     this.icon.src =
-      theme === DARK_THEME
-        ? "assets/lightmode.png"
-        : "assets/darkmode.jpeg";
+      theme === DARK_THEME ? "assets/lightmode.png" : "assets/darkmode.jpeg";
   }
 
   getCurrentTheme() {

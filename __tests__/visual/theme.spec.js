@@ -64,8 +64,7 @@ test.describe("ThemeManager Visual Tests", () => {
       for (let i = 0; i < toggleCount; i++) {
         await helper.clickToggle();
       }
-      const expected =
-        toggleCount % 2 === 1 ? THEMES.DARK : THEMES.LIGHT;
+      const expected = toggleCount % 2 === 1 ? THEMES.DARK : THEMES.LIGHT;
       await helper.expectThemeState(expected);
     });
 
