@@ -1,5 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { AuthTestHelper } from "./helpers/auth-helper.js";
+import {
+  TEST_USERS,
+  WRONG_PASSWORD,
+} from "../visual/config/test-user.config.js";
+import { MESSAGES, UI_DELAYS } from "../../js/constants.js";
 
 test.describe("Authentication", () => {
   let helper;
@@ -12,14 +17,14 @@ test.describe("Authentication", () => {
       confirmPassword: user.password,
     });
     await helper.clickSubmit();
-    await helper.page.waitForTimeout(1100);
+    await helper.page.waitForTimeout(UI_DELAYS.SIGNUP_COMPLETE);
   };
 
   const login = async (email, password) => {
     await helper.clickLoginButton();
     await helper.fillLoginForm({ email, password });
     await helper.clickSubmit();
-    await helper.page.waitForTimeout(1100);
+    await helper.page.waitForTimeout(UI_DELAYS.LOGIN_COMPLETE);
   };
 
   test.beforeEach(async ({ page }) => {
@@ -46,79 +51,44 @@ test.describe("Authentication", () => {
     await helper.clickLoginButton();
     await helper.clickSignupTab();
     await helper.clickSubmit();
-    await helper.expectErrorMessage("Please fill in all required fields");
+    await helper.expectErrorMessage(MESSAGES.FILL_REQUIRED);
   });
 
   test("creates a new account", async () => {
-    await signup({
-      name: "Test User",
-      email: "test@example.com",
-      password: "password123",
-    });
-
-    await helper.expectLoggedIn("Test User");
+    await signup(TEST_USERS.PRIMARY);
+    await helper.expectLoggedIn(TEST_USERS.PRIMARY.name);
   });
 
   test("prevents duplicate signup", async () => {
-    await signup({
-      name: "User One",
-      email: "duplicate@example.com",
-      password: "password123",
-    });
-
+    await signup(TEST_USERS.DUPLICATE);
     await helper.logout();
-
     await helper.clickLoginButton();
     await helper.clickSignupTab();
     await helper.fillSignupForm({
-      name: "User Two",
-      email: "duplicate@example.com",
-      password: "password123",
-      confirmPassword: "password123",
+      ...TEST_USERS.DUPLICATE_ATTEMPT,
+      confirmPassword: TEST_USERS.DUPLICATE_ATTEMPT.password,
     });
     await helper.clickSubmit();
-
-    await helper.expectErrorMessage(
-      "An account with this email already exists"
-    );
+    await helper.expectErrorMessage(MESSAGES.DUPLICATE_EMAIL);
   });
 
   test("rejects login with incorrect password", async () => {
-    await signup({
-      name: "Login User",
-      email: "login@example.com",
-      password: "correctpassword",
-    });
-
+    await signup(TEST_USERS.LOGIN);
     await helper.logout();
-    await login("login@example.com", "wrongpassword");
-
-    await helper.expectErrorMessage("Incorrect password");
+    await login(TEST_USERS.LOGIN.email, WRONG_PASSWORD);
+    await helper.expectErrorMessage(MESSAGES.INCORRECT_PASSWORD);
   });
 
   test("logs in with valid credentials", async () => {
-    await signup({
-      name: "Valid User",
-      email: "valid@example.com",
-      password: "password123",
-    });
-
+    await signup(TEST_USERS.VALID);
     await helper.logout();
-    await login("valid@example.com", "password123");
-
-    await helper.expectLoggedIn("Valid User");
+    await login(TEST_USERS.VALID.email, TEST_USERS.VALID.password);
+    await helper.expectLoggedIn(TEST_USERS.VALID.name);
   });
 
-
   test("logs out and clears session", async () => {
-    await signup({
-      name: "Logout User",
-      email: "logout@example.com",
-      password: "password123",
-    });
-
+    await signup(TEST_USERS.LOGOUT);
     await helper.logout();
-
     const authData = await helper.getAuthFromLocalStorage();
     expect(authData).toBeNull();
     expect(await helper.getLoginButtonText()).toBe("Login");
@@ -127,8 +97,6 @@ test.describe("Authentication", () => {
   test("blocks game start when not authenticated", async () => {
     await helper.clickStartGameButton();
     await helper.expectModalVisible();
-    await helper.expectErrorMessage(
-      "Please login or sign up to start playing!"
-    );
+    await helper.expectErrorMessage(MESSAGES.LOGIN_REQUIRED);
   });
 });

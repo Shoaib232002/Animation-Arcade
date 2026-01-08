@@ -1,5 +1,12 @@
-import { THEME_KEY, DARK_THEME, LIGHT_THEME } from "./constants.js";
+import { STORAGE_KEYS, DARK_THEME, LIGHT_THEME } from "./constants.js";
 import "./auth.js";
+
+const THEME_ICONS = {
+  [DARK_THEME]: "assets/lightmode.png",
+  [LIGHT_THEME]: "assets/darkmode.jpeg",
+};
+
+const THEME_CLASS = "dark-theme";
 
 class ThemeManagerClass {
   constructor() {
@@ -15,13 +22,9 @@ class ThemeManagerClass {
         return;
       }
 
-      const storedTheme = localStorage.getItem(THEME_KEY);
-
-      if (storedTheme === DARK_THEME || storedTheme === LIGHT_THEME) {
-        this.applyTheme(storedTheme);
-      } else {
-        this.applyTheme(LIGHT_THEME);
-      }
+      const storedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
+      const theme = this.isValidTheme(storedTheme) ? storedTheme : LIGHT_THEME;
+      this.applyTheme(theme);
     };
 
     apply();
@@ -36,27 +39,26 @@ class ThemeManagerClass {
     });
   }
 
+  isValidTheme(theme) {
+    return theme === DARK_THEME || theme === LIGHT_THEME;
+  }
+
   applyTheme(theme) {
     this.currentTheme = theme;
-
-    document.body.classList.toggle("dark-theme", theme === DARK_THEME);
-
-    localStorage.setItem(THEME_KEY, theme);
+    document.body.classList.toggle(THEME_CLASS, theme === DARK_THEME);
+    localStorage.setItem(STORAGE_KEYS.THEME, theme);
     this.updateIcon(theme);
   }
 
   toggleTheme() {
     const nextTheme =
       this.currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
-
     this.applyTheme(nextTheme);
   }
 
   updateIcon(theme) {
     if (!this.icon) return;
-
-    this.icon.src =
-      theme === DARK_THEME ? "assets/lightmode.png" : "assets/darkmode.jpeg";
+    this.icon.src = THEME_ICONS[theme];
   }
 
   getCurrentTheme() {

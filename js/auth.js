@@ -1,6 +1,15 @@
+import {
+  STORAGE_KEYS,
+  TABS,
+  MESSAGE_TYPES,
+  MESSAGES,
+  RETRY_LIMITS,
+  ROUTES,
+} from "./constants.js";
+
 class AuthManagerClass {
   constructor() {
-    this.currentTab = "login";
+    this.currentTab = TABS.LOGIN;
     this.modal = null;
     this.overlay = null;
     this.loginBtn = null;
@@ -12,19 +21,13 @@ class AuthManagerClass {
         requestAnimationFrame(applySession);
         return;
       }
-      
-      const authData = localStorage.getItem("animation_arcade_auth");
+
+      const authData = this.getStoredAuth();
       if (authData) {
-        try {
-          const user = JSON.parse(authData);
-          this.updateUIForLoggedIn(user.name);
-        } catch (e) {
-          e.preventDefault();
-          localStorage.removeItem("animation_arcade_auth");
-        }
+        this.updateUIForLoggedIn(authData.name);
       }
     };
-    
+
     applySession();
   }
 
@@ -32,46 +35,53 @@ class AuthManagerClass {
     this.modal = document.querySelector(".modal");
     this.overlay = document.getElementById("loginOverlay");
     this.loginBtn = document.getElementById("loginBtn");
-    
+
     if (!this.loginBtn) {
       return;
     }
-    
-    this.loginBtn.addEventListener("click", () => this.handleLoginButtonClick());
-    
+
+    this.attachEventListeners();
+  }
+
+  attachEventListeners() {
+    this.loginBtn.addEventListener("click", () =>
+      this.handleLoginButtonClick()
+    );
+
     const closeBtn = document.getElementById("closeModal");
     if (closeBtn) {
       closeBtn.addEventListener("click", () => this.closeModal());
     }
-    
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", (e) => this.switchTab(e.target.dataset.tab));
+
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) =>
+        this.switchTab(e.target.dataset.tab)
+      );
     });
-    
+
     const authForm = document.getElementById("authForm");
     if (authForm) {
-      authForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        this.handleSubmit(e);
-      });
+      authForm.addEventListener("submit", (e) => this.handleSubmit(e));
     }
-    
+
     const startGameBtn = document.getElementById("startGameBtn");
     if (startGameBtn) {
-      startGameBtn.addEventListener("click", () => {
-        const authData = localStorage.getItem("animation_arcade_auth");
-        if (!authData) {
-          this.openModal();
-          this.showMessage("Please login or sign up to start playing!", "error");
-        } else {
-          window.location.href = "/game.html";
-        }
-      });
+      startGameBtn.addEventListener("click", () => this.handleStartGame());
+    }
+  }
+
+  handleStartGame() {
+    const authData = this.getStoredAuth();
+    if (!authData) {
+      this.openModal();
+      this.showMessage(MESSAGES.LOGIN_REQUIRED, MESSAGE_TYPES.ERROR);
+    } else {
+      window.location.href = ROUTES.GAME;
     }
   }
 
   handleLoginButtonClick() {
-    const authData = localStorage.getItem("animation_arcade_auth");
+    const authData = this.getStoredAuth();
     if (authData) {
       this.logout();
     } else {
@@ -81,7 +91,7 @@ class AuthManagerClass {
 
   openModal() {
     this.overlay.style.display = "flex";
-    this.switchTab("login");
+    this.switchTab(TABS.LOGIN);
   }
 
   closeModal() {
@@ -91,23 +101,23 @@ class AuthManagerClass {
 
   switchTab(tab) {
     this.currentTab = tab;
-    
-    document.querySelectorAll(".tab-btn").forEach(btn => {
+
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.tab === tab);
     });
-    
+
     this.updateModalContent(tab);
     this.updateFormFields(tab);
     this.clearMessages();
   }
 
   updateModalContent(tab) {
-    const modalTitle = document.getElementById("modalTitle");
+    const modalTitle = document.getElementById("modal-title");
     const submitBtn = document.getElementById("submitBtn");
     const footerText = document.getElementById("authFooterText");
-    
-    const isSignup = tab === "signup";
-    
+
+    const isSignup = tab === TABS.SIGNUP;
+
     if (modalTitle) {
       modalTitle.textContent = isSignup ? "Sign Up" : "Login";
     }
@@ -115,8 +125,8 @@ class AuthManagerClass {
       submitBtn.textContent = isSignup ? "Sign Up" : "Login";
     }
     if (footerText) {
-      footerText.textContent = isSignup 
-        ? "Already have an account? Login." 
+      footerText.textContent = isSignup
+        ? "Already have an account? Login."
         : "New user? Sign up.";
     }
   }
@@ -124,8 +134,8 @@ class AuthManagerClass {
   updateFormFields(tab) {
     const nameGroup = document.getElementById("nameGroup");
     const confirmGroup = document.getElementById("confirmPasswordGroup");
-    const displayValue = tab === "signup" ? "block" : "none";
-    
+    const displayValue = tab === TABS.SIGNUP ? "block" : "none";
+
     if (nameGroup) {
       nameGroup.style.display = displayValue;
     }
@@ -138,104 +148,112 @@ class AuthManagerClass {
     e.preventDefault();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
-    
-    if (this.currentTab === "signup") {
-      const name = document.getElementById("name").value.trim();
-      const confirmPassword = document.getElementById("confirmPassword").value.trim();
-      
-      if (!name || !email || !password || !confirmPassword) {
-        this.showMessage("Please fill in all required fields", "error");
-        return;
-      }
-      
-      if (password !== confirmPassword) {
-        this.showMessage("Passwords do not match", "error");
-        return;
-      }
-      
-      this.signup(name, email, password);
+
+    if (this.currentTab === TABS.SIGNUP) {
+      this.handleSignupSubmit(email, password);
     } else {
-      if (!email || !password) {
-        this.showMessage("Please fill in all required fields", "error");
-        return;
-      }
-      
-      this.login(email, password);
+      this.handleLoginSubmit(email, password);
     }
   }
 
-  signup(name, email, password) {
-    const users = JSON.parse(localStorage.getItem("animation_arcade_users") || "[]");
-    
-    if (users.some(u => u.email === email)) {
-      this.showMessage("An account with this email already exists", "error");
+  handleSignupSubmit(email, password) {
+    const name = document.getElementById("name").value.trim();
+    const confirmPassword = document
+      .getElementById("confirmPassword")
+      .value.trim();
+
+    if (!name || !email || !password || !confirmPassword) {
+      this.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
       return;
     }
-    
-    const user = {
-      id: Date.now().toString(),
-      name,
-      email,
-      password
-    };
-    
+
+    if (password !== confirmPassword) {
+      this.showMessage(MESSAGES.PASSWORD_MISMATCH, MESSAGE_TYPES.ERROR);
+      return;
+    }
+
+    this.signup(name, email, password);
+  }
+
+  handleLoginSubmit(email, password) {
+    if (!email || !password) {
+      this.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
+      return;
+    }
+
+    this.login(email, password);
+  }
+
+  signup(name, email, password) {
+    const users = this.getStoredUsers();
+
+    if (users.some((u) => u.email === email)) {
+      this.showMessage(MESSAGES.DUPLICATE_EMAIL, MESSAGE_TYPES.ERROR);
+      return;
+    }
+
+    const user = this.createUser(name, email, password);
     users.push(user);
-    localStorage.setItem("animation_arcade_users", JSON.stringify(users));
-    
-    const authData = { id: user.id, name: user.name, email: user.email };
-    localStorage.setItem("animation_arcade_auth", JSON.stringify(authData));
-    
+    this.saveUsers(users);
+    this.saveAuth(user);
+
     this.closeModal();
     this.updateUIForLoggedIn(name);
   }
 
   login(email, password) {
-    const users = JSON.parse(localStorage.getItem("animation_arcade_users") || "[]");
-    const user = users.find(u => u.email === email);
-    
+    const users = this.getStoredUsers();
+    const user = users.find((u) => u.email === email);
+
     if (!user) {
-      this.showMessage("No account found with this email", "error");
+      this.showMessage(MESSAGES.NO_ACCOUNT, MESSAGE_TYPES.ERROR);
       return;
     }
-    
+
     if (user.password !== password) {
-      this.showMessage("Incorrect password", "error");
+      this.showMessage(MESSAGES.INCORRECT_PASSWORD, MESSAGE_TYPES.ERROR);
       return;
     }
-    
-    const authData = { id: user.id, name: user.name, email: user.email };
-    localStorage.setItem("animation_arcade_auth", JSON.stringify(authData));
-    
+
+    this.saveAuth(user);
     this.closeModal();
     this.updateUIForLoggedIn(user.name);
   }
 
   logout() {
-    if (confirm("Are you sure you want to logout?")) {
-      localStorage.removeItem("animation_arcade_auth");
+    if (confirm(MESSAGES.LOGOUT_CONFIRM)) {
+      localStorage.removeItem(STORAGE_KEYS.AUTH);
       this.updateUIForLoggedOut();
     }
   }
 
   updateUIForLoggedIn(name, retryCount = 0) {
-    if (retryCount > 100) {
+    if (retryCount > RETRY_LIMITS.UI_UPDATE) {
       return;
     }
-    
+
     const loginBtn = document.getElementById("loginBtn");
     if (!loginBtn) {
-      requestAnimationFrame(() => this.updateUIForLoggedIn(name, retryCount + 1));
+      requestAnimationFrame(() =>
+        this.updateUIForLoggedIn(name, retryCount + 1)
+      );
       return;
     }
-    
+
     loginBtn.textContent = "Logout";
-    
+
     const heroSection = document.querySelector(".hero-section");
     if (!heroSection) {
-      requestAnimationFrame(() => this.updateUIForLoggedIn(name, retryCount + 1));
+      requestAnimationFrame(() =>
+        this.updateUIForLoggedIn(name, retryCount + 1)
+      );
       return;
     }
-    
+
+    this.createOrUpdateWelcomeMessage(heroSection, name);
+  }
+
+  createOrUpdateWelcomeMessage(heroSection, name) {
     let welcomeMsg = document.querySelector(".welcome-message");
     if (!welcomeMsg) {
       welcomeMsg = document.createElement("div");
@@ -251,7 +269,7 @@ class AuthManagerClass {
     if (loginBtn) {
       loginBtn.textContent = "Login";
     }
-    
+
     const welcomeMsg = document.querySelector(".welcome-message");
     if (welcomeMsg) {
       welcomeMsg.remove();
@@ -272,6 +290,43 @@ class AuthManagerClass {
       messageDiv.textContent = "";
       messageDiv.className = "auth-message";
     }
+  }
+
+  createUser(name, email, password) {
+    return {
+      id: Date.now().toString(),
+      name,
+      email,
+      password,
+    };
+  }
+
+  saveAuth(user) {
+    const authData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+    localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(authData));
+  }
+
+  getStoredAuth() {
+    try {
+      const authData = localStorage.getItem(STORAGE_KEYS.AUTH);
+      return authData ? JSON.parse(authData) : null;
+    } catch {
+      localStorage.removeItem(STORAGE_KEYS.AUTH);
+      return null;
+    }
+  }
+
+  getStoredUsers() {
+    const users = localStorage.getItem(STORAGE_KEYS.USERS);
+    return users ? JSON.parse(users) : [];
+  }
+
+  saveUsers(users) {
+    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
   }
 }
 

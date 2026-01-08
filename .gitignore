@@ -26,3 +26,4 @@ playwright/.auth/
 **/*-actual.png
 **/*-diff.png
 **/*-snapshots/
+__tests__/visual/config/test-user.config.js

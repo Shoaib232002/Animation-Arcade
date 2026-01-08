@@ -10,18 +10,9 @@
 
   <body id="app">
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="logo-text">Animation Arcade</span>
-            </div>
-            <div class="nav-actions">
-                <button id="loginBtn" class="login-btn">Login</button>
-                <button id="themeToggle" class="theme-toggle">
-                    <span class="theme-icon">
-                        <img src="./assets/darkmode.jpeg" alt="Mode toggle">
-                    </span>
-                </button>
-            </div>
+      <div class="nav-container">
+        <div class="logo">
+          <span class="logo-text">Animation Arcade</span>
         </div>
         <div class="nav-actions">
           <button id="loginBtn" class="login-btn">Login</button>
@@ -134,65 +125,28 @@
     <div id="loginOverlay" class="overlay">
       <div class="modal">
         <button class="close-btn" id="closeModal">&times;</button>
-        <h2 id="modalTitle">Login</h2>
+        <h2 id="modal-title">Login</h2>
 
-            <div class="tab-container">
-                <button class="tab-btn active" data-tab="login">Login</button>
-                <button class="tab-btn" data-tab="signup">Sign Up</button>
-            </div>
-
-            <form id="authForm" class="auth-form">
-                <div class="form-group" id="nameGroup" style="display: none;">
-                    <input type="text" id="name" name="name" placeholder="Name">
-                </div>
-
-                <div class="form-group">
-                    <input type="email" id="email" name="email" placeholder="Email">
-                </div>
-
-                <div class="form-group">
-                    <input type="password" id="password" name="password" placeholder="Password">
-                </div>
-
-                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
-                    <input type="password" id="confirmPassword" name="confirmPassword"
-                        placeholder="Confirm Password">
-                </div>
-
-                <button type="submit" class="submit-btn" id="submitBtn">Login</button>
-            </form>
-
-            <div id="authMessage" class="auth-message"></div>
-            
-            <div class="auth-footer">
-                <span id="authFooterText">New user? Sign up.</span>
-            </div>
+        <div class="tab-container">
+          <button class="tab-btn active" data-tab="login">Login</button>
+          <button class="tab-btn" data-tab="signup">Sign Up</button>
         </div>
-    </div>
-    
-    <script type="module" src="./js/landing.js"></script>
-</body>
 
         <form id="authForm" class="auth-form">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              placeholder="Enter your email"
-            />
+          <div class="form-group" id="nameGroup" style="display: none">
+            <input type="text" id="name" name="name" placeholder="Name" />
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
+            <input type="email" id="email" name="email" placeholder="Email" />
+          </div>
+
+          <div class="form-group">
             <input
               type="password"
               id="password"
               name="password"
-              required
-              placeholder="Enter your password"
+              placeholder="Password"
             />
           </div>
 
@@ -201,12 +155,11 @@
             id="confirmPasswordGroup"
             style="display: none"
           >
-            <label for="confirmPassword">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              placeholder="Confirm your password"
+              placeholder="Confirm Password"
             />
           </div>
 
@@ -214,8 +167,13 @@
         </form>
 
         <div id="authMessage" class="auth-message"></div>
+
+        <div class="auth-footer">
+          <span id="authFooterText">New user? Sign up.</span>
+        </div>
       </div>
     </div>
+
     <script type="module" src="./js/landing.js"></script>
   </body>
 </html>

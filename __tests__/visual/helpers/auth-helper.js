@@ -1,4 +1,17 @@
 import { expect } from "@playwright/test";
+import { UI_DELAYS } from "../../../js/constants.js";
+
+const TIMEOUTS = {
+  SHORT: 200,
+  LONG: 10000,
+  LOGOUT: 2100,
+};
+
+const DISPLAY_STATES = {
+  FLEX: "flex",
+  NONE: "none",
+  BLOCK: "block",
+};
 
 export class AuthTestHelper {
   constructor(page) {
@@ -7,7 +20,7 @@ export class AuthTestHelper {
     this.overlay = page.locator("#loginOverlay");
     this.modal = page.locator(".modal");
     this.closeButton = page.locator("#closeModal");
-    this.modalTitle = page.locator("#modalTitle");
+    this.modalTitle = page.locator("#modal-title");
     this.loginTab = page.locator("[data-tab=\"login\"]");
     this.signupTab = page.locator("[data-tab=\"signup\"]");
     this.nameField = page.locator("#name");
@@ -34,32 +47,32 @@ export class AuthTestHelper {
 
   async clickLoginButton() {
     await this.loginButton.click({ force: true });
-    await this.page.waitForTimeout(200);
+    await this.page.waitForTimeout(TIMEOUTS.SHORT);
   }
 
   async clickCloseButton() {
     await this.closeButton.click();
-    await this.page.waitForTimeout(200);
+    await this.page.waitForTimeout(TIMEOUTS.SHORT);
   }
 
   async clickLoginTab() {
     await this.loginTab.click();
-    await this.page.waitForTimeout(200);
+    await this.page.waitForTimeout(TIMEOUTS.SHORT);
   }
 
   async clickSignupTab() {
     await this.signupTab.click();
-    await this.page.waitForTimeout(200);
+    await this.page.waitForTimeout(TIMEOUTS.SHORT);
   }
 
   async clickSubmit() {
     await this.submitButton.click();
-    await this.page.waitForTimeout(200);
+    await this.page.waitForTimeout(TIMEOUTS.SHORT);
   }
 
   async clickStartGameButton() {
     await this.startGameButton.click();
-    await this.page.waitForTimeout(200);
+    await this.page.waitForTimeout(TIMEOUTS.SHORT);
   }
 
   async fillLoginForm({ email, password }) {
@@ -77,12 +90,12 @@ export class AuthTestHelper {
   }
 
   async expectModalVisible() {
-    await expect(this.overlay).toHaveCSS("display", "flex");
+    await expect(this.overlay).toHaveCSS("display", DISPLAY_STATES.FLEX);
     await expect(this.modal).toBeVisible();
   }
 
   async expectModalHidden() {
-    await expect(this.overlay).toHaveCSS("display", "none");
+    await expect(this.overlay).toHaveCSS("display", DISPLAY_STATES.NONE);
   }
 
   async expectModalTitle(title) {
@@ -102,20 +115,28 @@ export class AuthTestHelper {
   }
 
   async expectErrorMessage(message) {
-    await expect(this.messageDiv).toHaveText(message, { timeout: 10000 });
+    await expect(this.messageDiv).toHaveText(message, {
+      timeout: TIMEOUTS.LONG,
+    });
   }
 
   async expectSuccessMessage(message) {
-    await expect(this.messageDiv).toHaveText(message, { timeout: 10000 });
+    await expect(this.messageDiv).toHaveText(message, {
+      timeout: TIMEOUTS.LONG,
+    });
   }
 
   async expectInfoMessage(message) {
-    await expect(this.messageDiv).toHaveText(message, { timeout: 10000 });
+    await expect(this.messageDiv).toHaveText(message, {
+      timeout: TIMEOUTS.LONG,
+    });
   }
 
   async expectLoggedIn(name) {
-    await expect(this.loginButton).toHaveText("Logout", { timeout: 10000 });
-    await expect(this.welcomeMessage).toBeVisible({ timeout: 10000 });
+    await expect(this.loginButton).toHaveText("Logout", {
+      timeout: TIMEOUTS.LONG,
+    });
+    await expect(this.welcomeMessage).toBeVisible({ timeout: TIMEOUTS.LONG });
     await expect(this.welcomeMessage).toContainText(`Welcome back, ${name}!`);
   }
 
@@ -154,12 +175,12 @@ export class AuthTestHelper {
   }
 
   async logout() {
-    this.page.once("dialog", async dialog => {
+    this.page.once("dialog", async (dialog) => {
       await dialog.accept();
     });
 
     await this.loginButton.click();
-    await this.page.waitForTimeout(2100);
+    await this.page.waitForTimeout(TIMEOUTS.LOGOUT);
   }
 
   async signupUser({ name, email, password }) {
@@ -170,10 +191,10 @@ export class AuthTestHelper {
       name,
       email,
       password,
-      confirmPassword: password
+      confirmPassword: password,
     });
 
     await this.clickSubmit();
-    await this.page.waitForTimeout(1200);
+    await this.page.waitForTimeout(UI_DELAYS.SIGNUP_COMPLETE);
   }
 }
