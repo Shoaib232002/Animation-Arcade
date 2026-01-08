@@ -2,16 +2,40 @@ import { test, expect } from "@playwright/test";
 import { AuthTestHelper } from "./helpers/auth-helper.js";
 import { MESSAGES, UI_DELAYS } from "../../js/constants.js";
 
-let TEST_USERS, WRONG_PASSWORD;
-try {
-  const config = await import("./config/test-user.config.js");
-  TEST_USERS = config.TEST_USERS;
-  WRONG_PASSWORD = config.WRONG_PASSWORD;
-} catch {
-  const config = await import("./config/test-user.config.example.js");
-  TEST_USERS = config.TEST_USERS;
-  WRONG_PASSWORD = config.WRONG_PASSWORD;
-}
+const TEST_USERS = {
+  PRIMARY: {
+    name: process.env.TEST_USER_PRIMARY_NAME || "Test User 1",
+    email: process.env.TEST_USER_PRIMARY_EMAIL || "user1@example.com",
+    password: process.env.TEST_USER_PRIMARY_PASSWORD || "Test@123",
+  },
+  DUPLICATE: {
+    name: process.env.TEST_USER_DUPLICATE_NAME || "Test User 2",
+    email: process.env.TEST_USER_DUPLICATE_EMAIL || "user2@example.com",
+    password: process.env.TEST_USER_DUPLICATE_PASSWORD || "Test@123",
+  },
+  DUPLICATE_ATTEMPT: {
+    name: "Duplicate Attempt",
+    email: process.env.TEST_USER_DUPLICATE_EMAIL || "user2@example.com",
+    password: "DifferentPassword@123",
+  },
+  LOGIN: {
+    name: process.env.TEST_USER_LOGIN_NAME || "Test User 3",
+    email: process.env.TEST_USER_LOGIN_EMAIL || "user3@example.com",
+    password: process.env.TEST_USER_LOGIN_PASSWORD || "Test@123",
+  },
+  VALID: {
+    name: process.env.TEST_USER_VALID_NAME || "Test User 4",
+    email: process.env.TEST_USER_VALID_EMAIL || "user4@example.com",
+    password: process.env.TEST_USER_VALID_PASSWORD || "Test@123",
+  },
+  LOGOUT: {
+    name: process.env.TEST_USER_LOGOUT_NAME || "Test User 5",
+    email: process.env.TEST_USER_LOGOUT_EMAIL || "user5@example.com",
+    password: process.env.TEST_USER_LOGOUT_PASSWORD || "Test@123",
+  },
+};
+
+const WRONG_PASSWORD = process.env.WRONG_PASSWORD || "Wrong@123";
 
 test.describe("Authentication", () => {
   let helper;
