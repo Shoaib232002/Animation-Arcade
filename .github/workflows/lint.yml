@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 env:
-  NODE_VERSION: '24'
+  NODE_VERSION: "24"
 jobs:
   lint:
     name: Lint
@@ -19,10 +19,22 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false --loglevel=error
-      - run: npx eslint . --format stylish --max-warnings 0
-      - run: npx stylelint "css/**/*.css" --allow-empty-input
-
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false --loglevel=error
+      - name: Check Prettier formatting
+        run: |
+          npx prettier --check .
+          echo "Prettier check completed successfully"
+      - name: Run ESLint
+        run: |
+          npx eslint . --format stylish --max-warnings 0
+          echo "ESLint completed successfully"
+      - name: Run Stylelint
+        run: |
+          npx stylelint "css/**/*.css" --allow-empty-input
+          echo "Stylelint completed successfully"
+      - name: Lint summary
+        run: echo "All lint checks passed successfully"
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -34,9 +46,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false --loglevel=error
-      - run: npm test -- --ci --maxWorkers=4 --silent
-
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false --loglevel=error
+      - name: Run Unit Tests
+        run: |
+          npm test -- --ci --maxWorkers=4 --silent
+          echo "Unit tests completed successfully"
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
@@ -48,7 +63,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-      - run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false --loglevel=error
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --prefer-offline --no-audit --no-fund --progress=false --loglevel=error
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         id: playwright-cache
@@ -57,9 +73,19 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install chromium
-      - run: npm run test:visual
-      - run: npm run test:e2e
+        run: |
+          npx playwright install chromium
+          echo "Playwright browsers installed"
+      - name: Run Visual Tests
+        run: |
+          npm run test:visual
+          echo "Visual tests completed successfully"
+      - name: Run E2E Tests
+        run: |
+          npm run test:e2e
+          echo "E2E tests completed successfully"
+      - name: E2E summary
+        run: echo "All E2E tests passed successfully"
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

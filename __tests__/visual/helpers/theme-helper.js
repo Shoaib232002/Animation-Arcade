@@ -29,14 +29,9 @@ export class ThemeTestHelper {
 
   async waitForTheme(theme) {
     const isDark = theme === DARK_THEME;
-    await this.page.waitForFunction(
-      (expectedDark) => {
-        return (
-          document.body.classList.contains("dark-theme") === expectedDark
-        );
-      },
-      isDark
-    );
+    await this.page.waitForFunction((expectedDark) => {
+      return document.body.classList.contains("dark-theme") === expectedDark;
+    }, isDark);
   }
 
   async getIconSrc() {
@@ -54,9 +49,9 @@ export class ThemeTestHelper {
 
     await this.waitForTheme(theme);
 
-    const hasDarkClass = await this.page.locator("body").evaluate(
-      (el) => el.classList.contains("dark-theme")
-    );
+    const hasDarkClass = await this.page
+      .locator("body")
+      .evaluate((el) => el.classList.contains("dark-theme"));
     expect(hasDarkClass).toBe(isDark);
 
     const storedTheme = await this.getThemeFromLocalStorage();

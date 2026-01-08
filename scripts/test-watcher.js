@@ -58,7 +58,9 @@ function runTest(testFile) {
 
   isRunning = true;
   console.log(`\n${colors.cyan}${"=".repeat(60)}${colors.reset}`);
-  console.log(`${colors.bright}${colors.blue}Running tests: ${testFile}${colors.reset}`);
+  console.log(
+    `${colors.bright}${colors.blue}Running tests: ${testFile}${colors.reset}`
+  );
   console.log(`${colors.cyan}${"=".repeat(60)}${colors.reset}\n`);
 
   const startTime = Date.now();
@@ -71,11 +73,15 @@ function runTest(testFile) {
 
   currentTestProcess.on("close", (code) => {
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    
+
     if (code === 0) {
-      console.log(`\n${colors.green}Tests passed in ${duration}s${colors.reset}\n`);
+      console.log(
+        `\n${colors.green}Tests passed in ${duration}s${colors.reset}\n`
+      );
     } else {
-      console.log(`\n${colors.red}Tests failed in ${duration}s (exit code: ${code})${colors.reset}\n`);
+      console.log(
+        `\n${colors.red}Tests failed in ${duration}s (exit code: ${code})${colors.reset}\n`
+      );
     }
 
     currentTestProcess = null;
@@ -90,7 +96,9 @@ function runTest(testFile) {
   });
 
   currentTestProcess.on("error", (error) => {
-    console.error(`${colors.red}Test execution error: ${error.message}${colors.reset}`);
+    console.error(
+      `${colors.red}Test execution error: ${error.message}${colors.reset}`
+    );
     isRunning = false;
   });
 }
@@ -122,7 +130,9 @@ function initWatcher() {
     }
   );
 
-  console.log(`${colors.bright}${colors.green}Animation Arcade - Test Watcher${colors.reset}`);
+  console.log(
+    `${colors.bright}${colors.green}Animation Arcade - Test Watcher${colors.reset}`
+  );
   console.log(`${colors.cyan}${"=".repeat(60)}${colors.reset}`);
   console.log(`${colors.magenta}Watching for file changes...${colors.reset}`);
   console.log(`${colors.yellow}Watched patterns:${colors.reset}`);
@@ -131,15 +141,25 @@ function initWatcher() {
   watcher
     .on("change", (filePath) => {
       const normalizedPath = filePath.replace(/\\/g, "/");
-      console.log(`${colors.yellow}File changed: ${normalizedPath}${colors.reset}`);
+      console.log(
+        `${colors.yellow}File changed: ${normalizedPath}${colors.reset}`
+      );
 
-      if (normalizedPath.includes("__tests__") && normalizedPath.endsWith(".spec.js")) {
+      if (
+        normalizedPath.includes("__tests__") &&
+        normalizedPath.endsWith(".spec.js")
+      ) {
         debouncedRunTest(normalizedPath);
         return;
       }
 
-      if (normalizedPath.includes("__tests__") && normalizedPath.includes("helpers")) {
-        console.log(`${colors.blue}Helper file changed, running all tests${colors.reset}`);
+      if (
+        normalizedPath.includes("__tests__") &&
+        normalizedPath.includes("helpers")
+      ) {
+        console.log(
+          `${colors.blue}Helper file changed, running all tests${colors.reset}`
+        );
         debouncedRunTest("__tests__/visual");
         return;
       }
@@ -149,8 +169,12 @@ function initWatcher() {
       if (testFile) {
         debouncedRunTest(testFile);
       } else {
-        console.log(`${colors.yellow}No test mapping found for: ${normalizedPath}${colors.reset}`);
-        console.log(`${colors.yellow}Add mapping in scripts/test-watcher.js if needed${colors.reset}\n`);
+        console.log(
+          `${colors.yellow}No test mapping found for: ${normalizedPath}${colors.reset}`
+        );
+        console.log(
+          `${colors.yellow}Add mapping in scripts/test-watcher.js if needed${colors.reset}\n`
+        );
       }
     })
     .on("error", (error) => {

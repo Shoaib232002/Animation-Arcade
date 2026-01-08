@@ -6,7 +6,7 @@ export default {
     "/node_modules/",
     "/tests/",
     "/playwright-report/",
-    "/test-results/"
+    "/test-results/",
   ],
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",

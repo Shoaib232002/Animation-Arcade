@@ -91,7 +91,9 @@ main,
   border-radius: var(--radius);
   text-align: center;
   box-shadow: 0 10px 25px rgb(0 0 0 / 10%);
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
 }
 
 .page-description:hover {
@@ -135,13 +137,15 @@ main,
   gap: 1.5rem;
 }
 
-.feature-card{
+.feature-card {
   padding: 1.5rem;
   background-color: var(--surface-color);
   border-radius: var(--radius);
   border-top: 4px solid var(--secondary-color);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition), border-color var(--transition);
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
 }
 
 .feature-card:hover,
@@ -172,7 +176,9 @@ main,
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
   box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
 }
 
@@ -180,7 +186,6 @@ main,
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgb(0 0 0 / 18%);
 }
-
 
 .info-section {
   background-color: var(--surface-color);
@@ -224,10 +229,12 @@ main,
   border-radius: var(--radius);
   border-top: 4px solid var(--secondary-color);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition), border-color var(--transition);
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
 }
 
-.step h3{
+.step h3 {
   text-align: center;
 }
 
@@ -344,7 +351,7 @@ input:focus {
   .page-description h1 {
     font-size: 1.8rem;
   }
-  
+
   .page-description p {
     font-size: 1rem;
   }
@@ -429,5 +436,8 @@ body,
 .theme-toggle,
 .tab-btn,
 input {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
