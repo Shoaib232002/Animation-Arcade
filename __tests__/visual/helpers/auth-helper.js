@@ -21,8 +21,8 @@ export class AuthTestHelper {
     this.modal = page.locator(".modal");
     this.closeButton = page.locator("#closeModal");
     this.modalTitle = page.locator("#modal-title");
-    this.loginTab = page.locator("[data-tab=\"login\"]");
-    this.signupTab = page.locator("[data-tab=\"signup\"]");
+    this.loginTab = page.locator('[data-tab="login"]');
+    this.signupTab = page.locator('[data-tab="signup"]');
     this.nameField = page.locator("#name");
     this.emailField = page.locator("#email");
     this.passwordField = page.locator("#password");
