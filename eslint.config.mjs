@@ -1,10 +1,16 @@
 import js from "@eslint/js";
 import globals from "globals";
+import prettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
 
 export default [
   js.configs.recommended,
+  prettierConfig,
   {
     files: ["**/*.{js,mjs,cjs}"],
+    plugins: {
+      prettier,
+    },
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -14,12 +20,12 @@ export default [
       },
     },
     rules: {
+      "prettier/prettier": "error",
       "no-var": "error",
       "prefer-const": "error",
       "prefer-arrow-callback": "warn",
       quotes: ["error", "double"],
       semi: ["error", "always"],
-      indent: ["error", 2],
       "no-console": "warn",
       "no-debugger": "error",
       eqeqeq: ["error", "always"],
