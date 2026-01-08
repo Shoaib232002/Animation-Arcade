@@ -1,67 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation Arcade - Game</title>
+    <link rel="icon" href="./assets/Icon.png" />
+    <link rel="stylesheet" href="./css/main/main.css" />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animation Arcade - Game</title>
-  <link rel="icon" href="./assets/Icon.png">
-  <link rel="stylesheet" href="./css/main/main.css">
-</head>
-
-<body>
-  <header class="top-bar">
-    <div class="logo">Animation Arcade</div>
-    <div class="header-actions">
-      <button class="home-btn">Home</button>
-      <button id="themeToggle" class="theme-toggle">
-        <span class="theme-icon">
-          <img src="./assets/darkmode.jpeg" alt="Mode toggle">
-        </span>
-      </button>
-    </div>
-  </header>
-  <main class="main-layout">
-    <section class="left-section">
-      <div class="editor-container">
-        <div class="description-box">
-          <p class="game-description">Description:</p>
-        </div>
-
-        <div class="code-editor">
-          <div class="line-numbers" id="lineNumbers">
-            <span>1</span>
+  <body>
+    <header class="top-bar">
+      <div class="logo">Animation Arcade</div>
+      <div class="header-actions">
+        <button class="home-btn">Home</button>
+        <button id="themeToggle" class="theme-toggle">
+          <span class="theme-icon">
+            <img src="./assets/darkmode.jpeg" alt="Mode toggle" />
+          </span>
+        </button>
+      </div>
+    </header>
+    <main class="main-layout">
+      <section class="left-section">
+        <div class="editor-container">
+          <div class="description-box">
+            <p class="game-description">Description:</p>
           </div>
-          <pre class="code-content" id="codeContent">
+
+          <div class="code-editor">
+            <div class="line-numbers" id="lineNumbers">
+              <span>1</span>
+            </div>
+            <pre class="code-content" id="codeContent">
             <div class="code-line"><span class="code-line-text"></span></div>
           </pre>
+          </div>
+
+          <div class="editor-footer">
+            <button class="submit-btn">Next</button>
+          </div>
         </div>
-
-        <div class="editor-footer">
-          <button class="submit-btn">Next</button>
+        <div class="hints">
+          <h3>Hints:</h3>
+          <ul id="hintsList">
+            <li>Show Solution</li>
+          </ul>
         </div>
-      </div>
-      <div class="hints">
-        <h3>Hints:</h3>
-        <ul id="hintsList">
-          <li>Show Solution</li>
-        </ul>
-      </div>
-    </section>
-    <section class="right-section">
-      <div class="levels-bar">
-        <span><img class="arrows" id="prevArrow" src="./assets/left-arrow.svg" alt="Previous"></span>
-        <span class="level-text">Level <span id="currentLevel">1</span> of <span id="totalLevels">10</span></span>
-        <span><img class="arrows" id="nextArrow" src="./assets/right-arrow.svg" alt="Next"></span>
-      </div>
-      <div class="output-box">
+      </section>
+      <section class="right-section">
+        <div class="levels-bar">
+          <span
+            ><img
+              class="arrows"
+              id="prevArrow"
+              src="./assets/left-arrow.svg"
+              alt="Previous"
+          /></span>
+          <span class="level-text"
+            >Level <span id="currentLevel">1</span> of
+            <span id="totalLevels">10</span></span
+          >
+          <span
+            ><img
+              class="arrows"
+              id="nextArrow"
+              src="./assets/right-arrow.svg"
+              alt="Next"
+          /></span>
+        </div>
+        <div class="output-box"></div>
+      </section>
+    </main>
 
-      </div>
-    </section>
-  </main>
-
-  <script type="module" src="./js/animation.js"></script>
-  <script type="module" src="./js/landing.js"></script>
-</body>
-
+    <script type="module" src="./js/animation.js"></script>
+    <script type="module" src="./js/landing.js"></script>
+  </body>
 </html>
