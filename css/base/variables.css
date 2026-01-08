@@ -1,0 +1,19 @@
+:root {
+    --bg-body: #f5f7fa;
+    --bg-top-bar: #fff;
+    --border-light: #e0e6e2;
+    --text-light: #1f2933;
+    --text-dark: #1f2933;
+    --bg-editor-panel: #f3f7f2;
+    --bg-editor: #fff;
+    --bg-line-numbers: #f0f2f5;
+    --text-muted: #777;
+    --border-muted: #ddd;
+    --accent-primary: #1b7f3a;
+    --accent-secondary: #f4c542;
+    --bg-levels-bar: #f3f7f2;
+    --shadow: 0 2px 8px rgb(0 0 0 / 8%);
+    --shadow-hover: 0 4px 12px rgb(0 0 0 / 12%);
+    --transition: 0.3s ease;
+    --radius: 0.5rem;
+}
