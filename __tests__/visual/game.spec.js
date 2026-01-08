@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import {TOTAL_LEVELS} from "../../js/constants";
+import { TOTAL_LEVELS } from "../../js/constants";
 
 const gotoGame = async (page) =>
   page.goto("/game.html", { waitUntil: "networkidle" });
