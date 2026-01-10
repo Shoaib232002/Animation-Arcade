@@ -18,8 +18,8 @@ export default defineConfig({
     deviceScaleFactor: 1,
     isMobile: false,
     hasTouch: false,
+    screenshot: "on",
     trace: "on-first-retry",
-    screenshot: "only-on-failure",
     launchOptions: {
       args: [
         "--disable-font-subpixel-positioning",
