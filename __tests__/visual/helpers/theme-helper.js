@@ -1,5 +1,11 @@
 import { expect } from "@playwright/test";
-import { DARK_THEME, LIGHT_THEME } from "../../../js/constants.js";
+import {
+  DARK_THEME,
+  LIGHT_THEME,
+  STORAGE_KEYS,
+} from "../../../js/constants.js";
+
+const WAIT_TIMEOUT = 100;
 
 export class ThemeTestHelper {
   constructor(page) {
@@ -20,11 +26,17 @@ export class ThemeTestHelper {
   }
 
   async getThemeFromLocalStorage() {
-    return await this.page.evaluate(() => localStorage.getItem("theme"));
+    return await this.page.evaluate(
+      (key) => localStorage.getItem(key),
+      STORAGE_KEYS.THEME
+    );
   }
 
   async setThemeInLocalStorage(theme) {
-    await this.page.evaluate((t) => localStorage.setItem("theme", t), theme);
+    await this.page.evaluate(
+      ({ key, value }) => localStorage.setItem(key, value),
+      { key: STORAGE_KEYS.THEME, value: theme }
+    );
   }
 
   async waitForTheme(theme) {
@@ -40,7 +52,7 @@ export class ThemeTestHelper {
 
   async clickToggle() {
     await this.themeToggle.click();
-    await this.page.waitForTimeout(100);
+    await this.page.waitForTimeout(WAIT_TIMEOUT);
   }
 
   async expectThemeState(theme) {

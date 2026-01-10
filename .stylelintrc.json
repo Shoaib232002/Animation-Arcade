@@ -26,7 +26,6 @@
     "unit-no-unknown": true,
     "property-no-unknown": true,
     "declaration-block-no-shorthand-property-overrides": true,
-    "selector-max-id": 0,
     "max-nesting-depth": 3,
     "no-duplicate-selectors": true,
     "no-descending-specificity": null,

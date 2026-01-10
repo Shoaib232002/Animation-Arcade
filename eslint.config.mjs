@@ -24,7 +24,6 @@ export default [
       "no-var": "error",
       "prefer-const": "error",
       "prefer-arrow-callback": "warn",
-      quotes: ["error", "double"],
       semi: ["error", "always"],
       "no-console": "warn",
       "no-debugger": "error",
