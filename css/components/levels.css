@@ -1,0 +1,31 @@
+.levels-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-light);
+  margin-bottom: 0.25rem;
+  border-radius: var(--radius);
+  background: var(--bg-levels-bar);
+}
+
+.levels-bar.compact {
+  align-self: flex-start;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  margin: 0.5rem 0 0;
+  width: fit-content;
+  font-size: 0.95rem;
+}
+
+.arrows {
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  transition: transform var(--transition);
+}
+
+.arrows:hover {
+  transform: scale(1.1);
+}

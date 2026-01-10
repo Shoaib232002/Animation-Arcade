@@ -49,3 +49,4 @@ export const RETRY_LIMITS = {
 export const ROUTES = {
   GAME: "/game.html",
 };
+export const TOTAL_LEVELS = 10;

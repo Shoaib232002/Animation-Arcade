@@ -1,0 +1,43 @@
+.home-btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent-secondary);
+  box-shadow: var(--shadow);
+  color: #1f2933;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.home-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.home-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn {
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent-secondary);
+  box-shadow: var(--shadow);
+  color: #1f2933;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}

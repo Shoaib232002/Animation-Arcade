@@ -1,0 +1,82 @@
+body.dark-theme {
+  --bg-body: #1a1d23;
+  --bg-top-bar: #252931;
+  --border-light: #3a3f4b;
+  --text-light: #e4e7eb;
+  --text-dark: #e4e7eb;
+  --bg-editor-panel: #1f2229;
+  --bg-editor: #2d3139;
+  --bg-line-numbers: #252931;
+  --text-muted: #a0a8b0;
+  --border-muted: #3a3f4b;
+  --accent-primary: #2ecc71;
+  --accent-secondary: #f4c542;
+  --bg-levels-bar: #1f2229;
+  --shadow: 0 2px 8px rgb(0 0 0 / 30%);
+  --shadow-hover: 0 4px 12px rgb(0 0 0 / 40%);
+}
+
+body.dark-theme .editor-input {
+  background: var(--bg-editor);
+  color: var(--text-light);
+}
+
+body.dark-theme .editor-input.correct {
+  background: #1b5e20;
+  color: #a5d6a7;
+}
+
+body.dark-theme .editor-input.error {
+  background: #b71c1c;
+  color: #ffcdd2;
+}
+
+body.dark-theme .submit-btn {
+  color: #1f2933;
+}
+
+body.dark-theme .theme-toggle:hover {
+  border-color: var(--border-light);
+  background-color: var(--bg-editor-panel);
+}
+
+body,
+.top-bar,
+.header-actions,
+.home-btn,
+.theme-toggle,
+.editor-container,
+.editor-input,
+.editor-footer,
+.hints,
+.right-section,
+.levels-bar,
+.output-box {
+  transition:
+    background-color var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.theme-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.6rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+  background-color: var(--bg-editor-panel);
+  box-shadow: var(--shadow);
+}
+
+.theme-icon img {
+  width: 1.2rem;
+  height: 1.2rem;
+}
