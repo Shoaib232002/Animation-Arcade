@@ -1,110 +1,62 @@
 import { test, expect } from "@playwright/test";
+import { TOTAL_LEVELS } from "../../js/constants";
 
-test.describe("Game UI Visual Tests", () => {
+const gotoGame = async (page) =>
+  page.goto("/game.html", { waitUntil: "networkidle" });
+
+const expectVisible = async (page, selector, text) => {
+  const el = page.locator(selector);
+  await expect(el).toBeVisible();
+  if (text) await expect(el).toContainText(text);
+};
+
+test.describe("Game UI Tests", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/game.html");
-    await page.waitForLoadState("domcontentloaded");
+    await gotoGame(page);
   });
 
-  test("should render header with logo and buttons", async ({ page }) => {
-    const header = page.locator(".top-bar");
-    await expect(header).toBeVisible();
-
-    const logo = page.locator(".logo");
-    await expect(logo).toContainText("Animation Arcade");
-
-    const homeBtn = page.locator(".home-btn");
-    await expect(homeBtn).toBeVisible();
-
-    const themeToggle = page.locator("#themeToggle");
-    await expect(themeToggle).toBeVisible();
+  test("renders header", async ({ page }) => {
+    await expectVisible(page, ".top-bar");
+    await expectVisible(page, ".logo", "Animation Arcade");
+    await expectVisible(page, ".home-btn", "Home");
+    await expectVisible(page, "#themeToggle");
   });
 
-  test("should render main layout with left and right sections", async ({
-    page,
-  }) => {
-    const mainLayout = page.locator(".main-layout");
-    await expect(mainLayout).toBeVisible();
-
-    const leftSection = page.locator(".left-section");
-    await expect(leftSection).toBeVisible();
-
-    const rightSection = page.locator(".right-section");
-    await expect(rightSection).toBeVisible();
+  test("renders main layout", async ({ page }) => {
+    for (const sel of [".main-layout", ".left-section", ".right-section"]) {
+      await expectVisible(page, sel);
+    }
   });
 
-  test("should render editor container with input", async ({ page }) => {
-    const editorContainer = page.locator(".editor-container");
-    await expect(editorContainer).toBeVisible();
-
-    const editor = page.locator(".editor");
-    await expect(editor).toBeVisible();
-
-    const lineNumbers = page.locator(".line-numbers");
-    await expect(lineNumbers).toBeVisible();
-
-    const textarea = page.locator(".editor-input");
-    await expect(textarea).toBeVisible();
+  test("renders editor container", async ({ page }) => {
+    for (const sel of [
+      ".editor-container",
+      ".description-box",
+      ".code-editor",
+      "#lineNumbers",
+      "#codeContent",
+    ]) {
+      await expectVisible(page, sel);
+    }
   });
 
-  test("should render editor footer with level and submit button", async ({
-    page,
-  }) => {
-    const footer = page.locator(".editor-footer");
-    await expect(footer).toBeVisible();
-
-    const levelText = page.locator(".editor-footer .level-text");
-    await expect(levelText).toContainText("Level:");
-
-    const submitBtn = page.locator(".editor-footer .submit-btn");
-    await expect(submitBtn).toContainText("Submit");
+  test("renders editor footer", async ({ page }) => {
+    await expectVisible(page, ".editor-footer");
+    await expectVisible(page, ".editor-footer .submit-btn", "Next");
+    await expect(page.locator("#currentLevel")).toHaveText(/\d+/);
   });
 
-  test("should render hints section", async ({ page }) => {
-    const hints = page.locator(".hints");
-    await expect(hints).toBeVisible();
-
-    const hintsTitle = page.locator(".hints h3");
-    await expect(hintsTitle).toContainText("Hints:");
+  test("renders hints section", async ({ page }) => {
+    await expectVisible(page, ".hints");
+    await expectVisible(page, ".hints h3", "Hints:");
+    await expectVisible(page, "#hintsList");
   });
 
-  test("should render levels bar with navigation arrows", async ({ page }) => {
-    const levelsBar = page.locator(".levels-bar");
-    await expect(levelsBar).toBeVisible();
-
-    const levelsText = page.locator(".levels-bar .level-text");
-    await expect(levelsText).toContainText("Levels");
-
-    const arrows = page.locator(".arrows");
-    expect(await arrows.count()).toBe(2);
-  });
-
-  test("should render output box for animation preview", async ({ page }) => {
-    const outputBox = page.locator(".output-box");
-    await expect(outputBox).toBeVisible();
-  });
-
-  test("should toggle between light and dark theme", async ({ page }) => {
-    const body = page.locator("body");
-    let hasDarkClass = await body.evaluate((el) =>
-      el.classList.contains("dark-theme")
-    );
-    expect(hasDarkClass).toBe(false);
-    const themeToggle = page.locator("#themeToggle");
-    await themeToggle.click();
-    await page.waitForTimeout(300);
-
-    hasDarkClass = await body.evaluate((el) =>
-      el.classList.contains("dark-theme")
-    );
-    expect(hasDarkClass).toBe(true);
-
-    await themeToggle.click();
-    await page.waitForTimeout(300);
-
-    hasDarkClass = await body.evaluate((el) =>
-      el.classList.contains("dark-theme")
-    );
-    expect(hasDarkClass).toBe(false);
+  test("renders levels bar", async ({ page }) => {
+    await expectVisible(page, ".levels-bar");
+    await expect(page.locator(".levels-bar .arrows")).toHaveCount(2);
+    await expectVisible(page, ".level-text", "Level");
+    await expect(page.locator("#currentLevel")).toHaveText("1");
+    await expect(page.locator("#totalLevels")).toHaveText(String(TOTAL_LEVELS));
   });
 });

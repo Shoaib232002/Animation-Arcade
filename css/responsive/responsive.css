@@ -1,0 +1,241 @@
+@media (width <=1024px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+    flex: 1;
+    gap: 1rem;
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  .left-section {
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .editor-container {
+    flex: 0 1 auto;
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .hints {
+    flex: 1 1 auto;
+    margin-top: 0.75rem;
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .code-editor {
+    height: auto;
+    margin-bottom: 0.5rem;
+    overflow: visible;
+  }
+
+  .output-box {
+    padding: 1rem;
+    min-height: 160px;
+    font-size: 1.2rem;
+  }
+
+  .levels-bar {
+    gap: 1.25rem;
+    padding: 0.7rem 1.1rem;
+  }
+
+  .editor-footer {
+    gap: 0.8rem;
+  }
+}
+
+@media (width <=768px) {
+  .top-bar {
+    padding: 0.75rem 1rem;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .home-btn,
+  .theme-toggle {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .main-layout {
+    flex: 1;
+    gap: 0.75rem;
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  .left-section {
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .editor-container {
+    flex: 0 1 auto;
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .hints {
+    flex: 1 1 auto;
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .code-editor {
+    height: auto;
+    margin-bottom: 1rem;
+    overflow: visible;
+  }
+
+  .level-title {
+    font-size: 1.1rem;
+  }
+
+  .blank-input {
+    min-width: 120px;
+    font-size: 0.9rem;
+  }
+
+  .right-section {
+    padding: 0.9rem;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .levels-bar {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .levels-text {
+    font-size: 0.9rem;
+  }
+
+  .output-box {
+    padding: 1rem;
+    min-height: 150px;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 1rem;
+  }
+
+  .arrows {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+@media (width <=480px) {
+  .main-layout {
+    flex: 1;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    overflow: hidden;
+  }
+
+  .top-bar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .logo {
+    font-size: 0.9rem;
+  }
+
+  .home-btn,
+  .theme-toggle {
+    padding: 0.4rem;
+    font-size: 0.75rem;
+  }
+
+  .left-section {
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .editor-container {
+    flex: 0 1 auto;
+    padding: 0.75rem;
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .code-editor {
+    height: auto;
+    margin-bottom: 0.5rem;
+    overflow: visible;
+  }
+
+  .hints {
+    flex: 1 1 auto;
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .level-title {
+    font-size: 1rem;
+  }
+
+  .blank-input {
+    padding: 0.3rem 0.4rem;
+    min-width: 100px;
+    font-size: 0.85rem;
+  }
+
+  .right-section {
+    padding: 0.75rem;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .levels-bar {
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .output-box {
+    padding: 0.75rem;
+    min-height: 120px;
+    font-size: 0.875rem;
+  }
+
+  .editor-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .level-text {
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .line-numbers {
+    padding: 0.75rem 0.5rem;
+    min-width: 2rem;
+    font-size: 0.85rem;
+  }
+
+  .code-content {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+}
