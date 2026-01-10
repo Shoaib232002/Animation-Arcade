@@ -35,7 +35,6 @@ jobs:
           echo "Stylelint completed successfully"
       - name: Lint summary
         run: echo "All lint checks passed successfully"
-
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -53,7 +52,6 @@ jobs:
         run: |
           npm test -- --ci --maxWorkers=4 --silent
           echo "Unit tests completed successfully"
-
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
@@ -90,16 +88,16 @@ jobs:
         continue-on-error: true
       - name: E2E summary
         run: echo "All E2E tests passed successfully"
-
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-${{ github.run_id }}
-          path: playwright-report/
+          path: |
+            playwright-report/
+            !playwright-report/data/
           retention-days: 30
           if-no-files-found: ignore
-
       - name: Upload Screenshots
         uses: actions/upload-artifact@v4
         if: always()
