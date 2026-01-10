@@ -1,7 +1,4 @@
 import { defineConfig } from "@playwright/test";
-import dotenv from "dotenv";
-
-dotenv.config({ path: ".env.test" });
 
 export default defineConfig({
   testDir: "./__tests__/visual",
@@ -13,7 +10,6 @@ export default defineConfig({
   reporter: [
     ["html", { outputFolder: "playwright-report", open: "never" }],
     ["list"],
-    ["json", { outputFile: "test-results/results.json" }],
   ],
   timeout: 50000,
   use: {
