@@ -1,5 +1,4 @@
 import { defineConfig } from "@playwright/test";
-
 export default defineConfig({
   testDir: "./__tests__/visual",
   outputDir: "test-results",
@@ -10,7 +9,6 @@ export default defineConfig({
   reporter: [
     ["html", { outputFolder: "playwright-report", open: "never" }],
     ["list"],
-    ["json", { outputFile: "test-results/results.json" }],
   ],
   timeout: 50000,
   use: {
@@ -19,8 +17,8 @@ export default defineConfig({
     deviceScaleFactor: 1,
     isMobile: false,
     hasTouch: false,
+    screenshot: "on",
     trace: "on-first-retry",
-    screenshot: "only-on-failure",
     launchOptions: {
       args: [
         "--disable-font-subpixel-positioning",
