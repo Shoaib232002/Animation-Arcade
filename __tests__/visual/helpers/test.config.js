@@ -6,8 +6,8 @@ import * as fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const envTestPath = path.resolve(__dirname, "../../.env.test");
-const envExamplePath = path.resolve(__dirname, "../../.env.test.example");
+const envTestPath = path.resolve(__dirname, "../../../.env.test");
+const envExamplePath = path.resolve(__dirname, "../../../.env.test.example");
 
 if (fs.existsSync(envExamplePath)) {
   dotenv.config({ path: envExamplePath });
