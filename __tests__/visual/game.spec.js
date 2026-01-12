@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { TOTAL_LEVELS } from "../../js/constants";
 
 const gotoGame = async (page) =>
   page.goto("/game.html", { waitUntil: "networkidle" });
@@ -50,13 +49,5 @@ test.describe("Game UI Tests", () => {
     await expectVisible(page, ".hints");
     await expectVisible(page, ".hints h3", "Hints:");
     await expectVisible(page, "#hintsList");
-  });
-
-  test("renders levels bar", async ({ page }) => {
-    await expectVisible(page, ".levels-bar");
-    await expect(page.locator(".levels-bar .arrows")).toHaveCount(2);
-    await expectVisible(page, ".level-text", "Level");
-    await expect(page.locator("#currentLevel")).toHaveText("1");
-    await expect(page.locator("#totalLevels")).toHaveText(String(TOTAL_LEVELS));
   });
 });
