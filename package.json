@@ -7,6 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "build": "npm run lint:all && npm run format:check && npm run test",
+    "vercel-build": "npm run build",
     "dev:test": "nodemon --exec 'npm test' --watch js --watch __tests__",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --passWithNoTests",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
