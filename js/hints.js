@@ -1,48 +1,101 @@
+const HINT_CONSTANTS = {
+  FIRST_TOPIC_INDEX: 0,
+  CLASSES: {
+    KEYWORD: "hint-keyword",
+    SOLUTION_BTN: "show-solution-btn",
+    REVEALED: "revealed",
+  },
+  ATTRIBUTES: {
+    VALUES: "data-values",
+    HINT: "data-hint",
+  },
+  MESSAGES: {
+    CONFIRM_SOLUTION: "Do you really want to check the solution?",
+  },
+};
+
+function findTopicByKeyword(topicHints, keyword) {
+  return (
+    topicHints.find((topic) => topic.keyword === keyword) ||
+    topicHints[HINT_CONSTANTS.FIRST_TOPIC_INDEX]
+  );
+}
+
+function createKeywordElement(keyword, topicHints) {
+  const keywordElement = document.createElement("li");
+  keywordElement.className = HINT_CONSTANTS.CLASSES.KEYWORD;
+  keywordElement.textContent = keyword;
+
+  if (
+    Array.isArray(topicHints) &&
+    topicHints.length > HINT_CONSTANTS.FIRST_TOPIC_INDEX
+  ) {
+    const topic = findTopicByKeyword(topicHints, keyword);
+
+    if (topic && topic.description) {
+      keywordElement.setAttribute(
+        HINT_CONSTANTS.ATTRIBUTES.VALUES,
+        topic.description
+      );
+      keywordElement.title = topic.description;
+    }
+  }
+
+  return keywordElement;
+}
+
+function handleSolutionReveal(button, description) {
+  const userConfirmed = window.confirm(
+    HINT_CONSTANTS.MESSAGES.CONFIRM_SOLUTION
+  );
+
+  if (!userConfirmed) return;
+
+  button.disabled = true;
+  button.classList.add(HINT_CONSTANTS.CLASSES.REVEALED);
+  button.textContent = description;
+}
+
+function createHintButton(hint) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = HINT_CONSTANTS.CLASSES.SOLUTION_BTN;
+  button.textContent = hint.term;
+  button.dataset.hint = hint.description;
+
+  button.addEventListener("click", () => {
+    handleSolutionReveal(button, hint.description);
+  });
+
+  return button;
+}
+
+function createHintListItem(hint) {
+  const listItem = document.createElement("li");
+  const hintButton = createHintButton(hint);
+  listItem.appendChild(hintButton);
+  return listItem;
+}
+
+function renderKeywordHint(editor, level) {
+  if (!level.keyword) return;
+
+  const keywordElement = createKeywordElement(level.keyword, level.topicHints);
+  editor.elements.hintsList.appendChild(keywordElement);
+}
+
+function renderHintsList(editor, hints) {
+  hints.forEach((hint) => {
+    const hintListItem = createHintListItem(hint);
+    editor.elements.hintsList.appendChild(hintListItem);
+  });
+}
+
 export function renderHints(editor, level) {
   if (!editor.elements.hintsList) return;
 
   editor.elements.hintsList.innerHTML = "";
 
-  if (level.keyword) {
-    const keywordLi = document.createElement("li");
-    keywordLi.className = "hint-keyword";
-    keywordLi.textContent = level.keyword;
-
-    if (Array.isArray(level.topicHints) && level.topicHints.length > 0) {
-      const topic =
-        level.topicHints.find((t) => t.keyword === level.keyword) ||
-        level.topicHints[0];
-
-      if (topic && topic.description) {
-        keywordLi.setAttribute("data-values", topic.description);
-        keywordLi.title = topic.description;
-      }
-    }
-
-    editor.elements.hintsList.appendChild(keywordLi);
-  }
-
-  level.hints.forEach((hint) => {
-    const li = document.createElement("li");
-
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "show-solution-btn";
-    btn.textContent = hint.term;
-    btn.dataset.hint = hint.description;
-
-    btn.addEventListener("click", () => {
-      const confirmed = window.confirm(
-        "Do you really want to check the solution?"
-      );
-      if (!confirmed) return;
-
-      btn.disabled = true;
-      btn.classList.add("revealed");
-      btn.textContent = hint.description;
-    });
-
-    li.appendChild(btn);
-    editor.elements.hintsList.appendChild(li);
-  });
+  renderKeywordHint(editor, level);
+  renderHintsList(editor, level.hints);
 }

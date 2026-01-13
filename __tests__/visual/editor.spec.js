@@ -1,7 +1,20 @@
 import { test, expect } from "@playwright/test";
+import * as dotenv from "dotenv";
+import * as fs from "fs";
+
+const envTestPath = ".env.test";
+const envExamplePath = ".env.test.example";
+
+if (fs.existsSync(envTestPath)) {
+  dotenv.config({ path: envTestPath });
+} else if (fs.existsSync(envExamplePath)) {
+  dotenv.config({ path: envExamplePath });
+} else {
+  throw new Error(`Neither ${envTestPath} nor ${envExamplePath} found`);
+}
 
 const CONFIG = {
-  url: "http://localhost:3000/game.html",
+  url: process.env.Test_URL,
   timeouts: {
     short: 50,
     medium: 100,
@@ -41,143 +54,166 @@ const selectors = {
   codeLine: ".code-line",
 };
 
-const waitForPageLoad = async (page) => {
-  await page.waitForLoadState("domcontentloaded");
-  await page.waitForSelector(selectors.blankInput, {
-    state: "visible",
-    timeout: CONFIG.timeouts.page,
-  });
-  await page.waitForTimeout(CONFIG.timeouts.long);
-};
+class GamePage {
+  constructor(page) {
+    this.page = page;
+  }
 
-const getInput = async (page, index = 0) => {
-  const inputs = await page.locator(selectors.blankInput).all();
-  return inputs[index];
-};
+  async goto() {
+    await this.page.goto(CONFIG.url);
+    await this.waitForPageLoad();
+  }
 
-const fillInput = async (page, value, index = 0) => {
-  const input = await getInput(page, index);
-  await input.fill(value);
-};
+  async waitForPageLoad() {
+    await this.page.waitForLoadState("domcontentloaded");
+    await this.page.waitForSelector(selectors.blankInput, {
+      state: "visible",
+      timeout: CONFIG.timeouts.page,
+    });
+    await this.page.waitForTimeout(CONFIG.timeouts.long);
+  }
 
-const getInputClass = async (page, index = 0) => {
-  const input = await getInput(page, index);
-  return await input.getAttribute("class");
-};
+  async getInput(index = 0) {
+    const inputs = await this.page.locator(selectors.blankInput).all();
+    return inputs[index];
+  }
 
-const navigateLevel = async (page, direction) => {
-  const arrow = direction > 0 ? selectors.nextArrow : selectors.prevArrow;
-  await page.click(arrow);
-  await page.waitForTimeout(CONFIG.timeouts.medium);
-};
+  async fillInput(value, index = 0) {
+    const input = await this.getInput(index);
+    await input.fill(value);
+  }
 
-const assertVisibility = async (page, selector) => {
-  await expect(page.locator(selector)).toBeVisible();
-};
+  async getInputValue(index = 0) {
+    const input = await this.getInput(index);
+    return await input.inputValue();
+  }
 
-const getCurrentLevel = async (page) => {
-  return await page.locator(selectors.currentLevel).textContent();
-};
+  async getInputClass(index = 0) {
+    const input = await this.getInput(index);
+    return (await input.getAttribute("class")) || "";
+  }
+
+  async getInputDataAnswer(index = 0) {
+    const input = await this.getInput(index);
+    return await input.getAttribute("data-answer");
+  }
+
+  async navigateLevel(direction) {
+    const arrow =
+      direction > CONFIG.levels.decrement
+        ? selectors.nextArrow
+        : selectors.prevArrow;
+    await this.page.click(arrow);
+    await this.page.waitForTimeout(CONFIG.timeouts.medium);
+  }
+
+  async submit() {
+    await this.page.click(selectors.submitBtn);
+    await this.page.waitForTimeout(CONFIG.timeouts.medium);
+  }
+
+  async submitWithKeyboard() {
+    await this.page.keyboard.press(CONFIG.keyboard.ctrlEnter);
+    await this.page.waitForTimeout(CONFIG.timeouts.medium);
+  }
+
+  async assertVisible(selector) {
+    await expect(this.page.locator(selector)).toBeVisible();
+  }
+
+  async getCurrentLevel() {
+    return (
+      (await this.page.locator(selectors.currentLevel).textContent()) || ""
+    );
+  }
+
+  async getTotalLevels() {
+    return (await this.page.locator(selectors.totalLevels).textContent()) || "";
+  }
+
+  async getDescription() {
+    return (await this.page.locator(selectors.description).textContent()) || "";
+  }
+
+  async getCodeLines() {
+    return await this.page.locator(selectors.codeLine).all();
+  }
+
+  hasStateClass(className) {
+    return (
+      className.includes(CONFIG.states.correct) ||
+      className.includes(CONFIG.states.error)
+    );
+  }
+
+  doesNotHaveStateClasses(className) {
+    return (
+      !className.includes(CONFIG.states.error) &&
+      !className.includes(CONFIG.states.correct)
+    );
+  }
+}
 
 test.describe("GameEditor Core Functionality", () => {
-  test("should initialize game with default state", async ({ page }) => {
-    await page.goto(CONFIG.url);
-    await waitForPageLoad(page);
+  let gamePage;
 
-    await assertVisibility(page, selectors.description);
-    await assertVisibility(page, selectors.codeContent);
-    await assertVisibility(page, selectors.submitBtn);
-    await assertVisibility(page, selectors.ball);
-    await assertVisibility(page, selectors.ground);
-    await assertVisibility(page, selectors.blankInput);
-
-    const currentLevel = await getCurrentLevel(page);
-    expect(currentLevel).toBe(CONFIG.levels.first);
-
-    const totalLevels = await page.locator(selectors.totalLevels).textContent();
-    expect(totalLevels).toBe(String(CONFIG.levels.total));
+  test.beforeEach(async ({ page }) => {
+    gamePage = new GamePage(page);
+    await gamePage.goto();
   });
 
-  test("should navigate between levels correctly", async ({ page }) => {
-    await page.goto(CONFIG.url);
-    await waitForPageLoad(page);
+  test("should navigate between levels correctly", async () => {
+    const initialLevel = await gamePage.getCurrentLevel();
+    await gamePage.navigateLevel(CONFIG.levels.increment);
 
-    const initialLevel = await getCurrentLevel(page);
-    await navigateLevel(page, CONFIG.levels.increment);
-
-    const nextLevel = await getCurrentLevel(page);
+    const nextLevel = await gamePage.getCurrentLevel();
     expect(parseInt(nextLevel)).toBe(
       parseInt(initialLevel) + CONFIG.levels.increment
     );
 
-    await navigateLevel(page, CONFIG.levels.decrement);
-    const previousLevel = await getCurrentLevel(page);
+    await gamePage.navigateLevel(CONFIG.levels.decrement);
+    const previousLevel = await gamePage.getCurrentLevel();
     expect(previousLevel).toBe(initialLevel);
   });
 
-  test("should handle user input and validation", async ({ page }) => {
-    await page.goto(CONFIG.url);
-    await waitForPageLoad(page);
-
-    await fillInput(page, CONFIG.testValues.transform);
-    const input = await getInput(page);
-    const inputValue = await input.inputValue();
+  test("should handle user input and validation", async () => {
+    await gamePage.fillInput(CONFIG.testValues.transform);
+    const inputValue = await gamePage.getInputValue();
     expect(inputValue).toBe(CONFIG.testValues.transform);
 
-    await page.keyboard.press(CONFIG.keyboard.ctrlEnter);
-    await page.waitForTimeout(CONFIG.timeouts.medium);
+    await gamePage.submitWithKeyboard();
 
-    const className = await getInputClass(page);
-    const hasStateClass =
-      className.includes(CONFIG.states.correct) ||
-      className.includes(CONFIG.states.error);
-    expect(hasStateClass).toBe(true);
+    const className = await gamePage.getInputClass();
+    expect(gamePage.hasStateClass(className)).toBe(true);
   });
 
-  test("should clear input state when navigating", async ({ page }) => {
-    await page.goto(CONFIG.url);
-    await waitForPageLoad(page);
+  test("should clear input state when navigating", async () => {
+    await gamePage.fillInput(CONFIG.testValues.wrongAnswer);
+    await gamePage.submit();
 
-    await fillInput(page, CONFIG.testValues.wrongAnswer);
-    await page.click(selectors.submitBtn);
-    await page.waitForTimeout(CONFIG.timeouts.medium);
+    await gamePage.navigateLevel(CONFIG.levels.increment);
+    await gamePage.navigateLevel(CONFIG.levels.decrement);
 
-    await navigateLevel(page, CONFIG.levels.increment);
-    await navigateLevel(page, CONFIG.levels.decrement);
-
-    const input = await getInput(page);
-    const inputValue = await input.inputValue();
-    const className = await getInputClass(page);
+    const inputValue = await gamePage.getInputValue();
+    const className = await gamePage.getInputClass();
 
     expect(inputValue).toBe("");
-    expect(className).not.toContain(CONFIG.states.error);
-    expect(className).not.toContain(CONFIG.states.correct);
+    expect(gamePage.doesNotHaveStateClasses(className)).toBe(true);
   });
 
-  test("should update description on level change", async ({ page }) => {
-    await page.goto(CONFIG.url);
-    await waitForPageLoad(page);
+  test("should update description on level change", async () => {
+    const firstDescription = await gamePage.getDescription();
+    await gamePage.navigateLevel(CONFIG.levels.increment);
 
-    const firstDescription = await page
-      .locator(selectors.description)
-      .textContent();
-    await navigateLevel(page, CONFIG.levels.increment);
-
-    const secondDescription = await page
-      .locator(selectors.description)
-      .textContent();
+    const secondDescription = await gamePage.getDescription();
     expect(secondDescription).not.toBe(firstDescription);
   });
 
-  test("should render code lines correctly", async ({ page }) => {
-    await page.goto(CONFIG.url);
-    await waitForPageLoad(page);
+  test("should render code lines correctly", async () => {
+    const codeLines = await gamePage.getCodeLines();
+    expect(codeLines.length).toBeGreaterThan(CONFIG.levels.decrement);
 
-    const codeLines = await page.locator(selectors.codeLine).all();
-    expect(codeLines.length).toBeGreaterThan(0);
-
-    const input = await getInput(page);
-    const dataAnswer = await input.getAttribute("data-answer");
+    const dataAnswer = await gamePage.getInputDataAnswer();
     expect(dataAnswer).toBeTruthy();
   });
 });

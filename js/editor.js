@@ -1,11 +1,82 @@
-import { levels } from "./levels.js";
+import { levels } from "./levelsData.js";
 import "./animation.js";
 import { GameValidator } from "./validator.js";
 import { renderHints } from "./hints.js";
 
+const CONSTANTS = {
+  LINE_NUMBER_START: 1,
+  LINE_INCREMENT: 1,
+  FOCUS_DELAY: 100,
+  FIRST_INPUT_INDEX: 0,
+  LEVEL_START: 0,
+  NAVIGATION: {
+    BACKWARD: -1,
+    FORWARD: 1,
+  },
+  BLANK_PLACEHOLDER: "_____",
+  FIRST_LEVEL_ID: 1,
+  REGEX: {
+    SENTENCE_END: /[.!?]/,
+    NOT_FOUND: -1,
+  },
+  KEYS: {
+    ENTER: "Enter",
+  },
+  CSS: {
+    HYPHEN_LOWERCASE: /-([a-z])/g,
+  },
+};
+
+const SELECTORS = {
+  LEVEL_TITLE: ".level-title",
+  DESCRIPTION: ".game-description",
+  CODE_CONTENT: "#codeContent",
+  LINE_NUMBERS: "#lineNumbers",
+  HINTS_LIST: "#hintsList",
+  CURRENT_LEVEL: "#currentLevel",
+  TOTAL_LEVELS: "#totalLevels",
+  SUBMIT_BTN: ".submit-btn",
+  OUTPUT_BOX: ".output-box",
+  PREV_ARROW: "#prevArrow",
+  NEXT_ARROW: "#nextArrow",
+  BALL: ".ball",
+  GROUND: ".ground",
+};
+
+const CSS_CLASSES = {
+  CODE_LINE: "code-line",
+  CODE_LINE_TEXT: "code-line-text",
+  CODE_LINE_BLANK: "code-line-blank",
+  BLANK_INPUT: "blank-input",
+  CORRECT: "correct",
+  ERROR: "error",
+  COMPLETION_CONTAINER: "completion-container",
+  ERROR_CONTAINER: "error-container",
+};
+
+const HTML_TEMPLATES = {
+  OUTPUT_BOX: `
+    <div class="${CSS_CLASSES.GROUND}">
+      <div class="${SELECTORS.BALL.slice(1)}"></div>
+    </div>
+  `,
+  COMPLETION_MESSAGE: `
+    <div class="${CSS_CLASSES.COMPLETION_CONTAINER}">
+      <h2>You've completed all levels!</h2>
+    </div>
+  `,
+  ERROR_MESSAGE: `
+    <div class="${CSS_CLASSES.ERROR_CONTAINER}">
+      <h3>Error Loading Game</h3>
+      <p>Please check that all files are loaded correctly.</p>
+      <p>Check browser console for details.</p>
+    </div>
+  `,
+};
+
 class GameEditor {
   constructor() {
-    this.currentLevel = 0;
+    this.currentLevel = CONSTANTS.LEVEL_START;
     this.inputs = [];
     this.initializeElements();
     this.validator = new GameValidator(this);
@@ -15,17 +86,17 @@ class GameEditor {
 
   initializeElements() {
     this.elements = {
-      levelTitle: document.querySelector(".level-title"),
-      description: document.querySelector(".game-description"),
-      codeContent: document.querySelector("#codeContent"),
-      lineNumbers: document.querySelector("#lineNumbers"),
-      hintsList: document.querySelector("#hintsList"),
-      currentLevel: document.querySelector("#currentLevel"),
-      totalLevels: document.querySelector("#totalLevels"),
-      submitBtn: document.querySelector(".submit-btn"),
-      outputBox: document.querySelector(".output-box"),
-      prevArrow: document.querySelector("#prevArrow"),
-      nextArrow: document.querySelector("#nextArrow"),
+      levelTitle: document.querySelector(SELECTORS.LEVEL_TITLE),
+      description: document.querySelector(SELECTORS.DESCRIPTION),
+      codeContent: document.querySelector(SELECTORS.CODE_CONTENT),
+      lineNumbers: document.querySelector(SELECTORS.LINE_NUMBERS),
+      hintsList: document.querySelector(SELECTORS.HINTS_LIST),
+      currentLevel: document.querySelector(SELECTORS.CURRENT_LEVEL),
+      totalLevels: document.querySelector(SELECTORS.TOTAL_LEVELS),
+      submitBtn: document.querySelector(SELECTORS.SUBMIT_BTN),
+      outputBox: document.querySelector(SELECTORS.OUTPUT_BOX),
+      prevArrow: document.querySelector(SELECTORS.PREV_ARROW),
+      nextArrow: document.querySelector(SELECTORS.NEXT_ARROW),
     };
   }
 
@@ -34,21 +105,22 @@ class GameEditor {
       this.validator.checkAnswer()
     );
     this.elements.prevArrow?.addEventListener("click", () =>
-      this.navigateLevel(-1)
+      this.navigateLevel(CONSTANTS.NAVIGATION.BACKWARD)
     );
     this.elements.nextArrow?.addEventListener("click", () =>
-      this.navigateLevel(1)
+      this.navigateLevel(CONSTANTS.NAVIGATION.FORWARD)
     );
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      if (e.key === CONSTANTS.KEYS.ENTER && (e.ctrlKey || e.metaKey)) {
         this.validator.checkAnswer();
       }
     });
   }
 
   loadLevel(levelIndex) {
-    if (levelIndex < 0 || levelIndex >= levels.length) return;
+    if (levelIndex < CONSTANTS.LEVEL_START || levelIndex >= levels.length)
+      return;
 
     this.currentLevel = levelIndex;
     const level = levels[levelIndex];
@@ -75,19 +147,26 @@ class GameEditor {
   setDescription(level) {
     if (!this.elements.description) return;
     const descHTML =
-      level?.id === 1
+      level?.id === CONSTANTS.FIRST_LEVEL_ID
         ? this.formatSpecialDescription(level)
         : this.formatStandardDescription(level);
     this.elements.description.innerHTML = descHTML;
   }
+
   formatSpecialDescription(level) {
     if (!level.description) return this.addQuestion("", level.question);
-    const firstSentenceEnd = level.description.search(/[.!?]/);
+    const firstSentenceEnd = level.description.search(
+      CONSTANTS.REGEX.SENTENCE_END
+    );
     const splitAt =
-      firstSentenceEnd === -1 ? level.description.length : firstSentenceEnd + 1;
-    const firstPart = level.description.slice(0, splitAt).trim();
+      firstSentenceEnd === CONSTANTS.REGEX.NOT_FOUND
+        ? level.description.length
+        : firstSentenceEnd + CONSTANTS.LINE_INCREMENT;
+    const firstPart = level.description
+      .slice(CONSTANTS.LEVEL_START, splitAt)
+      .trim();
     const restPart = level.description.slice(splitAt).trim();
-    let result = `<span style="color: var(--accent-primary); font-weight:700;">${firstPart}</span>`;
+    let result = `<span class="description-highlight">${firstPart}</span>`;
     if (restPart) result += `<br/><span>${restPart}</span>`;
     return this.addQuestion(result, level.question);
   }
@@ -99,7 +178,7 @@ class GameEditor {
 
   addQuestion(html, question) {
     if (question) {
-      html += `<br/><br/><strong style="color: var(--accent-primary);">${question}</strong>`;
+      html += `<br/><br/><strong class="question-highlight">${question}</strong>`;
     }
     return html;
   }
@@ -122,46 +201,46 @@ class GameEditor {
 
     level.code.forEach((line, index) => {
       const lineNumber = document.createElement("span");
-      lineNumber.textContent = index + 1;
+      lineNumber.textContent = index + CONSTANTS.LINE_NUMBER_START;
       this.elements.lineNumbers.appendChild(lineNumber);
 
       const codeLine = document.createElement("div");
-      codeLine.className = "code-line";
+      codeLine.className = CSS_CLASSES.CODE_LINE;
 
       const blank = level.blanks.find((b) => b.line === index);
 
       if (blank) {
-        const parts = line.split("_____");
+        const parts = line.split(CONSTANTS.BLANK_PLACEHOLDER);
 
-        if (parts[0]) {
+        if (parts[CONSTANTS.LEVEL_START]) {
           const textBefore = document.createElement("span");
-          textBefore.className = "code-line-text";
-          textBefore.textContent = parts[0];
+          textBefore.className = CSS_CLASSES.CODE_LINE_TEXT;
+          textBefore.textContent = parts[CONSTANTS.LEVEL_START];
           codeLine.appendChild(textBefore);
         }
 
         const input = document.createElement("input");
         input.type = "text";
-        input.className = "blank-input";
+        input.className = CSS_CLASSES.BLANK_INPUT;
         input.dataset.answer = blank.answer;
         input.dataset.line = index;
         input.placeholder = "";
         this.inputs.push(input);
 
         const blankContainer = document.createElement("span");
-        blankContainer.className = "code-line-blank";
+        blankContainer.className = CSS_CLASSES.CODE_LINE_BLANK;
         blankContainer.appendChild(input);
         codeLine.appendChild(blankContainer);
 
-        if (parts[1]) {
+        if (parts[CONSTANTS.LINE_INCREMENT]) {
           const textAfter = document.createElement("span");
-          textAfter.className = "code-line-text";
-          textAfter.textContent = parts[1];
+          textAfter.className = CSS_CLASSES.CODE_LINE_TEXT;
+          textAfter.textContent = parts[CONSTANTS.LINE_INCREMENT];
           codeLine.appendChild(textAfter);
         }
       } else {
         const text = document.createElement("span");
-        text.className = "code-line-text";
+        text.className = CSS_CLASSES.CODE_LINE_TEXT;
         text.textContent = line;
         codeLine.appendChild(text);
       }
@@ -169,25 +248,20 @@ class GameEditor {
       this.elements.codeContent.appendChild(codeLine);
     });
 
-    if (this.inputs.length > 0) {
+    if (this.inputs.length > CONSTANTS.LEVEL_START) {
       setTimeout(() => {
-        this.inputs[0]?.focus();
-      }, 100);
+        this.inputs[CONSTANTS.FIRST_INPUT_INDEX]?.focus();
+      }, CONSTANTS.FOCUS_DELAY);
     }
   }
 
   renderOutput() {
     if (!this.elements.outputBox) return;
-
-    this.elements.outputBox.innerHTML = `
-      <div class="ground">
-        <div class="ball"></div>
-      </div>
-    `;
+    this.elements.outputBox.innerHTML = HTML_TEMPLATES.OUTPUT_BOX;
   }
 
   applyAnimation(cssRule) {
-    const ball = document.querySelector(".ball");
+    const ball = document.querySelector(SELECTORS.BALL);
     if (!ball) return;
 
     ball.removeAttribute("style");
@@ -196,8 +270,9 @@ class GameEditor {
     rules.forEach((rule) => {
       const [property, value] = rule.split(":").map((s) => s.trim());
       if (property && value) {
-        const camelCase = property.replace(/-([a-z])/g, (g) =>
-          g[1].toUpperCase()
+        const camelCase = property.replace(
+          CONSTANTS.CSS.HYPHEN_LOWERCASE,
+          (match, letter) => letter.toUpperCase()
         );
         ball.style[camelCase] = value;
       }
@@ -206,27 +281,21 @@ class GameEditor {
 
   clearInputStates() {
     this.inputs.forEach((input) => {
-      input.classList.remove("correct", "error");
+      input.classList.remove(CSS_CLASSES.CORRECT, CSS_CLASSES.ERROR);
       input.value = "";
     });
   }
 
   navigateLevel(direction) {
     const newLevel = this.currentLevel + direction;
-    if (newLevel >= 0 && newLevel < levels.length) {
+    if (newLevel >= CONSTANTS.LEVEL_START && newLevel < levels.length) {
       this.loadLevel(newLevel);
     }
   }
 
   showCompletionMessage() {
     if (this.elements.outputBox) {
-      this.elements.outputBox.innerHTML = `
-        <div style="text-align: center; padding: 2rem;">
-          <h2 style="color: var(--bg-body); margin-bottom: 1rem;">
-            You've completed all levels!
-          </h2>
-        </div>
-      `;
+      this.elements.outputBox.innerHTML = HTML_TEMPLATES.COMPLETION_MESSAGE;
     }
   }
 }
@@ -235,17 +304,9 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     new GameEditor();
   } catch {
-    const outputBox = document.querySelector(".output-box");
+    const outputBox = document.querySelector(SELECTORS.OUTPUT_BOX);
     if (outputBox) {
-      outputBox.innerHTML = `
-        <div style="text-align: center; padding: 2rem; color: #d32f2f;">
-          <h3>Error Loading Game</h3>
-          <p>Please check that all files are loaded correctly.</p>
-          <p style="font-size: 0.85rem; margin-top: 1rem;">
-            Check browser console for details.
-          </p>
-        </div>
-      `;
+      outputBox.innerHTML = HTML_TEMPLATES.ERROR_MESSAGE;
     }
   }
 });
