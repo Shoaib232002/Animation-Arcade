@@ -4,7 +4,7 @@ export async function loadLevels() {
   try {
     const response = await fetch("../levelsdata.json");
     if (!response.ok) {
-      throw new Error(`Failed to load levels: ${response.statusText}`);
+      throw new Error("Failed to load levels");
     }
     const rawLevels = await response.json();
     levelsData = rawLevels.map((level) => ({
