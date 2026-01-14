@@ -195,3 +195,83 @@ export const ANIMATION_CONSTANTS = {
   }
 `,
 };
+
+export const EDITOR_CONSTANTS = {
+  LINE_NUMBER_START: 1,
+  LINE_INCREMENT: 1,
+  FOCUS_DELAY: 100,
+  FIRST_INPUT_INDEX: 0,
+  LEVEL_START: 0,
+  NAVIGATION: {
+    BACKWARD: -1,
+    FORWARD: 1,
+  },
+  BLANK_PLACEHOLDER: "_____",
+  FIRST_LEVEL_ID: 1,
+  REGEX: {
+    SENTENCE_END: /[.!?]/,
+    NOT_FOUND: -1,
+  },
+  KEYS: {
+    ENTER: "Enter",
+  },
+  CSS: {
+    HYPHEN_LOWERCASE: /-([a-z])/g,
+  },
+};
+
+export const SELECTORS = {
+  LEVEL_TITLE: ".level-title",
+  DESCRIPTION: ".game-description",
+  CODE_CONTENT: "#codeContent",
+  LINE_NUMBERS: "#lineNumbers",
+  HINTS_LIST: "#hintsList",
+  CURRENT_LEVEL: "#currentLevel",
+  TOTAL_LEVELS: "#totalLevels",
+  SUBMIT_BTN: ".submit-btn",
+  OUTPUT_BOX: ".output-box",
+  PREV_ARROW: "#prevArrow",
+  NEXT_ARROW: "#nextArrow",
+  BALL: ".ball",
+  GROUND: ".ground",
+};
+
+export const EDITOR_CSS_CLASSES = {
+  CODE_LINE: "code-line",
+  CODE_LINE_TEXT: "code-line-text",
+  CODE_LINE_BLANK: "code-line-blank",
+  BLANK_INPUT: "blank-input",
+  CORRECT: "correct",
+  ERROR: "error",
+  COMPLETION_CONTAINER: "completion-container",
+  ERROR_CONTAINER: "error-container",
+};
+
+export const getHTMLTemplates = () => ({
+  OUTPUT_BOX: `
+    <div class="${EDITOR_CSS_CLASSES.GROUND}">
+      <div class="${SELECTORS.BALL.slice(1)}"></div>
+    </div>
+  `,
+  COMPLETION_MESSAGE: `
+    <div class="${EDITOR_CSS_CLASSES.COMPLETION_CONTAINER}">
+      <h2>${UI_STRINGS.COMPLETION_TITLE}</h2>
+    </div>
+  `,
+  ERROR_MESSAGE: `
+    <div class="${EDITOR_CSS_CLASSES.ERROR_CONTAINER}">
+      <h3>${UI_STRINGS.ERROR_TITLE}</h3>
+      <p>${UI_STRINGS.ERROR_MESSAGE_1}</p>
+      <p>${UI_STRINGS.ERROR_MESSAGE_2}</p>
+    </div>
+  `,
+});
+
+export const VALIDATOR_CONSTANTS = {
+  DELAYS: {
+    SUCCESS_MESSAGE: 2000,
+  },
+  NAVIGATION: {
+    NEXT_LEVEL: 1,
+  },
+};

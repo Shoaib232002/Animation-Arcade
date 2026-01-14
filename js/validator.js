@@ -1,30 +1,9 @@
 import { getLevels } from "./levelsData.js";
-import { UI_STRINGS } from "./constants.js";
-
-const VALIDATOR_CONSTANTS = {
-  DELAYS: {
-    SUCCESS_MESSAGE: 2000,
-  },
-  NAVIGATION: {
-    NEXT_LEVEL: 1,
-  },
-  NORMALIZATION: {
-    SPACE_PATTERN: /\s+/g,
-    OPENING_PAREN_PATTERN: /\s*\(\s*/g,
-    CLOSING_PAREN_PATTERN: /\s*\)\s*/g,
-    COMMA_PATTERN: /\s*,\s*/g,
-    SEMICOLON_PATTERN: /;+$/g,
-    SINGLE_SPACE: " ",
-    OPENING_PAREN: "(",
-    CLOSING_PAREN: ")",
-    COMMA: ",",
-    EMPTY_STRING: "",
-  },
-  CSS_CLASSES: {
-    ERROR: "error",
-    CORRECT: "correct",
-  },
-};
+import {
+  UI_STRINGS,
+  VALIDATOR_CONSTANTS,
+  EDITOR_CSS_CLASSES,
+} from "./constants.js";
 
 export class GameValidator {
   constructor(editor) {
@@ -34,26 +13,11 @@ export class GameValidator {
   normalizeValue(value) {
     return value
       .toLowerCase()
-      .replace(
-        VALIDATOR_CONSTANTS.NORMALIZATION.SPACE_PATTERN,
-        VALIDATOR_CONSTANTS.NORMALIZATION.SINGLE_SPACE
-      )
-      .replace(
-        VALIDATOR_CONSTANTS.NORMALIZATION.OPENING_PAREN_PATTERN,
-        VALIDATOR_CONSTANTS.NORMALIZATION.OPENING_PAREN
-      )
-      .replace(
-        VALIDATOR_CONSTANTS.NORMALIZATION.CLOSING_PAREN_PATTERN,
-        VALIDATOR_CONSTANTS.NORMALIZATION.CLOSING_PAREN
-      )
-      .replace(
-        VALIDATOR_CONSTANTS.NORMALIZATION.COMMA_PATTERN,
-        VALIDATOR_CONSTANTS.NORMALIZATION.COMMA
-      )
-      .replace(
-        VALIDATOR_CONSTANTS.NORMALIZATION.SEMICOLON_PATTERN,
-        VALIDATOR_CONSTANTS.NORMALIZATION.EMPTY_STRING
-      )
+      .replace(/\s+/g, " ")
+      .replace(/\s*\(\s*/g, "(")
+      .replace(/\s*\)\s*/g, ")")
+      .replace(/\s*,\s*/g, ",")
+      .replace(/;+$/g, "")
       .trim();
   }
 
@@ -63,13 +27,13 @@ export class GameValidator {
     const isCorrect = userAnswer === correctAnswer;
 
     input.classList.remove(
-      VALIDATOR_CONSTANTS.CSS_CLASSES.ERROR,
-      VALIDATOR_CONSTANTS.CSS_CLASSES.CORRECT
+      EDITOR_CSS_CLASSES.ERROR,
+      EDITOR_CSS_CLASSES.CORRECT
     );
     if (isCorrect) {
-      input.classList.add(VALIDATOR_CONSTANTS.CSS_CLASSES.CORRECT);
+      input.classList.add(EDITOR_CSS_CLASSES.CORRECT);
     } else {
-      input.classList.add(VALIDATOR_CONSTANTS.CSS_CLASSES.ERROR);
+      input.classList.add(EDITOR_CSS_CLASSES.ERROR);
     }
 
     return isCorrect;
