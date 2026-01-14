@@ -1,6 +1,5 @@
 export default {
   testEnvironment: "jsdom",
-  extensionsToTreatAsEsm: [".js"],
   testMatch: ["**/__tests__/**/*.test.js"],
   testPathIgnorePatterns: [
     "/node_modules/",
