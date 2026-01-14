@@ -1,18 +1,4 @@
-const HINT_CONSTANTS = {
-  FIRST_TOPIC_INDEX: 0,
-  CLASSES: {
-    KEYWORD: "hint-keyword",
-    SOLUTION_BTN: "show-solution-btn",
-    REVEALED: "revealed",
-  },
-  ATTRIBUTES: {
-    VALUES: "data-values",
-    HINT: "data-hint",
-  },
-  MESSAGES: {
-    CONFIRM_SOLUTION: "Do you really want to check the solution?",
-  },
-};
+import { HINT_CONSTANTS } from "./constants.js";
 
 function findTopicByKeyword(topicHints, keyword) {
   return (

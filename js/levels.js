@@ -1,25 +1,9 @@
-const createLevel = (
-  id,
-  title,
-  description,
-  code,
-  blanks,
-  answer,
-  keyword,
-  topicDescription,
-  question,
-  expectedCSS
-) => ({
-  id,
-  title,
-  description,
-  code,
-  blanks,
-  hints: [{ term: "Show Solution", description: answer }],
-  keyword,
-  topicHints: [{ keyword, description: topicDescription }],
-  question,
-  expectedCSS,
+const createLevel = (levelData = {}) => ({
+  ...levelData,
+  hints: [{ term: "Show Solution", description: levelData.answer }],
+  topicHints: [
+    { keyword: levelData.keyword, description: levelData.topicDescription },
+  ],
 });
 
 export { createLevel };

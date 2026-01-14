@@ -1,4 +1,4 @@
-import { levels } from "./levelsData.js";
+import { getLevels } from "./levelsData.js";
 
 const VALIDATOR_CONSTANTS = {
   DELAYS: {
@@ -99,6 +99,7 @@ export class GameValidator {
   }
 
   navigateToNextLevel() {
+    const levels = getLevels();
     const nextLevelIndex =
       this.editor.currentLevel + VALIDATOR_CONSTANTS.NAVIGATION.NEXT_LEVEL;
 
@@ -115,6 +116,7 @@ export class GameValidator {
     );
 
     if (allCorrect) {
+      const levels = getLevels();
       const level = levels[this.editor.currentLevel];
       this.handleSuccess(level);
     }

@@ -1,4 +1,4 @@
-import { levels } from "./levelsData.js";
+import { loadLevels, getLevels } from "./levelsData.js";
 import "./animation.js";
 import { GameValidator } from "./validator.js";
 import { renderHints } from "./hints.js";
@@ -119,6 +119,7 @@ class GameEditor {
   }
 
   loadLevel(levelIndex) {
+    const levels = getLevels();
     if (levelIndex < CONSTANTS.LEVEL_START || levelIndex >= levels.length)
       return;
 
@@ -135,7 +136,7 @@ class GameEditor {
   updateLevelInfo(level) {
     this.setLevelTitle(level.title);
     this.setDescription(level);
-    this.setLevelCount(level.id, levels.length);
+    this.setLevelCount(level.id, getLevels().length);
   }
 
   setLevelTitle(title) {
@@ -287,6 +288,7 @@ class GameEditor {
   }
 
   navigateLevel(direction) {
+    const levels = getLevels();
     const newLevel = this.currentLevel + direction;
     if (newLevel >= CONSTANTS.LEVEL_START && newLevel < levels.length) {
       this.loadLevel(newLevel);
@@ -300,10 +302,12 @@ class GameEditor {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   try {
+    await loadLevels();
     new GameEditor();
-  } catch {
+  } catch (error) {
+    console.error("Failed to initialize game:", error);
     const outputBox = document.querySelector(SELECTORS.OUTPUT_BOX);
     if (outputBox) {
       outputBox.innerHTML = HTML_TEMPLATES.ERROR_MESSAGE;
