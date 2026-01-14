@@ -18,7 +18,7 @@ export async function loadLevels() {
     }));
     return levelsData;
   } catch {
-    console.log("Error in levels data");
+    throw new Error("Failed to load levels data");
   }
 }
 
