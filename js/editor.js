@@ -307,8 +307,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     await loadLevels();
     new GameEditor();
-  } catch (error) {
-    console.error("Failed to initialize game:", error);
+  } catch {
+    console.log("Failed to initialize game");
     const outputBox = document.querySelector(SELECTORS.OUTPUT_BOX);
     if (outputBox) {
       outputBox.innerHTML = HTML_TEMPLATES.ERROR_MESSAGE;

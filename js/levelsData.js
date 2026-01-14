@@ -17,9 +17,8 @@ export async function loadLevels() {
       ],
     }));
     return levelsData;
-  } catch (error) {
-    console.error(UI_STRINGS.ERROR_LOADING_LEVELS, error);
-    throw error;
+  } catch {
+    console.log(UI_STRINGS.ERROR_LOADING_LEVELS);
   }
 }
 
