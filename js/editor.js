@@ -2,6 +2,7 @@ import { loadLevels, getLevels } from "./levelsData.js";
 import "./animation.js";
 import { GameValidator } from "./validator.js";
 import { renderHints } from "./hints.js";
+import { UI_STRINGS } from "./constants.js";
 
 const CONSTANTS = {
   LINE_NUMBER_START: 1,
@@ -62,14 +63,14 @@ const HTML_TEMPLATES = {
   `,
   COMPLETION_MESSAGE: `
     <div class="${CSS_CLASSES.COMPLETION_CONTAINER}">
-      <h2>You've completed all levels!</h2>
+      <h2>${UI_STRINGS.COMPLETION_TITLE}</h2>
     </div>
   `,
   ERROR_MESSAGE: `
     <div class="${CSS_CLASSES.ERROR_CONTAINER}">
-      <h3>Error Loading Game</h3>
-      <p>Please check that all files are loaded correctly.</p>
-      <p>Check browser console for details.</p>
+      <h3>${UI_STRINGS.ERROR_TITLE}</h3>
+      <p>${UI_STRINGS.ERROR_MESSAGE_1}</p>
+      <p>${UI_STRINGS.ERROR_MESSAGE_2}</p>
     </div>
   `,
 };

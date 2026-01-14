@@ -67,6 +67,19 @@ export const HINT_CONSTANTS = {
   },
 };
 
+export const UI_STRINGS = {
+  SHOW_SOLUTION: "Show Solution",
+  SUCCESS: "Success!",
+  NEXT: "Next",
+  COMPLETION_TITLE: "You've completed all levels!",
+  ERROR_TITLE: "Error Loading Game",
+  ERROR_MESSAGE_1: "Please check that all files are loaded correctly.",
+  ERROR_MESSAGE_2: "Check browser console for details.",
+  FAILED_TO_LOAD_LEVELS: "Failed to load levels",
+  ERROR_LOADING_LEVELS: "Error loading levels data:",
+  FAILED_TO_INITIALIZE: "Failed to initialize game:",
+};
+
 export const ANIMATION_CONSTANTS = {
   KEYFRAME_NAMES: [
     "bounce",

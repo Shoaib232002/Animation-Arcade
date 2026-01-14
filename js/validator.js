@@ -1,4 +1,5 @@
 import { getLevels } from "./levelsData.js";
+import { UI_STRINGS } from "./constants.js";
 
 const VALIDATOR_CONSTANTS = {
   DELAYS: {
@@ -18,10 +19,6 @@ const VALIDATOR_CONSTANTS = {
     CLOSING_PAREN: ")",
     COMMA: ",",
     EMPTY_STRING: "",
-  },
-  MESSAGES: {
-    SUCCESS: "Success!",
-    NEXT: "Next",
   },
   CSS_CLASSES: {
     ERROR: "error",
@@ -81,8 +78,7 @@ export class GameValidator {
   handleSuccess(level) {
     this.editor.applyAnimation(level.expectedCSS);
     if (this.editor.elements.submitBtn) {
-      this.editor.elements.submitBtn.textContent =
-        VALIDATOR_CONSTANTS.MESSAGES.SUCCESS;
+      this.editor.elements.submitBtn.textContent = UI_STRINGS.SUCCESS;
     }
 
     setTimeout(() => {
@@ -93,8 +89,7 @@ export class GameValidator {
 
   updateSubmitButton() {
     if (this.editor.elements.submitBtn) {
-      this.editor.elements.submitBtn.textContent =
-        VALIDATOR_CONSTANTS.MESSAGES.NEXT;
+      this.editor.elements.submitBtn.textContent = UI_STRINGS.NEXT;
     }
   }
 

@@ -1,6 +1,8 @@
+import { UI_STRINGS } from "./constants.js";
+
 const createLevel = (levelData = {}) => ({
   ...levelData,
-  hints: [{ term: "Show Solution", description: levelData.answer }],
+  hints: [{ term: UI_STRINGS.SHOW_SOLUTION, description: levelData.answer }],
   topicHints: [
     { keyword: levelData.keyword, description: levelData.topicDescription },
   ],
