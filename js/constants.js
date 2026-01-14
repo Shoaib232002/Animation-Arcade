@@ -208,15 +208,8 @@ export const EDITOR_CONSTANTS = {
   },
   BLANK_PLACEHOLDER: "_____",
   FIRST_LEVEL_ID: 1,
-  REGEX: {
-    SENTENCE_END: /[.!?]/,
-    NOT_FOUND: -1,
-  },
   KEYS: {
     ENTER: "Enter",
-  },
-  CSS: {
-    HYPHEN_LOWERCASE: /-([a-z])/g,
   },
 };
 

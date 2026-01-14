@@ -95,11 +95,9 @@ class GameEditor {
 
   formatSpecialDescription(level) {
     if (!level.description) return this.addQuestion("", level.question);
-    const firstSentenceEnd = level.description.search(
-      EDITOR_CONSTANTS.REGEX.SENTENCE_END
-    );
+    const firstSentenceEnd = level.description.search(/[.!?]/);
     const splitAt =
-      firstSentenceEnd === EDITOR_CONSTANTS.REGEX.NOT_FOUND
+      firstSentenceEnd === -1
         ? level.description.length
         : firstSentenceEnd + EDITOR_CONSTANTS.LINE_INCREMENT;
     const firstPart = level.description
@@ -210,9 +208,8 @@ class GameEditor {
     rules.forEach((rule) => {
       const [property, value] = rule.split(":").map((s) => s.trim());
       if (property && value) {
-        const camelCase = property.replace(
-          EDITOR_CONSTANTS.CSS.HYPHEN_LOWERCASE,
-          (match, letter) => letter.toUpperCase()
+        const camelCase = property.replace(/-([a-z])/g, (match, letter) =>
+          letter.toUpperCase()
         );
         ball.style[camelCase] = value;
       }
