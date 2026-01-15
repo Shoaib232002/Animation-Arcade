@@ -167,6 +167,15 @@ class AuthManagerClass {
       return;
     }
 
+    const usernameRegex = /^(?=.*[a-zA-Z]{3})[a-zA-Z0-9]+$/;
+    if (!usernameRegex.test(name)) {
+      this.showMessage(
+        "Username must contain only letters and numbers, with at least 3 letters (cannot be only numbers)",
+        MESSAGE_TYPES.ERROR
+      );
+      return;
+    }
+
     if (password !== confirmPassword) {
       this.showMessage(MESSAGES.PASSWORD_MISMATCH, MESSAGE_TYPES.ERROR);
       return;
