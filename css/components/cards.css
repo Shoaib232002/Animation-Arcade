@@ -1,0 +1,66 @@
+.feature-card {
+  padding: 1.5rem;
+  background-color: var(--surface-color);
+  border-radius: var(--radius);
+  border-top: 4px solid var(--secondary-color);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-top-color: var(--primary-color);
+}
+
+.feature-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: var(--muted-text);
+}
+
+.feature-icon {
+  display: none;
+}
+
+.step {
+  background-color: var(--surface-color);
+  border-radius: var(--radius);
+  border-top: 4px solid var(--secondary-color);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
+}
+
+.step:hover {
+  transform: translateY(-4px);
+  border-top-color: var(--primary-color);
+}
+
+.step h3 {
+  text-align: center;
+}
+
+.step p {
+  color: var(--muted-text);
+  text-align: justify;
+  padding: 0.5rem 1rem 1rem;
+}
+
+.step-number {
+  width: var(--step-number-size);
+  height: var(--step-number-size);
+  margin: 0.5rem auto 1rem;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
