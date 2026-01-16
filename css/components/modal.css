@@ -7,6 +7,11 @@
   justify-content: center;
   z-index: var(--z-index-overlay);
   animation: fade-in 0.3s ease;
+  pointer-events: none;
+}
+
+.overlay.modal-open {
+  pointer-events: auto;
 }
 
 .modal {

@@ -90,12 +90,18 @@ class AuthManagerClass {
   }
 
   openModal() {
-    this.overlay.style.display = "flex";
+    if (this.overlay) {
+      this.overlay.style.display = "flex";
+      this.overlay.classList.add("modal-open");
+    }
     this.switchTab(TABS.LOGIN);
   }
 
   closeModal() {
-    this.overlay.style.display = "none";
+    if (this.overlay) {
+      this.overlay.style.display = "none";
+      this.overlay.classList.remove("modal-open");
+    }
     this.clearMessages();
   }
 
@@ -167,10 +173,10 @@ class AuthManagerClass {
       return;
     }
 
-    const usernameRegex = /^(?=.*[a-zA-Z]{3})[a-zA-Z0-9]+$/;
+    const usernameRegex = /^(?=.*[a-zA-Z]{3})[a-zA-Z0-9\s]+$/;
     if (!usernameRegex.test(name)) {
       this.showMessage(
-        "Username must contain only letters and numbers, with at least 3 letters (cannot be only numbers)",
+        "Username must contain only letters, numbers, and spaces, with at least 3 letters (cannot be only numbers)",
         MESSAGE_TYPES.ERROR
       );
       return;
@@ -206,7 +212,11 @@ class AuthManagerClass {
     this.saveUsers(users);
     this.saveAuth(user);
 
-    this.closeModal();
+    try {
+      this.closeModal();
+    } catch (e) {
+      console.error("Error closing modal:", e);
+    }
     this.updateUIForLoggedIn(name);
   }
 
@@ -225,7 +235,11 @@ class AuthManagerClass {
     }
 
     this.saveAuth(user);
-    this.closeModal();
+    try {
+      this.closeModal();
+    } catch (e) {
+      console.error("Error closing modal:", e);
+    }
     this.updateUIForLoggedIn(user.name);
   }
 

@@ -20,7 +20,7 @@
   transform: translateY(0);
 }
 
-.submit-btn {
+.editor-footer .submit-btn {
   padding: 0.6rem 1.5rem;
   border: none;
   border-radius: var(--radius);
