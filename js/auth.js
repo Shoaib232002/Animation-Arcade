@@ -214,8 +214,11 @@ class AuthManagerClass {
 
     try {
       this.closeModal();
-    } catch (e) {
-      throw new Error(console.error("Error closing modal:", e));
+    } catch {
+      this.showMessage(
+        "Account created but failed to close modal",
+        MESSAGE_TYPES.ERROR
+      );
     }
     this.updateUIForLoggedIn(name);
   }
@@ -237,8 +240,11 @@ class AuthManagerClass {
     this.saveAuth(user);
     try {
       this.closeModal();
-    } catch (e) {
-      throw new Error(console.error("Error closing modal:", e));
+    } catch {
+      this.showMessage(
+        "Login successful but failed to close modal",
+        MESSAGE_TYPES.ERROR
+      );
     }
     this.updateUIForLoggedIn(user.name);
   }
