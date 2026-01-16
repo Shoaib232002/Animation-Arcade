@@ -215,7 +215,7 @@ class AuthManagerClass {
     try {
       this.closeModal();
     } catch (e) {
-      console.error("Error closing modal:", e);
+      throw new Error(console.error("Error closing modal:", e));
     }
     this.updateUIForLoggedIn(name);
   }
@@ -238,7 +238,7 @@ class AuthManagerClass {
     try {
       this.closeModal();
     } catch (e) {
-      console.error("Error closing modal:", e);
+      throw new Error(console.error("Error closing modal:", e));
     }
     this.updateUIForLoggedIn(user.name);
   }
