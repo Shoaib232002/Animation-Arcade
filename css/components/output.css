@@ -10,3 +10,24 @@
   font-size: 1.375rem;
   font-weight: 600;
 }
+
+.ground {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ball {
+  position: absolute;
+  top: 85%;
+  left: 73%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #f82727, #c92a2a, #000, #000);
+  border: 1px solid #000;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 30%);
+  margin-left: -25px;
+  margin-top: -25px;
+}

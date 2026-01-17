@@ -28,7 +28,7 @@
 }
 
 .level-title {
-  margin: 0;
+  margin: 0 0 0.5rem;
   color: var(--accent-primary);
   font-size: 1.1rem;
   font-weight: 700;
@@ -183,18 +183,11 @@
   border-radius: 0.25rem;
   min-width: 180px;
   background: #fff;
-  color: var(--text-dark);
   font-family: "Courier New", monospace;
   font-size: 0.9rem;
   line-height: 1;
   outline: none;
   transition: all var(--transition);
-}
-
-.blank-input:focus {
-  border-color: #f4c542;
-  background: #fffacd;
-  box-shadow: 0 0 0 3px rgb(244 197 66 / 25%);
 }
 
 .blank-input.correct {
@@ -239,4 +232,34 @@
   color: var(--accent-primary);
   font-size: 1rem;
   font-weight: 600;
+}
+
+.description-highlight {
+  color: var(--accent-primary);
+  font-weight: 700;
+}
+
+.question-highlight {
+  color: var(--accent-primary);
+}
+
+.completion-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.completion-container h2 {
+  color: var(--bg-body);
+  margin-bottom: 1rem;
+}
+
+.error-container {
+  text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+}
+
+.error-container p:last-child {
+  font-size: 0.85rem;
+  margin-top: 1rem;
 }

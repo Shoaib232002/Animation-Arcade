@@ -1,6 +1,5 @@
 export default {
-  testEnvironment: "node",
-  transform: {},
+  testEnvironment: "jsdom",
   testMatch: ["**/__tests__/**/*.test.js"],
   testPathIgnorePatterns: [
     "/node_modules/",
@@ -11,4 +10,5 @@ export default {
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
+  transform: {},
 };
