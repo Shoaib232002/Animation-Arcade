@@ -2,7 +2,7 @@ import { jest } from "@jest/globals";
 
 const mockGetLevels = jest.fn();
 
-jest.unstable_mockModule("../js/levelsData.js", () => ({
+jest.unstable_mockModule("../js/levels-data.js", () => ({
   getLevels: mockGetLevels,
 }));
 

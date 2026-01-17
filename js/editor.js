@@ -1,9 +1,9 @@
-import { loadLevels, getLevels } from "./levelsData.js";
+import { loadLevels, getLevels } from "./levels-data.js";
 import "./animation.js";
 import { GameValidator } from "./validator.js";
 import { renderHints } from "./hints.js";
-import { KeyframesManager } from "./keyframesManager.js";
-import { DescriptionFormatter } from "./descriptionFormatter.js";
+import { KeyframesManager } from "./keyframes-manager.js";
+import { DescriptionFormatter } from "./description-formatter.js";
 import { ProgressManager } from "./progress.js";
 import {
   EDITOR_CONSTANTS,

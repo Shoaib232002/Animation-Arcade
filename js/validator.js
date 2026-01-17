@@ -1,4 +1,4 @@
-import { getLevels } from "./levelsData.js";
+import { getLevels } from "./levels-data.js";
 import {
   UI_STRINGS,
   VALIDATOR_CONSTANTS,
