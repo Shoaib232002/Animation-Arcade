@@ -45,7 +45,7 @@
   resize: vertical;
   outline: none;
   transition: all var(--transition);
-  min-width: 600px;
+  min-width: 500px;
 }
 
 .blank-input:focus {
