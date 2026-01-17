@@ -182,6 +182,16 @@ class AuthManagerClass {
       return;
     }
 
+    const passwordRegex =
+      /^(?=.*[a-zA-Z]{4,})(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?!.*\s).{4,}$/;
+    if (!passwordRegex.test(password)) {
+      this.showMessage(
+        "Password must be at least 4 characters, containing at least 4 letters, numbers, special characters, and no spaces",
+        MESSAGE_TYPES.ERROR
+      );
+      return;
+    }
+
     if (password !== confirmPassword) {
       this.showMessage(MESSAGES.PASSWORD_MISMATCH, MESSAGE_TYPES.ERROR);
       return;

@@ -1,0 +1,56 @@
+.keyframes-header {
+  padding: 0.75rem 0.6rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 2px solid var(--accent-primary);
+  background: var(--bg-body);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.keyframe-hover {
+  color: var(--accent-primary);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  transition: color 0.2s ease;
+}
+
+.keyframe-hover:hover {
+  color: var(--accent-secondary);
+}
+
+.keyframe-hover[data-tooltip-active="true"] {
+  text-decoration-style: solid;
+  color: var(--accent-secondary);
+}
+
+.keyframe-tooltip {
+  position: fixed;
+  background: var(--bg-editor);
+  border: 2px solid var(--accent-primary);
+  border-radius: var(--radius);
+  padding: 1rem;
+  max-width: 500px;
+  max-height: 400px;
+  overflow: auto;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+  z-index: 10000;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.keyframe-tooltip pre {
+  margin: 0;
+  background: var(--bg-body);
+  padding: 0.75rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.keyframe-tooltip code {
+  font-family: "Courier New", Monaco, monospace;
+  white-space: pre;
+}

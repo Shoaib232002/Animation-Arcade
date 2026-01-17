@@ -1,3 +1,7 @@
+@import url("./keyframes.css");
+@import url("./code-editor.css");
+@import url("./completion-messages.css");
+
 .editor-container {
   display: flex;
   flex: 0 1 auto;
@@ -85,7 +89,7 @@
   background: var(--bg-editor);
   color: var(--text-dark);
   font-family: "Courier New", monospace;
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.6;
   resize: vertical;
   outline: none;
@@ -142,84 +146,6 @@
   text-align: right;
 }
 
-.code-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 0;
-  padding: 0.5rem 0.6rem;
-  margin: 0;
-  min-width: 0;
-  background: var(--bg-editor);
-  overflow: auto visible;
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
-.code-line {
-  display: flex;
-  align-items: center;
-  height: 1.6rem;
-  min-height: 1.6rem;
-  color: var(--text-dark);
-  font-size: 0.9rem;
-}
-
-.code-line-text {
-  color: var(--text-dark);
-  font-family: "Courier New", monospace;
-  white-space: pre;
-}
-
-.code-line-blank {
-  flex: 1;
-  align-items: center;
-}
-
-.blank-input {
-  height: 1.3rem;
-  padding: 0.25rem 0.4rem;
-  border: 2px solid #f4c542;
-  border-radius: 0.25rem;
-  min-width: 180px;
-  background: #fff;
-  font-family: "Courier New", monospace;
-  font-size: 0.9rem;
-  line-height: 1;
-  outline: none;
-  transition: all var(--transition);
-}
-
-.blank-input.correct {
-  border-color: #1b7f3a;
-  background: #e8f5e9;
-  color: #1b7f3a;
-}
-
-.blank-input.error {
-  border-color: #d32f2f;
-  background: #fee;
-  color: #d32f2f;
-}
-
-.code-content::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.code-content::-webkit-scrollbar-track {
-  background: var(--bg-editor-panel);
-}
-
-.code-content::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background: var(--text-muted);
-}
-
-.code-content::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-primary);
-}
-
 .editor-footer {
   display: flex;
   justify-content: flex-end;
@@ -241,25 +167,4 @@
 
 .question-highlight {
   color: var(--accent-primary);
-}
-
-.completion-container {
-  text-align: center;
-  padding: 2rem;
-}
-
-.completion-container h2 {
-  color: var(--bg-body);
-  margin-bottom: 1rem;
-}
-
-.error-container {
-  text-align: center;
-  padding: 2rem;
-  color: #d32f2f;
-}
-
-.error-container p:last-child {
-  font-size: 0.85rem;
-  margin-top: 1rem;
 }

@@ -1,4 +1,4 @@
-import { getLevels } from "./levelsData.js";
+import { getLevels } from "./levels-data.js";
 import {
   UI_STRINGS,
   VALIDATOR_CONSTANTS,
@@ -44,6 +44,8 @@ export class GameValidator {
     if (this.editor.elements.submitBtn) {
       this.editor.elements.submitBtn.textContent = UI_STRINGS.SUCCESS;
     }
+
+    this.editor.progressManager.markLevelComplete(this.editor.currentLevel);
 
     setTimeout(() => {
       this.updateSubmitButton();

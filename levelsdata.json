@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "Level 1: Basic Transform - Translation",
-    "description": "Welcome to Animation Arcade! In this level, you'll learn about the transform property with translateX(). The transform property allows you to move, rotate, scale, and skew elements. The translateX() function moves an element horizontally. Use positive values to move right and negative values to move left. For example: translateX(100px) moves the element 100 pixels to the right.",
+    "description": "In this level, you'll learn about the transform property with translateX(). The transform property allows you to move, rotate, scale, and skew elements. The translateX() function moves an element horizontally. Use positive values to move right and negative values to move left. For example: translateX(100px) moves the element 100 pixels to the right.",
     "code": [".ball {", "  transform: _____;", "}"],
     "blanks": [{ "line": 1, "answer": "translateX(200px)" }],
     "answer": "translateX(200px)",
@@ -125,7 +125,8 @@
     "keyword": "animation",
     "topicDescription": "Syntax: animation: name duration. The name must match a keyframes rule. Example: animation: slide 3s.",
     "question": "Set up an animation named 'bounce' that runs for 2 seconds?",
-    "expectedCSS": "animation: bounce 2s;"
+    "expectedCSS": "animation: bounce 2s;",
+    "keyframes": "@keyframes bounce {\n  0% {\n    transform: translateY(0);\n  }\n  50% {\n    transform: translateY(-30px);\n  }\n  100% {\n    transform: translateY(0);\n  }\n}"
   },
   {
     "id": 10,
@@ -137,7 +138,8 @@
     "keyword": "animation",
     "topicDescription": "Values: number or infinite. Example: animation: pulse 2s 3 runs 3 times, animation: rotate 1s infinite loops forever.",
     "question": "Create an animation named 'spin' that runs for 1 second and repeats infinitely?",
-    "expectedCSS": "animation: spin 1s infinite;"
+    "expectedCSS": "animation: spin 1s infinite;",
+    "keyframes": "@keyframes spin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}"
   },
   {
     "id": 11,
@@ -149,7 +151,8 @@
     "keyword": "animation",
     "topicDescription": "Values: normal, reverse, alternate, alternate-reverse. Example: animation: bounce 1s infinite alternate creates a ping-pong effect.",
     "question": "Create a 'slide' animation that runs for 2 seconds, repeats infinitely, and alternates direction?",
-    "expectedCSS": "animation: slide 2s infinite alternate;"
+    "expectedCSS": "animation: slide 2s infinite alternate;",
+    "keyframes": "@keyframes slide {\n  0% {\n    transform: translateX(0);\n  }\n  100% {\n    transform: translateX(150px);\n  }\n}"
   },
   {
     "id": 12,
@@ -163,7 +166,8 @@
     "keyword": "animation",
     "topicDescription": "Timing functions: linear, ease, ease-in, ease-out, ease-in-out. Example: animation: fade 2s ease-in infinite creates smooth acceleration.",
     "question": "Create a 'wobble' animation with 1.8s duration, ease-in-out timing, infinite repetition, and alternate direction?",
-    "expectedCSS": "animation: wobble 1.8s ease-in-out infinite alternate;"
+    "expectedCSS": "animation: wobble 1.8s ease-in-out infinite alternate;",
+    "keyframes": "@keyframes wobble {\n  0% {\n    transform: rotate(-5deg);\n  }\n  50% {\n    transform: rotate(5deg);\n  }\n  100% {\n    transform: rotate(-5deg);\n  }\n}"
   },
   {
     "id": 13,
@@ -181,7 +185,8 @@
     "keyword": "animation",
     "topicDescription": "Delay syntax: animation: name duration timing delay iteration direction. Delay can be in seconds or milliseconds. Example: animation: fade 1s ease 2s waits 2 seconds before starting.",
     "question": "Create a 'pulse' animation with 2s duration, ease-in timing, 0.5s delay, infinite iterations, and alternate direction?",
-    "expectedCSS": "animation: pulse 2s ease-in 0.5s infinite alternate;"
+    "expectedCSS": "animation: pulse 2s ease-in 0.5s infinite alternate;",
+    "keyframes": "@keyframes pulse {\n  0% {\n    transform: scale(1);\n    opacity: 1;\n  }\n  50% {\n    transform: scale(1.2);\n    opacity: 0.8;\n  }\n  100% {\n    transform: scale(1);\n    opacity: 1;\n  }\n}"
   },
   {
     "id": 14,
@@ -201,12 +206,13 @@
     "keyword": "animation",
     "topicDescription": "Complex animations combine multiple properties with precise timing. Use animation shorthand for the main effect and additional properties for layered control.",
     "question": "Create a 'complex' animation with 3s duration, ease-in-out timing, 0.3s delay, infinite iterations, and alternate direction?",
-    "expectedCSS": "animation: complex 3s ease-in-out 0.3s infinite alternate; transform: rotate(0deg); opacity: 1;"
+    "expectedCSS": "animation: complex 3s ease-in-out 0.3s infinite alternate; transform: rotate(0deg); opacity: 1;",
+    "keyframes": "@keyframes complex {\n  0% {\n    transform: rotate(0deg) scale(1);\n    opacity: 1;\n  }\n  25% {\n    transform: rotate(90deg) scale(1.2);\n    opacity: 0.9;\n  }\n  50% {\n    transform: rotate(180deg) scale(0.8);\n    opacity: 0.7;\n  }\n  75% {\n    transform: rotate(270deg) scale(1.2);\n    opacity: 0.9;\n  }\n  100% {\n    transform: rotate(360deg) scale(1);\n    opacity: 1;\n  }\n}"
   },
   {
     "id": 15,
     "title": "Level 15: Master Level - Combined Animation and Transform",
-    "description": "The ultimate challenge combines everything: multiple transform functions with complex animation properties. You need to coordinate transform positioning with animation timing, iteration, direction, and delays. This creates sophisticated animations that demonstrate complete mastery of CSS animation techniques.",
+    "description": "The ultimate challenge combines everything: multiple transform functions with complex animation properties. You need to coordinate transform positioning.",
     "code": [
       ".ball {",
       "  transform: _____ _____ _____;",
@@ -222,6 +228,7 @@
     "keyword": "animation",
     "topicDescription": "Master level combines static transforms with animated properties. The transform provides base positioning while animation adds dynamic movement. Coordinate both for professional results.",
     "question": "Apply a transform that moves 100px right, rotates 45deg, and scales to 1.4, then add a 'master' animation with 2.5s duration, ease-in-out timing, 0.2s delay, infinite iterations, and alternate direction?",
-    "expectedCSS": "transform: translateX(100px) rotate(45deg) scale(1.4); animation: master 2.5s ease-in-out 0.2s infinite alternate; opacity: 0.85;"
+    "expectedCSS": "transform: translateX(100px) rotate(45deg) scale(1.4); animation: master 2.5s ease-in-out 0.2s infinite alternate; opacity: 0.85;",
+    "keyframes": "@keyframes master {\n  0% {\n    transform: translateX(0) translateY(0) rotate(0deg);\n    opacity: 0.85;\n  }\n  25% {\n    transform: translateX(50px) translateY(-20px) rotate(45deg);\n    opacity: 0.9;\n  }\n  50% {\n    transform: translateX(100px) translateY(0) rotate(90deg);\n    opacity: 0.85;\n  }\n  75% {\n    transform: translateX(50px) translateY(20px) rotate(180deg);\n    opacity: 0.9;\n  }\n  100% {\n    transform: translateX(0) translateY(0) rotate(360deg);\n    opacity: 0.85;\n  }\n}"
   }
 ]
