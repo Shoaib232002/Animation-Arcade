@@ -15,20 +15,15 @@ describe("GameValidator", () => {
   let mockLevels;
 
   const createMockLevel = (id, expectedCSS) => ({ id, expectedCSS });
-
   const createMockButton = () => ({ textContent: "" });
 
   beforeEach(() => {
     jest.useFakeTimers();
 
-    const firstLevelCSS = "transform: rotate(45deg)";
-    const secondLevelCSS = "transform: scale(2)";
-    const thirdLevelCSS = "transform: translate(100px)";
-
     mockLevels = [
-      createMockLevel(1, firstLevelCSS),
-      createMockLevel(2, secondLevelCSS),
-      createMockLevel(3, thirdLevelCSS),
+      createMockLevel(1, "transform: rotate(45deg)"),
+      createMockLevel(2, "transform: scale(2)"),
+      createMockLevel(3, "transform: translate(100px)"),
     ];
 
     mockGetLevels.mockReturnValue(mockLevels);
@@ -42,6 +37,10 @@ describe("GameValidator", () => {
       applyAnimation: jest.fn(),
       loadLevel: jest.fn(),
       showCompletionMessage: jest.fn(),
+
+      progressManager: {
+        markLevelComplete: jest.fn(),
+      },
     };
 
     validator = new GameValidator(mockEditor);
@@ -71,6 +70,9 @@ describe("GameValidator", () => {
 
     expect(mockBtn.textContent).toBe(UI_STRINGS.SUCCESS);
     expect(mockEditor.applyAnimation).toHaveBeenCalledWith(level.expectedCSS);
+    expect(mockEditor.progressManager.markLevelComplete).toHaveBeenCalledWith(
+      mockEditor.currentLevel
+    );
 
     jest.advanceTimersByTime(VALIDATOR_CONSTANTS.DELAYS.SUCCESS_MESSAGE);
 
@@ -79,21 +81,19 @@ describe("GameValidator", () => {
   });
 
   test("navigateToNextLevel should load next level when more levels exist", () => {
-    const firstLevelIndex = 0;
-    mockEditor.currentLevel = firstLevelIndex;
+    mockEditor.currentLevel = 0;
 
     validator.navigateToNextLevel();
 
-    const expectedNextLevel =
-      firstLevelIndex + VALIDATOR_CONSTANTS.NAVIGATION.NEXT_LEVEL;
     expect(mockGetLevels).toHaveBeenCalled();
-    expect(mockEditor.loadLevel).toHaveBeenCalledWith(expectedNextLevel);
+    expect(mockEditor.loadLevel).toHaveBeenCalledWith(
+      0 + VALIDATOR_CONSTANTS.NAVIGATION.NEXT_LEVEL
+    );
     expect(mockEditor.showCompletionMessage).not.toHaveBeenCalled();
   });
 
   test("navigateToNextLevel should show completion message at last level", () => {
-    const lastLevelIndex = mockLevels.length - 1;
-    mockEditor.currentLevel = lastLevelIndex;
+    mockEditor.currentLevel = mockLevels.length - 1;
 
     validator.navigateToNextLevel();
 

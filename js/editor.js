@@ -2,6 +2,9 @@ import { loadLevels, getLevels } from "./levelsData.js";
 import "./animation.js";
 import { GameValidator } from "./validator.js";
 import { renderHints } from "./hints.js";
+import { KeyframesManager } from "./keyframesManager.js";
+import { DescriptionFormatter } from "./descriptionFormatter.js";
+import { ProgressManager } from "./progress.js";
 import {
   EDITOR_CONSTANTS,
   SELECTORS,
@@ -13,6 +16,9 @@ class GameEditor {
   constructor() {
     this.currentLevel = EDITOR_CONSTANTS.LEVEL_START;
     this.inputs = [];
+    this.keyframesManager = new KeyframesManager();
+    this.descriptionFormatter = new DescriptionFormatter();
+    this.progressManager = new ProgressManager();
     this.HTML_TEMPLATES = getHTMLTemplates();
     this.initializeElements();
     this.validator = new GameValidator(this);
@@ -70,6 +76,39 @@ class GameEditor {
     renderHints(this, level);
     this.renderOutput();
     this.clearInputStates();
+    this.updateNavigationButtons();
+  }
+
+  updateNavigationButtons() {
+    const levels = getLevels();
+    const canGoPrev = this.currentLevel > 0;
+    const canGoNext =
+      this.currentLevel < levels.length - 1 &&
+      this.progressManager.isLevelCompleted(this.currentLevel);
+
+    if (this.elements.prevArrow) {
+      if (canGoPrev) {
+        this.elements.prevArrow.classList.remove("disabled");
+        this.elements.prevArrow.style.opacity = "1";
+        this.elements.prevArrow.style.pointerEvents = "auto";
+      } else {
+        this.elements.prevArrow.classList.add("disabled");
+        this.elements.prevArrow.style.opacity = "0.5";
+        this.elements.prevArrow.style.pointerEvents = "none";
+      }
+    }
+
+    if (this.elements.nextArrow) {
+      if (canGoNext) {
+        this.elements.nextArrow.classList.remove("disabled");
+        this.elements.nextArrow.style.opacity = "1";
+        this.elements.nextArrow.style.pointerEvents = "auto";
+      } else {
+        this.elements.nextArrow.classList.add("disabled");
+        this.elements.nextArrow.style.opacity = "0.5";
+        this.elements.nextArrow.style.pointerEvents = "none";
+      }
+    }
   }
 
   updateLevelInfo(level) {
@@ -86,39 +125,35 @@ class GameEditor {
 
   setDescription(level) {
     if (!this.elements.description) return;
-    const descHTML =
-      level?.id === EDITOR_CONSTANTS.FIRST_LEVEL_ID
-        ? this.formatSpecialDescription(level)
-        : this.formatStandardDescription(level);
+    const descHTML = this.descriptionFormatter.getFormattedDescription(level);
     this.elements.description.innerHTML = descHTML;
   }
 
-  formatSpecialDescription(level) {
-    if (!level.description) return this.addQuestion("", level.question);
-    const firstSentenceEnd = level.description.search(/[.!?]/);
-    const splitAt =
-      firstSentenceEnd === -1
-        ? level.description.length
-        : firstSentenceEnd + EDITOR_CONSTANTS.LINE_INCREMENT;
-    const firstPart = level.description
-      .slice(EDITOR_CONSTANTS.LEVEL_START, splitAt)
-      .trim();
-    const restPart = level.description.slice(splitAt).trim();
-    let result = `<span class="description-highlight">${firstPart}</span>`;
-    if (restPart) result += `<br/><span>${restPart}</span>`;
-    return this.addQuestion(result, level.question);
+  setupKeyframeHoverListeners() {
+    this.keyframesManager.setupKeyframeListeners(
+      (e) => this.showKeyframeTooltip(e),
+      (e, force) => this.hideKeyframeTooltip(e, force)
+    );
   }
 
-  formatStandardDescription(level) {
-    const base = level.description || "";
-    return this.addQuestion(base, level.question);
+  showKeyframeTooltip(event) {
+    this.keyframesManager.showKeyframeTooltip(
+      event,
+      (text) => this.descriptionFormatter.escapeHtml(text),
+      (e, force) => this.hideKeyframeTooltip(e, force)
+    );
   }
 
-  addQuestion(html, question) {
-    if (question) {
-      html += `<br/><br/><strong class="question-highlight">${question}</strong>`;
-    }
-    return html;
+  hideKeyframeTooltip(event, force = false) {
+    this.keyframesManager.hideKeyframeTooltip(event, force);
+  }
+
+  toggleKeyframeTooltip(event, showCallback, hideCallback) {
+    this.keyframesManager.toggleKeyframeTooltip(
+      event,
+      showCallback,
+      hideCallback
+    );
   }
 
   setLevelCount(current, total) {
@@ -136,6 +171,14 @@ class GameEditor {
     this.elements.codeContent.innerHTML = "";
     this.elements.lineNumbers.innerHTML = "";
     this.inputs = [];
+
+    if (level.keyframes) {
+      const keyframesHeader =
+        this.keyframesManager.createKeyframesHeader(level);
+      if (keyframesHeader) {
+        this.elements.codeContent.appendChild(keyframesHeader);
+      }
+    }
 
     level.code.forEach((line, index) => {
       const lineNumber = document.createElement("span");
@@ -191,6 +234,8 @@ class GameEditor {
         this.inputs[EDITOR_CONSTANTS.FIRST_INPUT_INDEX]?.focus();
       }, EDITOR_CONSTANTS.FOCUS_DELAY);
     }
+
+    this.setupKeyframeHoverListeners();
   }
 
   renderOutput() {
@@ -230,7 +275,9 @@ class GameEditor {
     const levels = getLevels();
     const newLevel = this.currentLevel + direction;
     if (newLevel >= EDITOR_CONSTANTS.LEVEL_START && newLevel < levels.length) {
-      this.loadLevel(newLevel);
+      if (this.progressManager.isLevelAccessible(newLevel)) {
+        this.loadLevel(newLevel);
+      }
     }
   }
 

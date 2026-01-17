@@ -45,6 +45,8 @@ export class GameValidator {
       this.editor.elements.submitBtn.textContent = UI_STRINGS.SUCCESS;
     }
 
+    this.editor.progressManager.markLevelComplete(this.editor.currentLevel);
+
     setTimeout(() => {
       this.updateSubmitButton();
       this.navigateToNextLevel();
