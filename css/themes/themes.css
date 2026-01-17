@@ -1,4 +1,13 @@
 body.dark-theme {
+  --bg-color: #1a1d23;
+  --surface-color: #252931;
+  --text-color: #e4e7eb;
+  --muted-text: #a0a8b0;
+  --primary-color: #2ecc71;
+  --secondary-color: #f4c542;
+  --accent-color: #e74c3c;
+  --border-color: #3a3f4b;
+  --shadow-sm: 0 8px 20px rgb(0 0 0 / 30%);
   --bg-body: #1a1d23;
   --bg-top-bar: #252931;
   --border-light: #3a3f4b;
@@ -40,6 +49,75 @@ body.dark-theme .theme-toggle:hover {
   background-color: var(--bg-editor-panel);
 }
 
+body.dark-theme .top-bar {
+  background-color: var(--bg-top-bar);
+}
+
+body.dark-theme .main-layout {
+  background: var(--bg-body);
+}
+
+body.dark-theme .navbar {
+  background-color: #252931;
+  border-bottom-color: var(--secondary-color);
+}
+
+body.dark-theme .login-btn,
+body.dark-theme .theme-toggle {
+  color: var(--text-color);
+}
+
+body.dark-theme .login-btn:hover,
+body.dark-theme .theme-toggle:hover {
+  background-color: #3a3f4b;
+}
+
+body.dark-theme .page-description {
+  background-color: var(--surface-color);
+  box-shadow: 0 10px 25px rgb(0 0 0 / 30%);
+}
+
+body.dark-theme .page-description:hover {
+  box-shadow: 0 15px 30px rgb(0 0 0 / 40%);
+}
+
+body.dark-theme .feature-card,
+body.dark-theme .step {
+  background-color: var(--surface-color);
+}
+
+body.dark-theme .info-section {
+  background-color: #1f2229;
+}
+
+body.dark-theme .modal {
+  background-color: var(--surface-color);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 50%);
+}
+
+body.dark-theme .tab-btn {
+  color: var(--muted-text);
+}
+
+body.dark-theme .tab-btn.active {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+body.dark-theme input {
+  background-color: #1a1d23;
+  color: var(--text-color);
+}
+
+body.dark-theme input:focus {
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+body.dark-theme .auth-footer {
+  border-top-color: var(--border-color);
+  color: var(--muted-text);
+}
+
 body,
 .top-bar,
 .header-actions,
@@ -51,7 +129,15 @@ body,
 .hints,
 .right-section,
 .levels-bar,
-.output-box {
+.output-box,
+.navbar,
+.page-description,
+.feature-card,
+.step,
+.modal,
+.login-btn,
+.tab-btn,
+input {
   transition:
     background-color var(--transition),
     color var(--transition),

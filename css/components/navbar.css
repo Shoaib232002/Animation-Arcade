@@ -1,0 +1,46 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-nav);
+  background-color: #fff;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+.nav-container {
+  max-width: var(--nav-max-width);
+  margin: auto;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.login-btn,
+.theme-toggle {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.login-btn:hover,
+.theme-toggle:hover {
+  background-color: var(--surface-color);
+}
+
+.theme-toggle img {
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
+}

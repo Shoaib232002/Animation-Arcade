@@ -1,4 +1,29 @@
 :root {
+  --bg-color: #fff;
+  --surface-color: #f3f7f2;
+  --text-color: #1f2933;
+  --muted-text: #5f6f65;
+  --primary-color: #1b7f3a;
+  --secondary-color: #d1b88a;
+  --accent-color: #c0392b;
+  --border-color: #e0e6e2;
+  --font-main: "Roboto", system-ui, -apple-system, sans-serif;
+  --radius: 1rem;
+  --radius-sm: 0.5rem;
+  --transition: 0.3s ease;
+  --shadow-sm: 0 8px 20px rgb(0 0 0 / 6%);
+  --scroll-margin: 80px;
+  --button-icon-size: 1rem;
+  --close-button-size: 36px;
+  --step-number-size: 40px;
+  --modal-max-width: 420px;
+  --page-max-width: 1000px;
+  --hero-max-width: 1100px;
+  --nav-max-width: 1200px;
+  --min-card-width: 220px;
+  --z-index-nav: 100;
+  --z-index-overlay: 1000;
+  --z-index-close: 10;
   --bg-body: #f5f7fa;
   --bg-top-bar: #fff;
   --border-light: #e0e6e2;
@@ -14,6 +39,4 @@
   --bg-levels-bar: #f3f7f2;
   --shadow: 0 2px 8px rgb(0 0 0 / 8%);
   --shadow-hover: 0 4px 12px rgb(0 0 0 / 12%);
-  --transition: 0.3s ease;
-  --radius: 0.5rem;
 }
