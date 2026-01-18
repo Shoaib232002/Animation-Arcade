@@ -39,7 +39,6 @@ class AuthManagerClass {
   init() {
     this.ui.init();
 
-    // Check if main buttons exist before attaching
     if (!document.getElementById("loginBtn")) return;
 
     this.attachEventListeners();
@@ -65,29 +64,24 @@ class AuthManagerClass {
   }
 
   attachEventListeners() {
-    // Login Button
     const loginBtn = document.getElementById("loginBtn");
     if (loginBtn)
       loginBtn.addEventListener("click", () => this.handleLoginButtonClick());
 
-    // Close Button
     const closeBtn = document.getElementById("closeModal");
     if (closeBtn)
       closeBtn.addEventListener("click", () => this.ui.closeModal());
 
-    // Tab Buttons
     document.querySelectorAll(".tab-btn").forEach((btn) => {
       btn.addEventListener("click", (e) =>
         this.switchTab(e.target.dataset.tab)
       );
     });
 
-    // Form Submit
     const authForm = document.getElementById("authForm");
     if (authForm)
       authForm.addEventListener("submit", (e) => this.handleSubmit(e));
 
-    // Start Game
     const startGameBtn = document.getElementById("startGameBtn");
     if (startGameBtn)
       startGameBtn.addEventListener("click", () => this.handleStartGame());
