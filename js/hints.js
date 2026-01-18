@@ -103,12 +103,7 @@ function createShowResultsButton(editor, level) {
         level.answer || level.expectedCSS || "Solution not available";
       body.innerHTML = `<strong>Complete Answer:</strong><br><code>${solution}</code>`;
 
-      if (level.keyframes) {
-        const keyframesSection = document.createElement("div");
-        keyframesSection.className = "keyframes-section";
-        keyframesSection.innerHTML = `<br><strong>Keyframes (if needed):</strong><br><pre>${level.keyframes}</pre>`;
-        body.appendChild(keyframesSection);
-      }
+
 
       contentArea.innerHTML = "";
       contentArea.appendChild(title);
