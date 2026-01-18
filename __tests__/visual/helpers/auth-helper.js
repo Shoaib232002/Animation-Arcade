@@ -115,11 +115,9 @@ export class AuthTestHelper {
   }
 
   async expectErrorMessage(message) {
-    // Check either global message div or tooltip on form group
     const globalMsg = this.messageDiv.filter({ hasText: message });
     const tooltip = this.page.locator(`.form-group[data-tooltip="${message}"]`);
 
-    // We expect one of them to be visible
     await expect(globalMsg.or(tooltip)).toBeVisible({
       timeout: TIMEOUTS.LONG,
     });
