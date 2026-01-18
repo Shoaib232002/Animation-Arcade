@@ -1,6 +1,2 @@
-import { ANIMATION_CONSTANTS } from "./constants.js";
-
-const styleSheet = document.createElement("style");
-document.head.appendChild(styleSheet);
-
-styleSheet.textContent = ANIMATION_CONSTANTS.KEYFRAMES_CSS;
+// This file is no longer needed as animations are moved to css/base/animations.css
+// Keeping file to prevent import errors if it's imported elsewhere

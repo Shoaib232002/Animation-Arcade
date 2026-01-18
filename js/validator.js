@@ -51,10 +51,21 @@ export class GameValidator {
 
     this.editor.progressManager.markLevelComplete(this.editor.currentLevel);
 
+    let delay = VALIDATOR_CONSTANTS.DELAYS.SUCCESS_MESSAGE;
+
+    if (level.id >= 13) {
+      delay = 4000;
+    }
+
+    const levels = getLevels();
+    if (this.editor.currentLevel === levels.length - 1) {
+      delay = 6000;
+    }
+
     setTimeout(() => {
       this.updateSubmitButton();
       this.navigateToNextLevel();
-    }, VALIDATOR_CONSTANTS.DELAYS.SUCCESS_MESSAGE);
+    }, delay);
   }
 
   updateSubmitButton() {
