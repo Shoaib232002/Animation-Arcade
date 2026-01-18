@@ -103,8 +103,6 @@ function createShowResultsButton(editor, level) {
         level.answer || level.expectedCSS || "Solution not available";
       body.innerHTML = `<strong>Complete Answer:</strong><br><code>${solution}</code>`;
 
-
-
       contentArea.innerHTML = "";
       contentArea.appendChild(title);
       contentArea.appendChild(body);
