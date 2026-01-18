@@ -26,3 +26,8 @@
   overflow: hidden;
   min-height: 0;
 }
+
+body {
+  background: url("https://t3.ftcdn.net/jpg/06/87/99/46/360_F_687994619_EsDIMiMqpmvP8eGwZPX2w0zPTr100rt8.jpg")
+    center/cover no-repeat rgb(255 255 255 / 50%);
+}

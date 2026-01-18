@@ -36,6 +36,6 @@ export class DescriptionFormatter {
   }
 
   getFormattedDescription(level) {
-    return this.formatStandardDescription(level);
+    return this.formatSpecialDescription(level);
   }
 }

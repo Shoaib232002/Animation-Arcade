@@ -40,6 +40,10 @@ export class GameValidator {
   }
 
   handleSuccess(level) {
+    const ground = document.querySelector(".ground");
+    if (ground) {
+      ground.classList.add("lights-on");
+    }
     this.editor.applyAnimation(level.expectedCSS);
     if (this.editor.elements.submitBtn) {
       this.editor.elements.submitBtn.textContent = UI_STRINGS.SUCCESS;
@@ -80,6 +84,33 @@ export class GameValidator {
       const levels = getLevels();
       const level = levels[this.editor.currentLevel];
       this.handleSuccess(level);
+    } else {
+      const levels = getLevels();
+      const level = levels[this.editor.currentLevel];
+      const staticParts = level.code
+        .filter(
+          (line) =>
+            line.includes(":") &&
+            !line.includes("{") &&
+            !line.includes("}") &&
+            !line.includes("_____")
+        )
+        .map((l) => l.trim());
+      const inputParts = [];
+      this.editor.inputs.forEach((input) => {
+        const lineIndex = parseInt(input.dataset.line, 10);
+        const line = level.code[lineIndex] || "";
+        if (line.includes(":")) {
+          const candidate = line.replace("_____", input.value).trim();
+          if (!candidate.includes("{") && !candidate.includes("}")) {
+            inputParts.push(candidate.replace(/;+\s*$/, ";"));
+          }
+        }
+      });
+      const cssRule = [...staticParts, ...inputParts].join(" ");
+      if (cssRule) {
+        this.editor.applyAnimation(cssRule);
+      }
     }
   }
 }

@@ -5,6 +5,7 @@ import {
   MESSAGES,
   RETRY_LIMITS,
   ROUTES,
+  UI_DELAYS,
 } from "./constants.js";
 
 class AuthManagerClass {
@@ -74,7 +75,16 @@ class AuthManagerClass {
     const authData = this.getStoredAuth();
     if (!authData) {
       this.openModal();
-      this.showMessage(MESSAGES.LOGIN_REQUIRED, MESSAGE_TYPES.ERROR);
+      setTimeout(() => {
+        const emailField = document.getElementById("email");
+        if (emailField) {
+          this.setFieldError(
+            "email",
+            "Please login or sign up to start playing!"
+          );
+          emailField.focus();
+        }
+      }, UI_DELAYS.TOOLTIP_FOCUS);
     } else {
       window.location.href = ROUTES.GAME;
     }
@@ -94,6 +104,7 @@ class AuthManagerClass {
       this.overlay.style.display = "flex";
       this.overlay.classList.add("modal-open");
     }
+    this.resetFormFields();
     this.switchTab(TABS.LOGIN);
   }
 
@@ -103,6 +114,7 @@ class AuthManagerClass {
       this.overlay.classList.remove("modal-open");
     }
     this.clearMessages();
+    this.resetFormFields();
   }
 
   switchTab(tab) {
@@ -114,7 +126,7 @@ class AuthManagerClass {
 
     this.updateModalContent(tab);
     this.updateFormFields(tab);
-    this.clearMessages();
+    this.resetFormFields();
   }
 
   updateModalContent(tab) {
@@ -131,9 +143,16 @@ class AuthManagerClass {
       submitBtn.textContent = isSignup ? "Sign Up" : "Login";
     }
     if (footerText) {
-      footerText.textContent = isSignup
-        ? "Already have an account? Login."
-        : "New user? Sign up.";
+      const actionText = isSignup ? "Already have an account?" : "New user?";
+      const actionLink = isSignup ? "Login" : "Sign up";
+      footerText.innerHTML = `<span id="footerActionText">${actionText}</span> <a href="#" id="footerActionLink">${actionLink}</a>.`;
+      const link = document.getElementById("footerActionLink");
+      if (link) {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          this.switchTab(isSignup ? TABS.LOGIN : TABS.SIGNUP);
+        });
+      }
     }
   }
 
@@ -170,30 +189,28 @@ class AuthManagerClass {
 
     if (!name || !email || !password || !confirmPassword) {
       this.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
+      this.applyFieldErrors({ name, email, password, confirmPassword });
       return;
     }
 
     const usernameRegex = /^(?=.*[a-zA-Z]{3})[a-zA-Z0-9\s]+$/;
     if (!usernameRegex.test(name)) {
-      this.showMessage(
-        "Username must contain only letters, numbers, and spaces, with at least 3 letters (cannot be only numbers)",
-        MESSAGE_TYPES.ERROR
-      );
+      this.setFieldError("name", "Name must have at least 3 letters");
       return;
     }
 
     const passwordRegex =
       /^(?=.*[a-zA-Z]{4,})(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?!.*\s).{4,}$/;
     if (!passwordRegex.test(password)) {
-      this.showMessage(
-        "Password must be at least 4 characters, containing at least 4 letters, numbers, special characters, and no spaces",
-        MESSAGE_TYPES.ERROR
+      this.setFieldError(
+        "password",
+        "4+ letters, 1 number, 1 special char, no spaces"
       );
       return;
     }
 
     if (password !== confirmPassword) {
-      this.showMessage(MESSAGES.PASSWORD_MISMATCH, MESSAGE_TYPES.ERROR);
+      this.setFieldError("confirmPassword", "Passwords do not match");
       return;
     }
 
@@ -203,6 +220,7 @@ class AuthManagerClass {
   handleLoginSubmit(email, password) {
     if (!email || !password) {
       this.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
+      this.applyFieldErrors({ email, password });
       return;
     }
 
@@ -213,7 +231,7 @@ class AuthManagerClass {
     const users = this.getStoredUsers();
 
     if (users.some((u) => u.email === email)) {
-      this.showMessage(MESSAGES.DUPLICATE_EMAIL, MESSAGE_TYPES.ERROR);
+      this.setFieldError("email", MESSAGES.DUPLICATE_EMAIL);
       return;
     }
 
@@ -222,15 +240,8 @@ class AuthManagerClass {
     this.saveUsers(users);
     this.saveAuth(user);
 
-    try {
-      this.closeModal();
-    } catch {
-      this.showMessage(
-        "Account created but failed to close modal",
-        MESSAGE_TYPES.ERROR
-      );
-    }
     this.updateUIForLoggedIn(name);
+    this.closeModal();
   }
 
   login(email, password) {
@@ -238,25 +249,19 @@ class AuthManagerClass {
     const user = users.find((u) => u.email === email);
 
     if (!user) {
-      this.showMessage(MESSAGES.NO_ACCOUNT, MESSAGE_TYPES.ERROR);
+      this.setFieldError("email", "No account found with this email");
       return;
     }
 
     if (user.password !== password) {
-      this.showMessage(MESSAGES.INCORRECT_PASSWORD, MESSAGE_TYPES.ERROR);
+      this.setFieldError("password", "Incorrect password");
       return;
     }
 
     this.saveAuth(user);
-    try {
-      this.closeModal();
-    } catch {
-      this.showMessage(
-        "Login successful but failed to close modal",
-        MESSAGE_TYPES.ERROR
-      );
-    }
     this.updateUIForLoggedIn(user.name);
+    this.closeModal();
+    this.resetFormFields();
   }
 
   logout() {
@@ -281,26 +286,29 @@ class AuthManagerClass {
 
     loginBtn.textContent = "Logout";
 
-    const heroSection = document.querySelector(".hero-section");
-    if (!heroSection) {
-      requestAnimationFrame(() =>
-        this.updateUIForLoggedIn(name, retryCount + 1)
-      );
-      return;
-    }
-
-    this.createOrUpdateWelcomeMessage(heroSection, name);
+    this.showNavbarWelcome(name);
   }
 
-  createOrUpdateWelcomeMessage(heroSection, name) {
-    let welcomeMsg = document.querySelector(".welcome-message");
-    if (!welcomeMsg) {
-      welcomeMsg = document.createElement("div");
-      welcomeMsg.className = "welcome-message";
-      heroSection.prepend(welcomeMsg);
+  showNavbarWelcome(name) {
+    const existingMsg = document.querySelector(".nav-welcome-message");
+    if (existingMsg) {
+      existingMsg.remove();
     }
-    welcomeMsg.textContent = `Welcome back, ${name}!`;
-    welcomeMsg.style.display = "block";
+
+    const welcomeMsg = document.createElement("span");
+    welcomeMsg.className = "nav-welcome-message";
+    welcomeMsg.textContent = `Welcome, ${name}!`;
+
+    const navActions = document.querySelector(".nav-actions");
+    if (navActions) {
+      navActions.prepend(welcomeMsg);
+
+      setTimeout(() => {
+        if (welcomeMsg && welcomeMsg.parentNode) {
+          welcomeMsg.remove();
+        }
+      }, UI_DELAYS.WELCOME_MESSAGE);
+    }
   }
 
   updateUIForLoggedOut() {
@@ -309,26 +317,87 @@ class AuthManagerClass {
       loginBtn.textContent = "Login";
     }
 
-    const welcomeMsg = document.querySelector(".welcome-message");
+    const welcomeMsg = document.querySelector(".nav-welcome-message");
     if (welcomeMsg) {
       welcomeMsg.remove();
     }
   }
 
   showMessage(message, type) {
-    const messageDiv = document.getElementById("authMessage");
-    if (messageDiv) {
-      messageDiv.textContent = message;
-      messageDiv.className = `auth-message ${type}`;
+    const msgDiv = document.getElementById("authMessage");
+    if (msgDiv) {
+      msgDiv.textContent = message;
+      msgDiv.className = `auth-message ${type}`;
+      msgDiv.style.display = "block";
     }
   }
 
   clearMessages() {
-    const messageDiv = document.getElementById("authMessage");
-    if (messageDiv) {
-      messageDiv.textContent = "";
-      messageDiv.className = "auth-message";
+    const msgDiv = document.getElementById("authMessage");
+    if (msgDiv) {
+      msgDiv.textContent = "";
+      msgDiv.style.display = "none";
+      msgDiv.className = "auth-message";
     }
+  }
+
+  setFieldError(fieldId, tip) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+
+    const formGroup = field.closest(".form-group");
+    if (!formGroup) return;
+
+    field.classList.add("input-error");
+    formGroup.setAttribute("data-tooltip", tip || "");
+    formGroup.classList.add("show-tooltip");
+
+    setTimeout(() => {
+      formGroup.classList.remove("show-tooltip");
+    }, UI_DELAYS.TOOLTIP_AUTO_HIDE);
+
+    field.addEventListener("focus", () => {
+      if (field.classList.contains("input-error")) {
+        formGroup.classList.add("show-tooltip");
+      }
+    });
+
+    field.addEventListener("blur", () => {
+      formGroup.classList.remove("show-tooltip");
+    });
+  }
+
+  clearFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+
+    const formGroup = field.closest(".form-group");
+    if (formGroup) {
+      formGroup.removeAttribute("data-tooltip");
+      formGroup.classList.remove("show-tooltip");
+    }
+
+    field.classList.remove("input-error");
+  }
+
+  applyFieldErrors(fields) {
+    Object.entries(fields).forEach(([id, value]) => {
+      if (!value) {
+        this.setFieldError(id, "This field is required");
+      } else {
+        this.clearFieldError(id);
+      }
+    });
+  }
+
+  resetFormFields() {
+    ["name", "email", "password", "confirmPassword"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.value = "";
+        this.clearFieldError(id);
+      }
+    });
   }
 
   createUser(name, email, password) {

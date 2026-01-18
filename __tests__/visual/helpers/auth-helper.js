@@ -31,7 +31,7 @@ export class AuthTestHelper {
     this.messageDiv = page.locator("#authMessage");
     this.footerText = page.locator("#authFooterText");
     this.startGameButton = page.locator("#startGameBtn");
-    this.welcomeMessage = page.locator(".welcome-message");
+    this.welcomeMessage = page.locator(".nav-welcome-message");
   }
 
   async goto() {
@@ -115,7 +115,12 @@ export class AuthTestHelper {
   }
 
   async expectErrorMessage(message) {
-    await expect(this.messageDiv).toHaveText(message, {
+    // Check either global message div or tooltip on form group
+    const globalMsg = this.messageDiv.filter({ hasText: message });
+    const tooltip = this.page.locator(`.form-group[data-tooltip="${message}"]`);
+
+    // We expect one of them to be visible
+    await expect(globalMsg.or(tooltip)).toBeVisible({
       timeout: TIMEOUTS.LONG,
     });
   }
@@ -137,7 +142,7 @@ export class AuthTestHelper {
       timeout: TIMEOUTS.LONG,
     });
     await expect(this.welcomeMessage).toBeVisible({ timeout: TIMEOUTS.LONG });
-    await expect(this.welcomeMessage).toContainText(`Welcome back, ${name}!`);
+    await expect(this.welcomeMessage).toContainText(`Welcome, ${name}!`);
   }
 
   async expectWelcomeMessageVisible() {

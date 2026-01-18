@@ -1,6 +1,6 @@
 .feature-card {
   padding: 1.5rem;
-  background-color: var(--surface-color);
+  background-color: rgb(255 255 255 / 60%);
   border-radius: var(--radius);
   border-top: 4px solid var(--secondary-color);
   box-shadow: var(--shadow-sm);
@@ -21,7 +21,7 @@
 
 .feature-card p {
   font-size: 0.95rem;
-  color: var(--muted-text);
+  color: var(--dark-text);
 }
 
 .feature-icon {
@@ -29,7 +29,7 @@
 }
 
 .step {
-  background-color: var(--surface-color);
+  background-color: rgb(255 255 255 / 60%);
   border-radius: var(--radius);
   border-top: 4px solid var(--secondary-color);
   box-shadow: var(--shadow-sm);

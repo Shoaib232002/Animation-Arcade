@@ -23,7 +23,7 @@ export const MESSAGES = {
   FILL_REQUIRED: "Please fill in all required fields",
   PASSWORD_MISMATCH: "Passwords do not match",
   DUPLICATE_EMAIL: "An account with this email already exists",
-  NO_ACCOUNT: "No account found with this email",
+  NO_ACCOUNT: "Incorrect email or password",
   INCORRECT_PASSWORD: "Incorrect password",
   LOGIN_REQUIRED: "Please login or sign up to start playing!",
   LOGOUT_CONFIRM: "Are you sure you want to logout?",
@@ -39,6 +39,9 @@ export const UI_DELAYS = {
   LOGOUT: CSS_TRANSITION_DURATION * 7,
   SIGNUP_COMPLETE: CSS_TRANSITION_DURATION * 4,
   LOGIN_COMPLETE: CSS_TRANSITION_DURATION * 3.5,
+  TOOLTIP_FOCUS: 300,
+  WELCOME_MESSAGE: 2000,
+  TOOLTIP_AUTO_HIDE: 4000,
 };
 
 export const RETRY_LIMITS = {
@@ -68,7 +71,7 @@ export const HINT_CONSTANTS = {
 };
 
 export const UI_STRINGS = {
-  SHOW_SOLUTION: "Show Solution",
+  SHOW_SOLUTION: "Show Hints",
   SUCCESS: "Success!",
   NEXT: "Next",
   COMPLETION_TITLE: "You've completed all levels!",
@@ -243,11 +246,13 @@ export const EDITOR_CSS_CLASSES = {
 export const getHTMLTemplates = () => ({
   OUTPUT_BOX: `
     <div class="${EDITOR_CSS_CLASSES.GROUND}">
+      <div class="stadium-lights"></div>
       <div class="${SELECTORS.BALL.slice(1)}"></div>
     </div>
   `,
   COMPLETION_MESSAGE: `
     <div class="${EDITOR_CSS_CLASSES.COMPLETION_CONTAINER}">
+      <div class="confetti"></div>
       <h2>${UI_STRINGS.COMPLETION_TITLE}</h2>
     </div>
   `,
