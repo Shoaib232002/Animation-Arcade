@@ -1,5 +1,5 @@
 import { loadLevels, getLevels } from "./levels-data.js";
-import "./animation.js";
+
 import { GameValidator } from "./validator.js";
 import { renderHints } from "./hints.js";
 import { KeyframesManager } from "./keyframes-manager.js";
