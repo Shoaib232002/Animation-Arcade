@@ -1,87 +1,138 @@
-import { HINT_CONSTANTS } from "./constants.js";
+import { HINT_CONSTANTS, UI_STRINGS } from "./constants.js";
 
-function findTopicByKeyword(topicHints, keyword) {
-  return (
-    topicHints.find((topic) => topic.keyword === keyword) ||
-    topicHints[HINT_CONSTANTS.FIRST_TOPIC_INDEX]
-  );
-}
-
-function createKeywordElement(keyword, topicHints) {
-  const keywordElement = document.createElement("li");
-  keywordElement.className = HINT_CONSTANTS.CLASSES.KEYWORD;
-  keywordElement.textContent = keyword;
-
-  if (
-    Array.isArray(topicHints) &&
-    topicHints.length > HINT_CONSTANTS.FIRST_TOPIC_INDEX
-  ) {
-    const topic = findTopicByKeyword(topicHints, keyword);
-
-    if (topic && topic.description) {
-      keywordElement.setAttribute(
-        HINT_CONSTANTS.ATTRIBUTES.VALUES,
-        topic.description
-      );
-      keywordElement.title = topic.description;
-    }
+function ensureOverlay(editor) {
+  const container = editor.elements.hintsList?.parentElement;
+  if (!container) return null;
+  let overlay = container.querySelector(".hint-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.className = "hint-overlay";
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "close-btn";
+    closeBtn.setAttribute("aria-label", "Close hints");
+    closeBtn.textContent = "×";
+    closeBtn.addEventListener("click", () => {
+      overlay.classList.remove("open");
+    });
+    const content = document.createElement("div");
+    content.className = "hint-overlay-content";
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(content);
+    container.appendChild(overlay);
   }
-
-  return keywordElement;
+  return overlay;
 }
 
-function handleSolutionReveal(button, description) {
-  const userConfirmed = window.confirm(
-    HINT_CONSTANTS.MESSAGES.CONFIRM_SOLUTION
-  );
-
-  if (!userConfirmed) return;
-
-  button.disabled = true;
-  button.classList.add(HINT_CONSTANTS.CLASSES.REVEALED);
-  button.textContent = description;
-}
-
-function createHintButton(hint) {
+function createShowResultsButton(editor, level) {
+  const buttonItem = document.createElement("li");
   const button = document.createElement("button");
   button.type = "button";
   button.className = HINT_CONSTANTS.CLASSES.SOLUTION_BTN;
-  button.textContent = hint.term;
-  button.dataset.hint = hint.description;
+  button.textContent = UI_STRINGS.SHOW_SOLUTION;
+  buttonItem.appendChild(button);
 
+  let state = 0;
   button.addEventListener("click", () => {
-    handleSolutionReveal(button, hint.description);
+    const contentEl = ensureOverlay(editor);
+    if (!contentEl) return;
+
+    contentEl.classList.add("open");
+    const contentArea = contentEl.querySelector(".hint-overlay-content");
+
+    if (state === 0) {
+      const title = document.createElement("div");
+      title.className = "hint-title";
+      title.textContent = "Hint 1: Understanding the Concept";
+
+      const body = document.createElement("div");
+      body.className = "hint-body";
+      body.textContent =
+        level.topicDescription ||
+        "Start with the basic property and its typical value pattern.";
+
+      const link = document.createElement("a");
+      link.href = "#";
+      link.className = "hint-link";
+      link.textContent = "Go to Hint 2 →";
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        button.click();
+      });
+
+      contentArea.innerHTML = "";
+      contentArea.appendChild(title);
+      contentArea.appendChild(body);
+      contentArea.appendChild(link);
+      state = 1;
+    } else if (state === 1) {
+      const title = document.createElement("div");
+      title.className = "hint-title";
+      title.textContent = "Hint 2: CSS Pattern";
+
+      const body = document.createElement("div");
+      body.className = "hint-body";
+      const expectedCSS =
+        level.expectedCSS ||
+        level.answer ||
+        "Try using the property with appropriate values.";
+      body.innerHTML = `<strong>Expected format:</strong><br><code>${expectedCSS}</code>`;
+
+      const link = document.createElement("a");
+      link.href = "#";
+      link.className = "hint-link";
+      link.textContent = "Show Solution →";
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        button.click();
+      });
+
+      contentArea.innerHTML = "";
+      contentArea.appendChild(title);
+      contentArea.appendChild(body);
+      contentArea.appendChild(link);
+      state = 2;
+    } else {
+      const title = document.createElement("div");
+      title.className = "hint-title";
+      title.textContent = "✓ Solution";
+
+      const body = document.createElement("div");
+      body.className = "hint-body solution";
+      const solution =
+        level.answer || level.expectedCSS || "Solution not available";
+      body.innerHTML = `<strong>Complete Answer:</strong><br><code>${solution}</code>`;
+
+      contentArea.innerHTML = "";
+      contentArea.appendChild(title);
+      contentArea.appendChild(body);
+
+      button.disabled = true;
+      button.classList.add(HINT_CONSTANTS.CLASSES.REVEALED);
+      button.textContent = "Solution Revealed";
+    }
   });
 
-  return button;
+  return buttonItem;
 }
 
-function createHintListItem(hint) {
-  const listItem = document.createElement("li");
-  const hintButton = createHintButton(hint);
-  listItem.appendChild(hintButton);
-  return listItem;
-}
-
-function renderKeywordHint(editor, level) {
-  if (!level.keyword) return;
-
-  const keywordElement = createKeywordElement(level.keyword, level.topicHints);
-  editor.elements.hintsList.appendChild(keywordElement);
-}
-
-function renderHintsList(editor, hints) {
-  hints.forEach((hint) => {
-    const hintListItem = createHintListItem(hint);
-    editor.elements.hintsList.appendChild(hintListItem);
-  });
+function renderSingleHintFlow(editor, level) {
+  const buttonItem = createShowResultsButton(editor, level);
+  editor.elements.hintsList.appendChild(buttonItem);
 }
 
 export function renderHints(editor, level) {
   if (!editor.elements.hintsList) return;
 
+  const container = editor.elements.hintsList.parentElement;
+  if (container) {
+    const overlay = container.querySelector(".hint-overlay");
+    if (overlay) {
+      overlay.classList.remove("open");
+    }
+  }
+
   editor.elements.hintsList.innerHTML = "";
 
-  renderKeywordHint(editor, level);
-  renderHintsList(editor, level.hints);
+  renderSingleHintFlow(editor, level);
 }

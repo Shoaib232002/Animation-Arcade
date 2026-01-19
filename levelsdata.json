@@ -1,70 +1,85 @@
 [
   {
     "id": 1,
-    "title": "Level 1: Basic Transform - Translation",
-    "description": "In this level, you'll learn about the transform property with translateX(). The transform property allows you to move, rotate, scale, and skew elements. The translateX() function moves an element horizontally. Use positive values to move right and negative values to move left. For example: translateX(100px) moves the element 100 pixels to the right.",
+    "title": "Level 1: Position the Cricket Ball",
+    "description": "Welcome to the cricket game! The ball is at the bowler's hand. We need to get it to the batting crease to start the match.",
     "code": [".ball {", "  transform: _____;", "}"],
     "blanks": [{ "line": 1, "answer": "translateX(200px)" }],
     "answer": "translateX(200px)",
     "keyword": "transform",
-    "topicDescription": "Values: translateX(), translateY(), translate(), rotate(), scale(), skew(). Use units like px for translate and deg for rotate.",
-    "question": "Can you move the ball 200px to the right using the transform property?",
+    "hints": {
+      "concept": "Use translateX() to move horizontally. Positive values move to the right.",
+      "css": "transform: translateX(100px);"
+    },
+    "question": "Move the ball 200px to the right.",
     "expectedCSS": "transform: translateX(200px);"
   },
   {
     "id": 2,
-    "title": "Level 2: Transform - Rotation",
-    "description": "Now let's rotate elements! The rotate() function spins an element around its center point. You specify the angle in degrees (deg). Positive values rotate clockwise, negative values rotate counter-clockwise. For example: rotate(45deg) rotates the element 45 degrees clockwise.",
+    "title": "Level 2: Spin the Ball",
+    "description": "Good! The ball is in position. But a good bowler adds spin to make it harder to hit. Let's give it some rotation.",
     "code": [".ball {", "  transform: _____;", "}"],
     "blanks": [{ "line": 1, "answer": "rotate(45deg)" }],
     "answer": "rotate(45deg)",
     "keyword": "transform",
-    "topicDescription": "Syntax: rotate(angle). Use deg for degrees. Example: rotate(90deg) for a quarter turn.",
-    "question": "Can you rotate the ball 45 degrees clockwise?",
+    "hints": {
+      "concept": "rotate() takes degrees (deg). Positive numbers rotate clockwise.",
+      "css": "transform: rotate(90deg);"
+    },
+    "question": "Rotate the ball 45 degrees.",
     "expectedCSS": "transform: rotate(45deg);"
   },
   {
     "id": 3,
-    "title": "Level 3: Transform - Scaling",
-    "description": "The scale() function changes the size of an element. A value of 1 keeps the original size, values greater than 1 make it larger, and values less than 1 make it smaller. You can scale uniformly (scale(2)) or differently on each axis (scale(2, 0.5)).",
+    "title": "Level 3: Make the Ball Visible",
+    "description": "Perfect spin! But the camera crew says the ball is too small on screen. The viewers at home can barely see it.",
     "code": [".ball {", "  transform: _____;", "}"],
     "blanks": [{ "line": 1, "answer": "scale(1.5)" }],
     "answer": "scale(1.5)",
     "keyword": "transform",
-    "topicDescription": "Syntax: scale(x) or scale(x, y). Values greater than 1 enlarge, values less than 1 shrink. Example: scale(2) doubles the size.",
-    "question": "Can you make the ball 1.5 times larger using scale?",
+    "hints": {
+      "concept": "scale() resizes the element. 1.0 is normal size, 1.5 is 50% larger.",
+      "css": "transform: scale(2);"
+    },
+    "question": "Scale the ball to 1.5 times larger.",
     "expectedCSS": "transform: scale(1.5);"
   },
   {
     "id": 4,
-    "title": "Level 4: Multiple Transforms",
-    "description": "You can combine multiple transform functions in a single declaration! Simply separate them with spaces. The transforms are applied in the order you write them, which can affect the final result. For example: transform: translateX(100px) rotate(45deg) scale(1.5);",
+    "title": "Level 4: Set Up the Bowling Position",
+    "description": "Great! Now the director wants a perfect shot. The ball needs to be at the right distance and the right size for the close-up camera angle.",
     "code": [".ball {", "  transform: _____ _____;", "}"],
     "blanks": [{ "line": 1, "answer": "translateX(150px) scale(2)" }],
     "answer": "translateX(150px) scale(2)",
     "keyword": "transform",
-    "topicDescription": "Combine transforms with spaces. Order matters! Example: translateX(50px) rotate(30deg) applies translation first, then rotation.",
-    "question": "Move the ball 150px right and scale it to double size?",
+    "hints": {
+      "concept": "You can apply multiple transforms by separating them with a space.",
+      "css": "transform: translateX(50px) scale(1.5);"
+    },
+    "question": "Move the ball 150px right and double its size.",
     "expectedCSS": "transform: translateX(150px) scale(2);"
   },
   {
     "id": 5,
-    "title": "Level 5: Complex Multi-Transform",
-    "description": "When combining three or more transforms, understanding execution order becomes critical. Each function applies to the result of the previous one. Experiment with different orderings to see how translateX(100px) rotate(90deg) scale(0.8) differs from scale(0.8) rotate(90deg) translateX(100px).",
+    "title": "Level 5: Create the Perfect Delivery Stance",
+    "description": "The bowler is ready for the match-winning delivery! This needs perfect positioning, maximum spin, and camera-ready sizing all at once.",
     "code": [".ball {", "  transform: _____ _____ _____;", "}"],
     "blanks": [
       { "line": 1, "answer": "translateX(120px) rotate(180deg) scale(1.8)" }
     ],
     "answer": "translateX(120px) rotate(180deg) scale(1.8)",
     "keyword": "transform",
-    "topicDescription": "Multiple transforms execute left to right. Each affects the coordinate system for the next. Example: translate then rotate vs rotate then translate produces different results.",
-    "question": "Move the ball 120px right, rotate it 180 degrees, and scale to 1.8 times?",
+    "hints": {
+      "concept": "Order matters! Translations are affected by rotation. Usually translate first.",
+      "css": "transform: translateX(50px) rotate(45deg) scale(1.2);"
+    },
+    "question": "Move 120px right, rotate 180 degrees, and scale to 1.8x.",
     "expectedCSS": "transform: translateX(120px) rotate(180deg) scale(1.8);"
   },
   {
     "id": 6,
-    "title": "Level 6: Basic Transition",
-    "description": "Transitions make changes smooth instead of instant. The transition property defines how property changes should be animated. The basic syntax is: transition: property duration. For example: transition: transform 2s makes transform changes animate over 2 seconds.",
+    "title": "Level 6: Animate the Delivery",
+    "description": "The ball jumps instantly! That looks unrealistic. Real cricket balls travel smoothly through the air from bowler to batsman.",
     "code": [
       ".ball {",
       "  transform: translateX(200px);",
@@ -74,14 +89,17 @@
     "blanks": [{ "line": 2, "answer": "transform 2s" }],
     "answer": "transform 2s",
     "keyword": "transition",
-    "topicDescription": "Syntax: transition: property duration. Duration uses s (seconds) or ms (milliseconds). Example: transition: all 0.5s.",
-    "question": "Add a 2-second transition to make the transform change smoothly?",
+    "hints": {
+      "concept": "Use transition to smooth out changes. Syntax: property duration.",
+      "css": "transition: transform 1s;"
+    },
+    "question": "Add a 2-second transition.",
     "expectedCSS": "transform: translateX(200px); transition: transform 2s;"
   },
   {
     "id": 7,
-    "title": "Level 7: Transition with Timing Function",
-    "description": "Timing functions control the speed curve of transitions. Common values include: linear (constant speed), ease (slow start and end), ease-in (slow start), ease-out (slow end), and ease-in-out (slow start and end). The syntax is: transition: property duration timing-function.",
+    "title": "Level 7: Perfect the Bowling Speed",
+    "description": "Better! But fast bowlers don't move at constant speed. They start the run-up slow, accelerate in the middle, then release smoothly.",
     "code": [
       ".ball {",
       "  transform: translateX(200px);",
@@ -91,14 +109,17 @@
     "blanks": [{ "line": 2, "answer": "transform 1.5s ease-in-out" }],
     "answer": "transform 1.5s ease-in-out",
     "keyword": "transition",
-    "topicDescription": "Values: linear, ease, ease-in, ease-out, ease-in-out. Example: transition: opacity 1s ease-in.",
-    "question": "Create a 1.5-second transition with ease-in-out timing for the transform?",
+    "hints": {
+      "concept": "Timing functions control acceleration. ease-in-out starts and ends slowly.",
+      "css": "transition: transform 0.5s ease-in;"
+    },
+    "question": "Make it 1.5 seconds with ease-in-out timing.",
     "expectedCSS": "transform: translateX(200px); transition: transform 1.5s ease-in-out;"
   },
   {
     "id": 8,
-    "title": "Level 8: Multi-Property Transitions",
-    "description": "You can transition multiple properties simultaneously by separating them with commas. Each property can have its own duration and timing function. This creates coordinated animations where different aspects change at different speeds.",
+    "title": "Level 8: Add Ball Visibility Effects",
+    "description": "The ball is traveling fast now! Add some motion blur effect - the ball should fade slightly as it grows and moves, just like in slow-motion replays.",
     "code": [
       ".ball {",
       "  transform: translateX(180px) scale(1.6);",
@@ -111,68 +132,83 @@
     ],
     "answer": "transform 2s ease-out, opacity 1s linear",
     "keyword": "transition",
-    "topicDescription": "Syntax: transition: prop1 duration timing, prop2 duration timing. Each property can have independent timing. Example: transition: width 1s ease, height 2s ease-in.",
-    "question": "Transition the transform over 2 seconds with ease-out and opacity over 1 second with linear timing?",
+    "hints": {
+      "concept": "Separate multiple transitions with a comma.",
+      "css": "transition: transform 1s ease, opacity 0.5s linear;"
+    },
+    "question": "Transition transform over 2s ease-out, opacity over 1s linear.",
     "expectedCSS": "transform: translateX(180px) scale(1.6); opacity: 0.7; transition: transform 2s ease-out, opacity 1s linear;"
   },
   {
     "id": 9,
-    "title": "Level 9: Basic Animation Setup",
-    "description": "CSS animations use keyframes to define animation sequences. First, we set up the animation properties on the element. The animation-name connects to a keyframe rule, and animation-duration sets how long the animation takes. Example: animation: slideBounce 3s means use the 'slideBounce' keyframes for 3 seconds.",
+    "title": "Level 9: Make the Ball Bounce",
+    "description": "The ball hits the pitch! Every good delivery bounces once before reaching the batsman. Let's add that bounce effect.",
     "code": [".ball {", "  animation: _____ _____;", "}"],
     "blanks": [{ "line": 1, "answer": "bounce 2s" }],
     "answer": "bounce 2s",
     "keyword": "animation",
-    "topicDescription": "Syntax: animation: name duration. The name must match a keyframes rule. Example: animation: slide 3s.",
-    "question": "Set up an animation named 'bounce' that runs for 2 seconds?",
+    "hints": {
+      "concept": "For animations, specify the keyframe name and duration.",
+      "css": "animation: bounce 1s;"
+    },
+    "question": "Apply the 'bounce' animation for 2 seconds.",
     "expectedCSS": "animation: bounce 2s;",
     "keyframes": "@keyframes bounce {\n  0% {\n    transform: translateY(0);\n  }\n  50% {\n    transform: translateY(-30px);\n  }\n  100% {\n    transform: translateY(0);\n  }\n}"
   },
   {
     "id": 10,
-    "title": "Level 10: Animation with Iteration",
-    "description": "Animations can repeat multiple times or infinitely. Use animation-iteration-count to control this. You can specify a number (like 3) or use 'infinite' for endless repetition. Combine it with other properties: animation: name duration iteration-count.",
+    "title": "Level 10: Continuous Ball Spin",
+    "description": "Nice bounce! But the ball stops spinning after one rotation. In real cricket, the ball keeps spinning throughout its flight.",
     "code": [".ball {", "  animation: _____ _____ _____;", "}"],
     "blanks": [{ "line": 1, "answer": "spin 1s infinite" }],
     "answer": "spin 1s infinite",
     "keyword": "animation",
-    "topicDescription": "Values: number or infinite. Example: animation: pulse 2s 3 runs 3 times, animation: rotate 1s infinite loops forever.",
-    "question": "Create an animation named 'spin' that runs for 1 second and repeats infinitely?",
+    "hints": {
+      "concept": "Add 'infinite' to make the animation repeat forever.",
+      "css": "animation: spin 2s infinite;"
+    },
+    "question": "Make 'spin' animation run for 1s and repeat infinitely.",
     "expectedCSS": "animation: spin 1s infinite;",
     "keyframes": "@keyframes spin {\n  from {\n    transform: rotate(0deg);\n  }\n  to {\n    transform: rotate(360deg);\n  }\n}"
   },
   {
     "id": 11,
-    "title": "Level 11: Animation Direction",
-    "description": "Control the direction of your animation with animation-direction. Values include: normal (forward), reverse (backward), alternate (forward then backward), and alternate-reverse (backward then forward). This is especially useful with infinite animations to create smooth back-and-forth effects.",
+    "title": "Level 11: Ball Moving Back and Forth",
+    "description": "It's practice time! The coach wants the ball to move back and forth between bowler and batsman for practice drills.",
     "code": [".ball {", "  animation: _____ _____ _____ _____;", "}"],
     "blanks": [{ "line": 1, "answer": "slide 2s infinite alternate" }],
     "answer": "slide 2s infinite alternate",
     "keyword": "animation",
-    "topicDescription": "Values: normal, reverse, alternate, alternate-reverse. Example: animation: bounce 1s infinite alternate creates a ping-pong effect.",
-    "question": "Create a 'slide' animation that runs for 2 seconds, repeats infinitely, and alternates direction?",
+    "hints": {
+      "concept": "Use 'alternate' to play the animation forward then backward.",
+      "css": "animation: slide 1s infinite alternate;"
+    },
+    "question": "Make 'slide' run 2s, infinite, and alternate direction.",
     "expectedCSS": "animation: slide 2s infinite alternate;",
     "keyframes": "@keyframes slide {\n  0% {\n    transform: translateX(0);\n  }\n  100% {\n    transform: translateX(150px);\n  }\n}"
   },
   {
     "id": 12,
-    "title": "Level 12: Animation Timing Function",
-    "description": "Just like transitions, animations can use timing functions to control their speed curve. The timing function affects how the animation progresses between keyframes. You can use the same values: linear, ease, ease-in, ease-out, ease-in-out, or even cubic-bezier for custom curves.",
+    "title": "Level 12: Realistic Ball Wobble",
+    "description": "The commentators notice something! The ball's seam is causing it to wobble in the air - this is what makes it so hard to hit!",
     "code": [".ball {", "  animation: _____ _____ _____ _____ _____;", "}"],
     "blanks": [
       { "line": 1, "answer": "wobble 1.8s ease-in-out infinite alternate" }
     ],
     "answer": "wobble 1.8s ease-in-out infinite alternate",
     "keyword": "animation",
-    "topicDescription": "Timing functions: linear, ease, ease-in, ease-out, ease-in-out. Example: animation: fade 2s ease-in infinite creates smooth acceleration.",
-    "question": "Create a 'wobble' animation with 1.8s duration, ease-in-out timing, infinite repetition, and alternate direction?",
+    "hints": {
+      "concept": "Combine timing (ease-in-out) with iteration and direction.",
+      "css": "animation: wobble 1s ease-in infinite alternate;"
+    },
+    "question": "Apply 'wobble' for 1.8s with ease-in-out, infinite, alternate.",
     "expectedCSS": "animation: wobble 1.8s ease-in-out infinite alternate;",
     "keyframes": "@keyframes wobble {\n  0% {\n    transform: rotate(-5deg);\n  }\n  50% {\n    transform: rotate(5deg);\n  }\n  100% {\n    transform: rotate(-5deg);\n  }\n}"
   },
   {
     "id": 13,
-    "title": "Level 13: Animation Delay",
-    "description": "Animation delay creates a pause before the animation starts. This is useful for sequencing multiple animations or creating staggered effects. The delay comes after the duration in the shorthand syntax: animation: name duration timing-function delay.",
+    "title": "Level 13: Delayed Power Shot",
+    "description": "The batsman sees the ball coming! He winds up his bat, takes a breath, then BOOM - a powerful shot! We need a delay before the action.",
     "code": [
       ".ball {",
       "  animation: _____ _____ _____ _____ _____ _____;",
@@ -183,15 +219,18 @@
     ],
     "answer": "pulse 2s ease-in 0.5s infinite alternate",
     "keyword": "animation",
-    "topicDescription": "Delay syntax: animation: name duration timing delay iteration direction. Delay can be in seconds or milliseconds. Example: animation: fade 1s ease 2s waits 2 seconds before starting.",
-    "question": "Create a 'pulse' animation with 2s duration, ease-in timing, 0.5s delay, infinite iterations, and alternate direction?",
+    "hints": {
+      "concept": "The delay value comes AFTER the duration value.",
+      "css": "animation: pulse 1s ease 2s infinite alternate;"
+    },
+    "question": "Apply 'pulse' 2s, ease-in, 0.5s delay, infinite, alternate.",
     "expectedCSS": "animation: pulse 2s ease-in 0.5s infinite alternate;",
     "keyframes": "@keyframes pulse {\n  0% {\n    transform: scale(1);\n    opacity: 1;\n  }\n  50% {\n    transform: scale(1.2);\n    opacity: 0.8;\n  }\n  100% {\n    transform: scale(1);\n    opacity: 1;\n  }\n}"
   },
   {
     "id": 14,
-    "title": "Level 14: Complex Multi-Line Animation",
-    "description": "Advanced animations often require multiple properties working together. You can animate transforms while also changing other properties like opacity or background. Each property can have different timing and iteration patterns to create rich, layered effects.",
+    "title": "Level 14: Complex Shot Animation",
+    "description": "SIX! The ball is flying through the air with incredible trajectory - spinning, scaling, and fading all at once as it soars toward the boundary!",
     "code": [
       ".ball {",
       "  animation: _____ _____ _____ _____ _____;",
@@ -204,15 +243,18 @@
     ],
     "answer": "complex 3s ease-in-out 0.3s infinite alternate",
     "keyword": "animation",
-    "topicDescription": "Complex animations combine multiple properties with precise timing. Use animation shorthand for the main effect and additional properties for layered control.",
-    "question": "Create a 'complex' animation with 3s duration, ease-in-out timing, 0.3s delay, infinite iterations, and alternate direction?",
+    "hints": {
+      "concept": "The complex animation handles position. The other properties are static starts.",
+      "css": "animation: complex 2s ease 0s infinite alternate;"
+    },
+    "question": "Apply 'complex' 3s, ease-in-out, 0.3s delay, infinite, alternate.",
     "expectedCSS": "animation: complex 3s ease-in-out 0.3s infinite alternate; transform: rotate(0deg); opacity: 1;",
     "keyframes": "@keyframes complex {\n  0% {\n    transform: rotate(0deg) scale(1);\n    opacity: 1;\n  }\n  25% {\n    transform: rotate(90deg) scale(1.2);\n    opacity: 0.9;\n  }\n  50% {\n    transform: rotate(180deg) scale(0.8);\n    opacity: 0.7;\n  }\n  75% {\n    transform: rotate(270deg) scale(1.2);\n    opacity: 0.9;\n  }\n  100% {\n    transform: rotate(360deg) scale(1);\n    opacity: 1;\n  }\n}"
   },
   {
     "id": 15,
-    "title": "Level 15: Master Level - Combined Animation and Transform",
-    "description": "The ultimate challenge combines everything: multiple transform functions with complex animation properties. You need to coordinate transform positioning.",
+    "title": "Level 15: Master Shot - The Final Delivery",
+    "description": "This is it - the final ball of the match! Everything must be perfect: the position, the spin, the size, the timing. The entire stadium holds its breath...",
     "code": [
       ".ball {",
       "  transform: _____ _____ _____;",
@@ -226,8 +268,11 @@
     ],
     "answer": "translateX(100px) rotate(45deg) scale(1.4) AND master 2.5s ease-in-out 0.2s infinite alternate",
     "keyword": "animation",
-    "topicDescription": "Master level combines static transforms with animated properties. The transform provides base positioning while animation adds dynamic movement. Coordinate both for professional results.",
-    "question": "Apply a transform that moves 100px right, rotates 45deg, and scales to 1.4, then add a 'master' animation with 2.5s duration, ease-in-out timing, 0.2s delay, infinite iterations, and alternate direction?",
+    "hints": {
+      "concept": "Define the static transform first. Then add the master animation below it.",
+      "css": "transform: translateX(10px) ...; animation: master 1s ...;"
+    },
+    "question": "Transform: move 100px right, rotate 45deg, scale 1.4x. Animate: 'master' 2.5s, ease-in-out, 0.2s delay, infinite, alternate.",
     "expectedCSS": "transform: translateX(100px) rotate(45deg) scale(1.4); animation: master 2.5s ease-in-out 0.2s infinite alternate; opacity: 0.85;",
     "keyframes": "@keyframes master {\n  0% {\n    transform: translateX(0) translateY(0) rotate(0deg);\n    opacity: 0.85;\n  }\n  25% {\n    transform: translateX(50px) translateY(-20px) rotate(45deg);\n    opacity: 0.9;\n  }\n  50% {\n    transform: translateX(100px) translateY(0) rotate(90deg);\n    opacity: 0.85;\n  }\n  75% {\n    transform: translateX(50px) translateY(20px) rotate(180deg);\n    opacity: 0.9;\n  }\n  100% {\n    transform: translateX(0) translateY(0) rotate(360deg);\n    opacity: 0.85;\n  }\n}"
   }

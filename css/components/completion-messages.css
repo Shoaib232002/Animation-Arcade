@@ -3,6 +3,39 @@
   padding: 2rem;
 }
 
+.confetti {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+}
+
+.confetti::before,
+.confetti::after {
+  content: "🎉🎊✨";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: fall 2.5s linear infinite;
+  font-size: 2rem;
+}
+
+.confetti::after {
+  animation-duration: 3s;
+  top: -20px;
+}
+
+@keyframes fall {
+  0% {
+    top: -30px;
+    opacity: 0.9;
+  }
+
+  100% {
+    top: 120px;
+    opacity: 0.1;
+  }
+}
+
 .completion-container h2 {
   color: var(--bg-body);
   margin-bottom: 1rem;

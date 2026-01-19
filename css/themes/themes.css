@@ -73,7 +73,7 @@ body.dark-theme .theme-toggle:hover {
 }
 
 body.dark-theme .page-description {
-  background-color: var(--surface-color);
+  background-color: rgb(37 41 49 / 40%);
   box-shadow: 0 10px 25px rgb(0 0 0 / 30%);
 }
 
@@ -83,11 +83,11 @@ body.dark-theme .page-description:hover {
 
 body.dark-theme .feature-card,
 body.dark-theme .step {
-  background-color: var(--surface-color);
+  background-color: rgb(37 41 49 / 40%);
 }
 
 body.dark-theme .info-section {
-  background-color: #1f2229;
+  background-color: rgb(31 34 41 / 40%);
 }
 
 body.dark-theme .modal {

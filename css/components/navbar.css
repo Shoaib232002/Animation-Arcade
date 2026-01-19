@@ -44,3 +44,11 @@
   width: var(--button-icon-size);
   height: var(--button-icon-size);
 }
+
+.nav-welcome-message {
+  font-weight: 600;
+  color: var(--primary-color);
+  animation: fade-in 0.3s ease;
+  margin-right: 0;
+  align-self: center;
+}

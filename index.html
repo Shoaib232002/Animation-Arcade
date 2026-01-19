@@ -32,12 +32,13 @@
           Animation Arcade is a gamified platform that teaches CSS animations,
           transforms, and transitions using hands-on, cricket-themed challenges.
         </p>
+        <button id="startGameBtn" class="start-btn">Start Playing Now</button>
       </section>
 
       <section class="hero-section">
-        <h1 class="hero-title">
+        <h2 class="hero-title">
           Master CSS Animations Through Interactive Challenges
-        </h1>
+        </h2>
         <p class="hero-subtitle">
           Write real CSS, animate real elements, and level up your animation
           skills through gameplay.
@@ -77,8 +78,6 @@
             <p>Track completed levels and continue your progress anytime.</p>
           </div>
         </div>
-
-        <button id="startGameBtn" class="start-btn">Start Playing Now</button>
       </section>
 
       <section class="info-section">
@@ -125,20 +124,36 @@
     <div id="loginOverlay" class="overlay">
       <div class="modal">
         <button class="close-btn" id="closeModal">&times;</button>
+        <div class="modal-brand">Animation Arcade</div>
         <h2 id="modal-title">Login</h2>
 
-        <div class="tab-container">
+        <div class="tab-container" role="tablist" aria-label="Authentication">
           <button class="tab-btn active" data-tab="login">Login</button>
           <button class="tab-btn" data-tab="signup">Sign Up</button>
         </div>
 
+        <div id="authMessage" class="auth-message"></div>
+
         <form id="authForm" class="auth-form">
           <div class="form-group" id="nameGroup" style="display: none">
-            <input type="text" id="name" name="name" placeholder="Name" />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Name"
+              aria-label="Name"
+            />
           </div>
 
           <div class="form-group">
-            <input type="email" id="email" name="email" placeholder="Email" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              aria-label="Email"
+              autocomplete="off"
+            />
           </div>
 
           <div class="form-group">
@@ -147,6 +162,7 @@
               id="password"
               name="password"
               placeholder="Password"
+              aria-label="Password"
             />
           </div>
 
@@ -160,16 +176,18 @@
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Confirm Password"
+              aria-label="Confirm Password"
             />
           </div>
 
           <button type="submit" class="submit-btn" id="submitBtn">Login</button>
         </form>
 
-        <div id="authMessage" class="auth-message"></div>
-
         <div class="auth-footer">
-          <span id="authFooterText">New user? Sign up.</span>
+          <span id="authFooterText"
+            ><span id="footerActionText">New user?</span>
+            <a href="#" id="footerActionLink">Sign up</a>.</span
+          >
         </div>
       </div>
     </div>

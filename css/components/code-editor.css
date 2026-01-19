@@ -40,7 +40,7 @@
   background: var(--bg-editor);
   color: var(--text-dark);
   font-family: "Courier New", monospace;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   line-height: 1.25;
   resize: vertical;
   outline: none;

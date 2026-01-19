@@ -17,6 +17,7 @@
   --close-button-size: 36px;
   --step-number-size: 40px;
   --modal-max-width: 420px;
+  --modal-min-height: 560px;
   --page-max-width: 1000px;
   --hero-max-width: 1100px;
   --nav-max-width: 1200px;
@@ -39,4 +40,5 @@
   --bg-levels-bar: #f3f7f2;
   --shadow: 0 2px 8px rgb(0 0 0 / 8%);
   --shadow-hover: 0 4px 12px rgb(0 0 0 / 12%);
+  --bg-main-image: url("https://t3.ftcdn.net/jpg/06/87/99/46/360_F_687994619_EsDIMiMqpmvP8eGwZPX2w0zPTr100rt8.jpg");
 }

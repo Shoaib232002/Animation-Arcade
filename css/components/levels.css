@@ -12,6 +12,9 @@
 
 .levels-bar.compact {
   align-self: flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.35rem 0.6rem;
   margin: 0.5rem 0 0;
@@ -24,6 +27,7 @@
   height: 2rem;
   cursor: pointer;
   transition: transform var(--transition);
+  align-content: center;
 }
 
 .arrows:hover {

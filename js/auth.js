@@ -1,18 +1,23 @@
 import {
-  STORAGE_KEYS,
   TABS,
   MESSAGE_TYPES,
   MESSAGES,
-  RETRY_LIMITS,
   ROUTES,
+  UI_DELAYS,
 } from "./constants.js";
+import { VALIDATION_MSGS } from "./auth/constants.js";
+import { AuthUI } from "./auth/ui.js";
+import { AuthService } from "./auth/service.js";
+import {
+  validateName,
+  validatePassword,
+  validateMatch,
+} from "./auth/validation.js";
 
 class AuthManagerClass {
   constructor() {
     this.currentTab = TABS.LOGIN;
-    this.modal = null;
-    this.overlay = null;
-    this.loginBtn = null;
+    this.ui = new AuthUI();
   }
 
   bootstrap() {
@@ -22,9 +27,9 @@ class AuthManagerClass {
         return;
       }
 
-      const authData = this.getStoredAuth();
+      const authData = AuthService.getStoredAuth();
       if (authData) {
-        this.updateUIForLoggedIn(authData.name);
+        this.ui.updateUIForLoggedIn(authData.name);
       }
     };
 
@@ -32,26 +37,40 @@ class AuthManagerClass {
   }
 
   init() {
-    this.modal = document.querySelector(".modal");
-    this.overlay = document.getElementById("loginOverlay");
-    this.loginBtn = document.getElementById("loginBtn");
+    this.ui.init();
 
-    if (!this.loginBtn) {
-      return;
-    }
+    if (!document.getElementById("loginBtn")) return;
 
     this.attachEventListeners();
+    this.attachFieldListeners();
+  }
+
+  attachFieldListeners() {
+    ["email", "password", "name", "confirmPassword"].forEach((id) => {
+      const field = document.getElementById(id);
+      if (field) {
+        field.addEventListener("focus", () => {
+          if (field.classList.contains("input-error")) {
+            const group = field.closest(".form-group");
+            if (group) group.classList.add("show-tooltip");
+          }
+        });
+        field.addEventListener("blur", () => {
+          const group = field.closest(".form-group");
+          if (group) group.classList.remove("show-tooltip");
+        });
+      }
+    });
   }
 
   attachEventListeners() {
-    this.loginBtn.addEventListener("click", () =>
-      this.handleLoginButtonClick()
-    );
+    const loginBtn = document.getElementById("loginBtn");
+    if (loginBtn)
+      loginBtn.addEventListener("click", () => this.handleLoginButtonClick());
 
     const closeBtn = document.getElementById("closeModal");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => this.closeModal());
-    }
+    if (closeBtn)
+      closeBtn.addEventListener("click", () => this.ui.closeModal());
 
     document.querySelectorAll(".tab-btn").forEach((btn) => {
       btn.addEventListener("click", (e) =>
@@ -60,93 +79,56 @@ class AuthManagerClass {
     });
 
     const authForm = document.getElementById("authForm");
-    if (authForm) {
+    if (authForm)
       authForm.addEventListener("submit", (e) => this.handleSubmit(e));
-    }
 
     const startGameBtn = document.getElementById("startGameBtn");
-    if (startGameBtn) {
+    if (startGameBtn)
       startGameBtn.addEventListener("click", () => this.handleStartGame());
-    }
-  }
-
-  handleStartGame() {
-    const authData = this.getStoredAuth();
-    if (!authData) {
-      this.openModal();
-      this.showMessage(MESSAGES.LOGIN_REQUIRED, MESSAGE_TYPES.ERROR);
-    } else {
-      window.location.href = ROUTES.GAME;
-    }
-  }
-
-  handleLoginButtonClick() {
-    const authData = this.getStoredAuth();
-    if (authData) {
-      this.logout();
-    } else {
-      this.openModal();
-    }
-  }
-
-  openModal() {
-    if (this.overlay) {
-      this.overlay.style.display = "flex";
-      this.overlay.classList.add("modal-open");
-    }
-    this.switchTab(TABS.LOGIN);
-  }
-
-  closeModal() {
-    if (this.overlay) {
-      this.overlay.style.display = "none";
-      this.overlay.classList.remove("modal-open");
-    }
-    this.clearMessages();
   }
 
   switchTab(tab) {
     this.currentTab = tab;
+    this.ui.updateTabButtons(tab);
+    this.ui.updateModalContent(tab);
+    this.ui.updateFormFields(tab);
+    this.ui.resetFormFields();
 
-    document.querySelectorAll(".tab-btn").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.tab === tab);
-    });
-
-    this.updateModalContent(tab);
-    this.updateFormFields(tab);
-    this.clearMessages();
-  }
-
-  updateModalContent(tab) {
-    const modalTitle = document.getElementById("modal-title");
-    const submitBtn = document.getElementById("submitBtn");
-    const footerText = document.getElementById("authFooterText");
-
-    const isSignup = tab === TABS.SIGNUP;
-
-    if (modalTitle) {
-      modalTitle.textContent = isSignup ? "Sign Up" : "Login";
-    }
-    if (submitBtn) {
-      submitBtn.textContent = isSignup ? "Sign Up" : "Login";
-    }
-    if (footerText) {
-      footerText.textContent = isSignup
-        ? "Already have an account? Login."
-        : "New user? Sign up.";
+    const link = document.getElementById("footerActionLink");
+    if (link) {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        this.switchTab(tab === TABS.SIGNUP ? TABS.LOGIN : TABS.SIGNUP);
+      });
     }
   }
 
-  updateFormFields(tab) {
-    const nameGroup = document.getElementById("nameGroup");
-    const confirmGroup = document.getElementById("confirmPasswordGroup");
-    const displayValue = tab === TABS.SIGNUP ? "block" : "none";
-
-    if (nameGroup) {
-      nameGroup.style.display = displayValue;
+  handleLoginButtonClick() {
+    const authData = AuthService.getStoredAuth();
+    if (authData) {
+      if (confirm(MESSAGES.LOGOUT_CONFIRM)) {
+        AuthService.logout();
+        this.ui.updateUIForLoggedOut();
+      }
+    } else {
+      this.ui.openModal();
+      this.switchTab(TABS.LOGIN);
     }
-    if (confirmGroup) {
-      confirmGroup.style.display = displayValue;
+  }
+
+  handleStartGame() {
+    const authData = AuthService.getStoredAuth();
+    if (!authData) {
+      this.ui.openModal();
+      setTimeout(() => {
+        const emailField = document.getElementById("email");
+        if (emailField) {
+          this.ui.setFieldError("email", MESSAGES.LOGIN_REQUIRED);
+          emailField.focus();
+        }
+      }, UI_DELAYS.TOOLTIP_FOCUS);
+    } else {
+      window.location.href = ROUTES.GAME;
     }
   }
 
@@ -169,203 +151,67 @@ class AuthManagerClass {
       .value.trim();
 
     if (!name || !email || !password || !confirmPassword) {
-      this.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
+      this.ui.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
+      this.ui.applyFieldErrors({
+        name: name,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      });
       return;
     }
 
-    const usernameRegex = /^(?=.*[a-zA-Z]{3})[a-zA-Z0-9\s]+$/;
-    if (!usernameRegex.test(name)) {
-      this.showMessage(
-        "Username must contain only letters, numbers, and spaces, with at least 3 letters (cannot be only numbers)",
-        MESSAGE_TYPES.ERROR
-      );
+    const nameError = validateName(name);
+    if (nameError) {
+      this.ui.setFieldError("name", nameError);
       return;
     }
 
-    const passwordRegex =
-      /^(?=.*[a-zA-Z]{4,})(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])(?!.*\s).{4,}$/;
-    if (!passwordRegex.test(password)) {
-      this.showMessage(
-        "Password must be at least 4 characters, containing at least 4 letters, numbers, special characters, and no spaces",
-        MESSAGE_TYPES.ERROR
-      );
+    const passError = validatePassword(password);
+    if (passError) {
+      this.ui.setFieldError("password", passError);
       return;
     }
 
-    if (password !== confirmPassword) {
-      this.showMessage(MESSAGES.PASSWORD_MISMATCH, MESSAGE_TYPES.ERROR);
+    const matchError = validateMatch(password, confirmPassword);
+    if (matchError) {
+      this.ui.setFieldError("confirmPassword", matchError);
       return;
     }
 
-    this.signup(name, email, password);
+    if (AuthService.checkEmailExists(email)) {
+      this.ui.setFieldError("email", MESSAGES.DUPLICATE_EMAIL);
+      return;
+    }
+
+    const newUser = AuthService.registerUser(name, email, password);
+    this.ui.updateUIForLoggedIn(newUser.name);
+    this.ui.closeModal();
   }
 
   handleLoginSubmit(email, password) {
     if (!email || !password) {
-      this.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
+      this.ui.showMessage(MESSAGES.FILL_REQUIRED, MESSAGE_TYPES.ERROR);
+      this.ui.applyFieldErrors({
+        email: email,
+        password: password,
+      });
       return;
     }
 
-    this.login(email, password);
-  }
-
-  signup(name, email, password) {
-    const users = this.getStoredUsers();
-
-    if (users.some((u) => u.email === email)) {
-      this.showMessage(MESSAGES.DUPLICATE_EMAIL, MESSAGE_TYPES.ERROR);
+    const result = AuthService.loginUser(email, password);
+    if (!result.success) {
+      if (result.error === "EMAIL_NOT_FOUND") {
+        this.ui.setFieldError("email", VALIDATION_MSGS.EMAIL_NOT_FOUND);
+      } else {
+        this.ui.setFieldError("password", VALIDATION_MSGS.INCORRECT_PASSWORD);
+      }
       return;
     }
 
-    const user = this.createUser(name, email, password);
-    users.push(user);
-    this.saveUsers(users);
-    this.saveAuth(user);
-
-    try {
-      this.closeModal();
-    } catch {
-      this.showMessage(
-        "Account created but failed to close modal",
-        MESSAGE_TYPES.ERROR
-      );
-    }
-    this.updateUIForLoggedIn(name);
-  }
-
-  login(email, password) {
-    const users = this.getStoredUsers();
-    const user = users.find((u) => u.email === email);
-
-    if (!user) {
-      this.showMessage(MESSAGES.NO_ACCOUNT, MESSAGE_TYPES.ERROR);
-      return;
-    }
-
-    if (user.password !== password) {
-      this.showMessage(MESSAGES.INCORRECT_PASSWORD, MESSAGE_TYPES.ERROR);
-      return;
-    }
-
-    this.saveAuth(user);
-    try {
-      this.closeModal();
-    } catch {
-      this.showMessage(
-        "Login successful but failed to close modal",
-        MESSAGE_TYPES.ERROR
-      );
-    }
-    this.updateUIForLoggedIn(user.name);
-  }
-
-  logout() {
-    if (confirm(MESSAGES.LOGOUT_CONFIRM)) {
-      localStorage.removeItem(STORAGE_KEYS.AUTH);
-      this.updateUIForLoggedOut();
-    }
-  }
-
-  updateUIForLoggedIn(name, retryCount = 0) {
-    if (retryCount > RETRY_LIMITS.UI_UPDATE) {
-      return;
-    }
-
-    const loginBtn = document.getElementById("loginBtn");
-    if (!loginBtn) {
-      requestAnimationFrame(() =>
-        this.updateUIForLoggedIn(name, retryCount + 1)
-      );
-      return;
-    }
-
-    loginBtn.textContent = "Logout";
-
-    const heroSection = document.querySelector(".hero-section");
-    if (!heroSection) {
-      requestAnimationFrame(() =>
-        this.updateUIForLoggedIn(name, retryCount + 1)
-      );
-      return;
-    }
-
-    this.createOrUpdateWelcomeMessage(heroSection, name);
-  }
-
-  createOrUpdateWelcomeMessage(heroSection, name) {
-    let welcomeMsg = document.querySelector(".welcome-message");
-    if (!welcomeMsg) {
-      welcomeMsg = document.createElement("div");
-      welcomeMsg.className = "welcome-message";
-      heroSection.prepend(welcomeMsg);
-    }
-    welcomeMsg.textContent = `Welcome back, ${name}!`;
-    welcomeMsg.style.display = "block";
-  }
-
-  updateUIForLoggedOut() {
-    const loginBtn = document.getElementById("loginBtn");
-    if (loginBtn) {
-      loginBtn.textContent = "Login";
-    }
-
-    const welcomeMsg = document.querySelector(".welcome-message");
-    if (welcomeMsg) {
-      welcomeMsg.remove();
-    }
-  }
-
-  showMessage(message, type) {
-    const messageDiv = document.getElementById("authMessage");
-    if (messageDiv) {
-      messageDiv.textContent = message;
-      messageDiv.className = `auth-message ${type}`;
-    }
-  }
-
-  clearMessages() {
-    const messageDiv = document.getElementById("authMessage");
-    if (messageDiv) {
-      messageDiv.textContent = "";
-      messageDiv.className = "auth-message";
-    }
-  }
-
-  createUser(name, email, password) {
-    return {
-      id: Date.now().toString(),
-      name,
-      email,
-      password,
-    };
-  }
-
-  saveAuth(user) {
-    const authData = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
-    localStorage.setItem(STORAGE_KEYS.AUTH, JSON.stringify(authData));
-  }
-
-  getStoredAuth() {
-    try {
-      const authData = localStorage.getItem(STORAGE_KEYS.AUTH);
-      return authData ? JSON.parse(authData) : null;
-    } catch {
-      localStorage.removeItem(STORAGE_KEYS.AUTH);
-      return null;
-    }
-  }
-
-  getStoredUsers() {
-    const users = localStorage.getItem(STORAGE_KEYS.USERS);
-    return users ? JSON.parse(users) : [];
-  }
-
-  saveUsers(users) {
-    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+    this.ui.updateUIForLoggedIn(result.user.name);
+    this.ui.closeModal();
+    this.ui.resetFormFields();
   }
 }
 
